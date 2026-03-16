@@ -86,6 +86,18 @@ def test_04():
   return taken, checked
 
 
+def test_05():
+  taken, checked = test_0()
+    
+  taken -= {c for c in taken if c.id in {'AST 203'}}
+  taken |= {Taken('BIO 201', 4, 'A', (2024,2), 'SB')}
+
+  checked['sci'] = (True, ['BIO 201', 'PHY 131', 'PHY 133'])
+
+  return taken, checked
+
+
+
 if __name__ == "__main__":
   pprint(test_0())
   pprint(test_01())

@@ -203,9 +203,8 @@ sci_more = {'AST 203', 'AST 205',
             'PHY 125', 'PHY 127', 'PHY 132', 'PHY 134', 'PHY 142', 
             'PHY 251', 'PHY 252'} 
 
-#_ no longer needed:
-#_ def sci_courses(taken):
-#_  return {c for c in taken if c.id in set().union(*sci_combs) | sci_more}
+def sci_courses(taken):
+  return {c for c in taken if c.id in set().union(*sci_combs) | sci_more}
 
 #_ not sufficient to be correct:
 #_ def sci_cred_req(taken): return sum(c.credits for c in sci_courses(taken))>=9
@@ -220,8 +219,7 @@ def sci_req(taken): ### subsumes sci_comb_req
   return any(t|s <= taken and sum(c.credits for c in t|s) >= 9 and
              GPA([(cr, g) for (_, cr, g, _, _) in t|s]) >= 2.0
              and wit('sci', {c.id for c in t|s})
-             for t in taken_combs
-             for s in pow({c for c in taken if c.id in sci_more}))
+             for t in taken_combs for s in pow(sci_courses(taken)-t))
 
 # 9. Professional Ethics
 ethics = {'CSE 312'}
