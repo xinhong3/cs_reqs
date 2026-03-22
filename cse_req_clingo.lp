@@ -10,10 +10,10 @@
 %%%   Clingo does not seem to have native support for string manipulation,
 %%%   therefore we use external python functions to extract course number and program from course Id.
 
-%% Guide: 3.1.10 Pooling
-%% the following is equivalent to c_or_higher("A"). c_or_higher("A-"). ...
 c_or_higher("A";"A-";"B+";"B";"B-";"C+";"C").
 
+%% mapping letter grade to points for GPA calculation
+%% scaled by 100 to make each integer
 grade_to_points("A", 400).
 grade_to_points("A-", 367).
 grade_to_points("B+", 333).
@@ -28,35 +28,37 @@ grade_to_points("F", 0).
 grade_to_points("I/F", 0).
 grade_to_points("Q", 0).
 
+%% courses_taken(Id, Credits, Grade, Subset): a subset of courses taken, identified by Subset.
+
+%% gpa calculation, takes a subset (courses_taken, indicated by the subset name) and calculates the GPA = floor(weighted sum / sum of weights).
+%% only consider letter grades in grade_to_points
 gpa_mul_100(TakenSubset, Gpa) :-
   courses_taken(Id, _, _, TakenSubset),
-  WeightedSum = #sum { Credit*Points : courses_taken(Id_, Credit, Grade, TakenSubset), grade_to_points(Grade, Points) }, %% only consider letter grades
+  WeightedSum = #sum { Credit*Points : courses_taken(Id_, Credit, Grade, TakenSubset), grade_to_points(Grade, Points) },
   SumOfWeights = #sum { Credit : courses_taken(Id_, Credit, Grade, TakenSubset), grade_to_points(Grade, _) },
-  SumOfWeights > 0,   %%% fails when it's 0, not returning 0 as in python.
-  Gpa = WeightedSum / SumOfWeights.
+  SumOfWeights > 0,
+  Gpa = WeightedSum / SumOfWeights. %%% integer floor division. 
 
-%% taken(Id, Credits, Grade, When, Where), defined later
+%% gpa is 0 when sum of weights is 0. same as in python
+gpa_mul_100(TakenSubset, 0) :-
+  courses_taken(Id, _, _, TakenSubset),
+  SumOfWeights = #sum { Credit : courses_taken(Id_, Credit, Grade, TakenSubset), grade_to_points(Grade, _) },
+  SumOfWeights = 0.
+
+% taken(Id, Credits, Grade, When, Where): taken course Id with Credits, etc.
+
 passed(Id) :- taken(Id, Credits_, Grade, When_, Where_), c_or_higher(Grade).
 
-%% define passed_all using distalgo semantics for "each"
+% passed all courses with course Id in Subject
 passed_all(Subject) :-
-  c(_, Subject),                                % c(Id, Subject): course Id in Subject
-  X = #count { C : c(C, Subject), passed(C) },
-  Y = #count { C : c(C, Subject) },
-  X = Y.
+  c(_, Subject),                 % c(Id, Subject): course Id in Subject
+  passed(Id) : c(Id, Subject).   %% for each course Id in Subject, passed(Id) is true
 
-%% it could also be defined as follows:
-%% passed_all(Subject) :-
-%%   c(_, Subject),
-%%   0 = #count { C : c(C, Subject), not passed(C) }.
-
-%% alternatively, we could first define the negation of passed_all
-%% 	then define passed_all:
-%% -passed_all(Subject) :- c(Id, Subject), not passed(Id).
-%% passed_all(Subject) :- c(_, Subject), not -passed_all(Subject).
-
-% from Annie: course C is witness for passing all courses in a subject in requirement Item
+% course C is witness for passing all courses in a subject in requirement Item
 wit(Item, Id) :- s(Item, Subj), passed_all(Subj), c(Id, Subj).
+
+% return set of courses in subjects in requirement item.
+courses(Id, Item) :- s(Item, Subj), c(Id, Subj).
 
 % 1. Required Introductory Courses
 c("CSE 114", prog). c("CSE 214", prog). c("CSE 216", prog). 
@@ -65,9 +67,6 @@ c("CSE 260", prog2). c("CSE 261", prog2).
 c("CSE 215", dmath). 
 c("CSE 150", dmath2).
 c("CSE 220", sys). 
-intro_courses(Id) :- c(Id, (prog; prog2; dmath; dmath2; sys)).
-
-% from Annie %%% changed intro to intro_req
 s(intro, (prog; prog2; dmath; dmath2; sys)).
 
 intro_req :-
@@ -79,8 +78,6 @@ intro_req :-
 c("CSE 303", theory). c("CSE 350", theory2).
 c("CSE 373", algo). c("CSE 385", algo2).
 c("CSE 310", common). c("CSE 316", common). c("CSE 320", common). c("CSE 416", common).
-adv_courses(Id) :- c(Id, (theory; theory2; algo; algo2; common)).
-
 s(adv, (theory; theory2; algo; algo2; common)).
 
 adv_req :- 
@@ -91,14 +88,12 @@ adv_req :-
 % 3. Computer Science Electives  %% simpler than 2025
 c(("CSE 475"; "CSE 495"; "CSE 300"; "CSE 301"; "CSE 312"), elect_exclude).
 
-%% define courses_taken(Id, Credits, Grade, Subset) to represent a subset of taken courses 
-%%   as in Annie's python, where Subset is a term used to identify the subset.
 courses_taken(Id, Credits, Grade, elect_passed) :- 
-  taken(Id, Credits, Grade, _, _), 
+  taken(Id, Credits, Grade, _, _), c_or_higher(Grade),
   Prog = @course_prog(Id), 
   Prog = "CSE", 
   @upper_division(Id) = 1,    %% is upper division
-  Credits >= 3, not adv_courses(Id), not c(Id, elect_exclude).
+  Credits >= 3, not courses(Id, adv), not c(Id, elect_exclude).
 
 elect_req :- 
   #count { Id: courses_taken(Id, _, _, elect_passed) } >= 4.
@@ -137,7 +132,7 @@ sta_req :-
   passed_all(sta; sta2).
 
 % 7. At least one of the following natural science lecture/laboratory combinations...
-% All courses taken to satisfy Requirements 1 through 10 must be taken for a letter grade.
+% combinations:
 c("BIO 201", bio). c("BIO 204", bio).
 c("BIO 202", bio2). c("BIO 204", bio2).
 c("BIO 203", bio3). c("BIO 204", bio3).
@@ -146,34 +141,28 @@ c("CHE 152", che2). c("CHE 154", che2).
 c("PHY 126", phy). c("PHY 133", phy).
 c("PHY 131", phy2). c("PHY 133", phy2).
 c("PHY 141", phy3). c("PHY 133", phy3).
+sci_combs(bio; bio2; bio3; che; che2; phy; phy2; phy3).
 
-sci_combs(L) :- L = (bio;bio2;bio3;che;che2;phy;phy2;phy3).
-
-% 8. Additional natural science courses selected from above and the following list...
-% All courses taken to satisfy Requirements 1 through 10 must be taken for a letter grade.
+% 8. Additional natural science courses selected from above and following list:
+% Note: The courses selected in 7 and 8 must carry at least 9 credits.
 c(("AST 203"; "AST 205"; "CHE 132"; "CHE 321"; "CHE 322"; "CHE 331"; "CHE 332"; "GEO 102"; "GEO 103"; "GEO 112"; "GEO 123"; "GEO 122"; "PHY 125"; "PHY 127"; "PHY 132"; "PHY 134"; "PHY 142"; "PHY 251"; "PHY 252"), sci_more).
 
-%% set of all sci courses taken
+%% sci_courses(taken) in python: set of all sci courses taken
 courses_taken(Id, Credit, Grade, sci_courses) :- taken(Id, Credit, Grade, _, _), c(Id, sci_more).
 courses_taken(Id, Credit, Grade, sci_courses) :- taken(Id, Credit, Grade, _, _), c(Id, L), sci_combs(L).
 
-%% a subset of sci courses taken: to satisfy sci_req, sci_cred_req and sci_grade_req.
+%% generate a subset of sci_courses taken: use the same subset to satisfy sci_req, sci_cred_req and sci_grade_req.
 { courses_taken(Id, Credit, Grade, sci_subset) : courses_taken(Id, Credit, Grade, sci_courses) }.
 
-%% use the same subset to check both credit and grade requirements:
 %% the subset must contain one sci_combo, use in requirement 7.
-sci_req :- sci_combs(L),        %% there exists one combo L
-           c(Id1, L),           %%% assume each combo has only two courses.
-           c(Id2, L),
-           Id1 != Id2,
-           courses_taken(Id1, _, _, sci_subset), courses_taken(Id2, _, _, sci_subset).
+sci_req :- sci_combs(L), courses_taken(Id, _, _, sci_subset) : c(Id, L).
 
 % The courses selected in 7 and 8 must carry at least 9 credits.
 %% Id is needed otherwise credit will only be counted once for courses that have the same credits.
 sci_cred_req :-  #sum { Credit, Id : courses_taken(Id, Credit, _, sci_subset) } >= 9.
 
 % The grade point average for the courses in Requirements 7 and 8 must be at least 2.00.
-sci_grade_req :- gpa_mul_100(sci_subset, Gpa), Gpa >= 200.  %% scaled by 100.
+sci_grade_req :- gpa_mul_100(sci_subset, Gpa), Gpa >= 200.
 
 %% witness for sci is the subset used to satisfy all sci requirements, as in python.
 wit(sci, Id) :- courses_taken(Id, _, _, sci_subset).
@@ -205,25 +194,122 @@ writing_req :- passed_all(writing).
 % items 2 and 3, must be completed at Stony Brook.
 %%% assume to be not about "The courses taken to satisfy Requirements ..."
 
-item123_course(Id) :- intro_courses(Id).
-item123_course(Id) :- adv_courses(Id).
-item123_course(Id) :- courses_taken(Id, _, _, elect_passed).
+%% courses in items 1,2,3
+items123_course(Id) :- courses(Id, intro).
+items123_course(Id) :- courses(Id, adv).
+items123_course(Id) :- courses_taken(Id, _, _, elect_passed).
 
-item23_course(Id) :- adv_courses(Id).
-item23_course(Id) :- courses_taken(Id, _, _, elect_passed).
+%% courses in items 2,3
+items23_course(Id) :- courses(Id, adv).
+items23_course(Id) :- courses_taken(Id, _, _, elect_passed).
 
 credits_at_sb_req :-
-  #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), item123_course(Id) } >= 24,
-  #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), item23_course(Id) } >= 18.
+  #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items123_course(Id) } >= 24,
+  #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items23_course(Id) } >= 18.
 
-wit(credits_at_SB, Id) :- item123_course(Id), taken(Id, _, _, _, "SB").
-wit(credits_at_SB, Id) :- item23_course(Id), taken(Id, _, _, _, "SB").
+wit(credits_at_SB, Id) :- items123_course(Id), taken(Id, _, _, _, "SB").
+wit(credits_at_SB, Id) :- items23_course(Id), taken(Id, _, _, _, "SB").
+
+% Grading (%%% comments copied from python)
+%
+% All courses taken to satisfy Requirements 1 through 10 must be taken for
+% a letter grade.  %%% always true if the two below are true
+% The courses in Requirements 1-6, 9, and 10 must be passed with a letter
+% grade of C or higher.  %%% assume to be: The courses *taken to satisfy* Req...
+% The grade point average for the courses in Requirements 7 and 8 must be
+% at least 2.00.  %%% assume to be: The courses *taken to satisfy* Req...
+%% merged with 7 and 8; otherwise, not correct if as assumed.
+
+#program check.
+
+%% whether the taken courses satisfy all requirements for BS major in CSE
+
+%%% there are no constraints used in checking, as when the degree requirements are not satisfied we want a model to show which reqs are (are not) satisfied and their witnesses.
+
+%% req_name: used in the constraint to check if all requirements are satisfied.
+req_name(intro; adv; elect; calc; alg; sta; sci; ethics; writing; credits_at_SB).
+
+%%% could've used req_passed directly in each requirement, but keep them same as in prolog.
+req_passed(intro)         :- intro_req.
+req_passed(adv)           :- adv_req.
+req_passed(elect)         :- elect_req.
+req_passed(calc)          :- calc_req.
+req_passed(alg)           :- alg_req.
+req_passed(sta)           :- sta_req.
+req_passed(sci)           :- sci_req, sci_cred_req, sci_grade_req.
+req_passed(ethics)        :- ethics_req.
+req_passed(writing)       :- writing_req.
+req_passed(credits_at_SB) :- credits_at_sb_req.
+
+deg_req :- req_passed(Item) : req_name(Item).   %% all requirements passed
+
+#maximize { 1, Item : req_passed(Item) }.
+
+#program plan.
+
+%% constants
+#const min_semester = 1.            %% min semester number
+#const max_semester = 8.            %% max number of semesters
+#const max_courses_per_semester = 4.%% max courses to take in one semester
+
+semester(min_semester..max_semester).
+
+%% The KB uses temporal relations (*_before, *_same) to evaluate requisites.
+%% e.g. prereq("CSE 214", Sem) :- semester(Sem), passed_before("CSE 114", Sem).
+%% e.g. coreq("CSE 161", Sem) :- semester(Sem), taken_same("CSE 160", Sem).
+
+%% course Id is taken before semester Sem. %% for prereq and antireq
+taken_before(Id, Sem) :- semester(Sem), taken(Id, _, _, Sem1, _), Sem1 < Sem.
+
+%% course Id is passed before semester Sem. %% for prereq only
+passed_before(Id, Sem) :- semester(Sem), taken(Id, _, Grade, Sem1, _), Sem1 < Sem, c_or_higher(Grade).
+
+%% course Id is taken at semester Sem. %% for coreq only   %%% todo: rename to taken_at?
+taken_same(Id, Sem) :- semester(Sem), taken(Id, _, _, Sem, _).
+
+%%%% generate
+%% any untaken course can be planned for at most one semester.
+{ planned(Id, Sem) : Sem = min_semester..max_semester } 1 :- course(Id, _), not taken_id(Id). %% #const can't be used in the head
+
+%% assume course planned has grade A and taken in SB
+taken(Id, Credit, "A", Sem, "SB") :- course(Id, Credit), planned(Id, Sem). 
+
+%%%% constraints
+%% all requirements must be satisfied.
+:- req_name(X), not req_passed(X).
+
+%% prereq: if a course is planned, then the prereq must be satisfied at the same semester.
+:- planned(Id, Sem),
+   has_prereq(Id),
+   not prereq(Id, Sem).
+
+% coreq: if a course is planned, then the coreq must be satisfied at the same semester.
+:- planned(Id, Sem),
+   has_coreq(Id),
+   not coreq(Id, Sem).
+
+% antireq
+:- plan_to_take(Id, Sem),  %% todo: need to work on the KB on each one (there is only 3 courses with anti-req)
+   has_anti_req(Id), 
+   anti_req(Id, Sem).      %% anti-req can not be satisfied
+
+%% do not exceed max courses per semester
+:- semester(Sem), #count { Id : planned(Id, Sem) } > max_courses_per_semester.
+
+%%%% optimization
+%% minimize the number of courses to take to satisfy all requirements.
+% #minimize { 1, Id : taken(Id, _, _, _, _) }.
+
+%% minimize the number of semesters
+max_sem(X) :- semester(X), X = #max { Sem : planned(_, Sem) }.
+#minimize { X: max_sem(X) }.
+
+#program input.
 
 %% student facts
 standing("U1"). standing("U2"). standing("U3"). standing("U4").
 major("CSE").
 
-#program check.
 %%%%% test
 %% to play around:
 %%   you can comment out more of the taken_id facts.
@@ -245,113 +331,6 @@ major("CSE").
 
 %% generate input, assume all courses are taken in semester 0 (before planning semesters)
 % taken(Id, Credit, "A", 0, "SB") :- course(Id, Credit), taken_id(Id).
-
-%% requirements:
-%% req_name: used in the constraint to check if all requirements are satisfied.
-%% req_passed: used in the constraint, also in the output.
-%%% ISSUE: this feels repetitive as each requirement is written twice.
-req_name(intro; adv; elect; calc; alg; sta; sci; ethics; writing; credits_at_SB).
-
-%% req 1-6
-req_passed(intro)         :- intro_req.
-req_passed(adv)           :- adv_req.
-req_passed(elect)         :- elect_req.
-req_passed(calc)          :- calc_req.
-req_passed(alg)           :- alg_req.
-req_passed(sta)           :- sta_req.
-
-%% req 7, 8
-req_passed(sci)           :- sci_req, sci_cred_req, sci_grade_req.
-
-%% req 9, 10
-req_passed(ethics)        :- ethics_req.
-req_passed(writing)       :- writing_req.
-req_passed(credits_at_SB) :- credits_at_sb_req.
-
-req_missing(Item) :- req_name(Item), not req_passed(Item).
-deg_req :- not req_missing(_).
-
-%% added for rules that require generating subsets
-%% otherwise clingo will ground them as empty sets, causing the requirements to fail.
-#maximize { 1, Item : req_passed(Item) }.
-
-% #show deg_req/0.
-% #show wit/2.
-% %% when degree requirements are not satisfied, show which requirements are missing and which are passed.
-% #show req_passed(Item) : req_passed(Item), not deg_req.
-% #show req_missing(Item) : req_missing(Item), not deg_req.
-
-#program plan.
-%%%%% planning
-
-%%%% constants
-#const min_semester = 1.            %% min semester number, assume 1
-#const max_semester = 8.            %% max number of semesters, assume 8
-#const max_courses_per_semester = 4.
-
-%% define semester to be from 1 to 8
-semester(min_semester..max_semester).
-
-%%%% rules used in KB
-
-%% for prereq and antireq
-%% course Id taken before semester Sem. used in prereq and antireq rules in the KB.
-%% e.g. prereq("CSE 214", Sem) :- semester(Sem), passed_before("CSE 114", Sem).
-taken_before(Id, Sem) :- semester(Sem), taken(Id, _, _, Sem1, _), Sem1 < Sem.
-
-%% for prereq only
-passed_before(Id, Sem) :- semester(Sem), taken(Id, _, Grade, Sem1, _), Sem1 < Sem, c_or_higher(Grade).
-
-%% for coreq only
-%% e.g. coreq("CSE 161", Sem) :- semester(Sem), taken_same("CSE 160", Sem).
-taken_same(Id, Sem) :- semester(Sem), taken(Id, _, _, Sem, _).
-
-%%%% generate
-%% if a course is not taken, we consider it for planning.
-%%   requisites (prereq, coreq, antireq) will be checked in constraints.
-%%   can't use taken/5 because planning needs to add new taken facts.
-can_take(Id) :- course(Id, _), not taken_id(Id).
-
-%% choose up to max_course_planned courses to plan for
-%% assume each planned course will be taken with credit, grade ...
-%% for each course, only take it in one semester.
-{ taken(Id, 4, "A", Sem, "SB") : Sem = min_semester..max_semester } 1 :- can_take(Id). %% #const can't be used in the head
-
-%% planned if not in the input (taken_id) and chosen in the generate rule above.
-planned(Id, Sem) :- taken(Id, _, _, Sem, _), not taken_id(Id).
-
-%%%% constraints
-
-%% all requirements must be satisfied.
-:- req_name(X), not req_passed(X).
-
-%% prereq: if a course is planned, then the prereq must be satisfied at the same semester.
-:-  planned(Id, Sem),
-    has_prereq(Id),
-    not prereq(Id, Sem).
-
-% coreq: if a course is planned, then the coreq must be satisfied at the same semester.
-:-  planned(Id, Sem),
-    has_coreq(Id),
-    not coreq(Id, Sem).
-
-%% antireq                     %% TODO: for antireq we can not simply assume unsupported is true or false
-% :-  plan_to_take(Id, Sem),   %%        need to work on the KB on each one (there is only 3 courses with anti-req)
-%     has_anti_req(Id), 
-%     anti_req(Id, Sem).      %% anti-req can not be satisfied
-
-%% do not exceed max courses per semester
-:- semester(Sem), #count { Id : planned(Id, Sem) } > max_courses_per_semester.
-
-%%%% optimization
-%% minimize the number of courses to take to satisfy all requirements.
-% #minimize { 1, Id : taken(Id, _, _, _, _) }.
-
-%% minimize the number of semesters
-max_sem(X) :- semester(X), X = #max { Sem : planned(_, Sem) }.
-#minimize { X: max_sem(X) }.
-
-% #show planned/2.       %% courses planned
 
 % #script (python)
 % import clingo

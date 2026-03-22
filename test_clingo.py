@@ -36,9 +36,9 @@ def run_clingo_tests(taken_set):
     test_facts += f'taken("{c.id}", {c.credits}, "{c.grade}", 1, "{c.where}").\n'
   
   ctrl.add("base", [], test_facts)
-  ctrl.ground([("base", []), ("check", [])], context=ClingoContext())
+  ctrl.ground([("base", []), ("input", []), ("check", [])], context=ClingoContext())
   
-  checked = {}
+  checked = {item: [False, []] for item in items}  ## initialize all items to not passed
   degree_passed = False
   
   def on_model(model):
@@ -49,9 +49,6 @@ def run_clingo_tests(taken_set):
       elif sym.name == "req_passed":
         name = str(sym.arguments[0])
         checked[name] = [True, []]
-      elif sym.name == "req_missing":
-        name = str(sym.arguments[0])
-        checked[name] = [False, []]
 
     for sym in model.symbols(atoms=True):     ## collect witness
       if sym.name == "wit":
@@ -59,8 +56,6 @@ def run_clingo_tests(taken_set):
         course = str(sym.arguments[1]).strip('"')
         if name in checked:
           checked[name][1].append(course)
-        else:
-          checked[name] = [True, [course]]
 
   ctrl.solve(on_model=on_model)
 
