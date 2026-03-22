@@ -1,14 +1,10 @@
-%%%%% TO RUN: copy the this file and the KB file (kb_complete.lp) into the following:
-%%%%%         https://potassco.org/clingo/run/ (it works for clingo v5.7.2)
-%%%%%         click the toggle for "lua" and it should be blue and says "python"
-%%%%%         paste the code and click "Run"
+%% comments in this file:
+%%    %: english text from the degree requirements, comments in python, or commented out code
+%%   %%: my own comments explaining the logic
+%%  %%%: issues, some are copied from python
 
-%%%%% Guide: https://github.com/potassco/guide/releases/tag/v2.2.0
-%%%%%   "introduction to the Answer Set Programming (ASP) tools gringo, clasp, and clingo"
-
-%%% ISSUE: better ways to do the same?
-%%%   Clingo does not seem to have native support for string manipulation,
-%%%   therefore we use external python functions to extract course number and program from course Id.
+%% clingo version for checking and planning for BS degree requirements in CSE at Stony Brook University (Fall 2024).
+%% python version: https://github.com/unicomputing/cs_reqs/blob/main/cs_reqs_2024.da (checking only)
 
 c_or_higher("A";"A-";"B+";"B";"B-";"C+";"C").
 
@@ -210,7 +206,7 @@ credits_at_sb_req :-
 wit(credits_at_SB, Id) :- items123_course(Id), taken(Id, _, _, _, "SB").
 wit(credits_at_SB, Id) :- items23_course(Id), taken(Id, _, _, _, "SB").
 
-% Grading (%%% comments copied from python)
+% Grading (%%% comments are copied from python)
 %
 % All courses taken to satisfy Requirements 1 through 10 must be taken for
 % a letter grade.  %%% always true if the two below are true
@@ -331,6 +327,10 @@ major("CSE").
 
 %% generate input, assume all courses are taken in semester 0 (before planning semesters)
 % taken(Id, Credit, "A", 0, "SB") :- course(Id, Credit), taken_id(Id).
+
+%%% ISSUE: better ways to do the same?
+%%%   Clingo does not seem to have native support for string manipulation,
+%%%   therefore we use external python functions to extract course number and program from course Id.
 
 % #script (python)
 % import clingo
