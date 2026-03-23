@@ -6,6 +6,7 @@ from collections import namedtuple
 ##   For requisites, we keep the original string as is. All requisites are optional.
 Course = namedtuple('Course', 
                     ['id',                  ## string: e.g. 'CSE 101'
+                     'title',               ## string: e.g. 'Intro to Computer Science'
                     'desc',                 ## string: course description
                     'prereq',               ## optional, And/Or structure (see below)
                     'coreq',
@@ -20,7 +21,9 @@ Course = namedtuple('Course',
                     'grading',              ## optional, string: special grading, such as S/U
                     ])
 
-class Expr: pass
+class Expr:
+  def __eq__(self, other):
+    return type(self) == type(other) and self.__dict__ == other.__dict__
 
 ## Represent each requirement in requisites.
 class Requirement(Expr):
@@ -68,6 +71,8 @@ class LogicalExpr(Expr):
   def __repr__(self):
     # return f'{self.op_str}({self.subexprs.__repr__()})'
     return f'{self.op_str}({", ".join(repr(e) for e in self.subexprs)})'
+  
+  # def __eq__(self, other): pass ### todo: order shouldn't matter in And and Or
 
 ## Represent a list of conjuncts in requisites.
 class And(LogicalExpr):

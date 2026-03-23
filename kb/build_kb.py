@@ -2,9 +2,41 @@ from pprint import pprint
 import requests
 import re
 import sys
+import pickle
+import jsonpickle
 from bs4 import BeautifulSoup, Tag
-from course_kb import Course, And, Expr, Or, Passed, Requirement, Taken, UnsupportedRequirement
+from course_kb import Course, And, Expr, Major, Or, Passed, Permission, Requirement, Standing, Taken, UnsupportedRequirement
 from parse_course import course_div_cleanup, parse_course_div, parse_req_text
+
+## all the courses in CSE that can't be handled by the current parsing logic.
+## we add them manually as overrides.
+OVERRIDES = {
+  # CSE 364: Advanced Multimedia Techniques
+  # Prerequisites: CSE/ISE 334
+  # 3 credits
+  "CSE 364": Course(
+    id="CSE 364", title="Advanced Multimedia Techniques",
+    desc="SKIPPED",
+    prereq=Or([Taken("CSE 334"), Taken("ISE 334")]),
+    coreq=None, anti_req=None, pre_or_coreq=None, advisory_prereq=None, advisory_coreq=None, advisory_pre_or_coreq=None,
+    credits="3",
+    category=None, ### ignore for now
+    grading=None
+  ),
+  # CSE 488: Internship in Computer Science
+  # Prerequisites: CSE major, U3 or U4 standing; permission of department
+  # SBC:     EXP+
+  # 3 credits, S/U grading
+  "CSE 488": Course(
+    id="CSE 488", title="Internship in Computer Science",
+    desc="SKIPPED",
+    prereq=And([Major("CSE"), Or([Standing("U3"), Standing("U4")]), Permission("permission of department")]),
+    coreq=None, anti_req=None, pre_or_coreq=None, advisory_prereq=None, advisory_coreq=None, advisory_pre_or_coreq=None,
+    credits="3",
+    category=None, ### ignore for now
+    grading="S/U"
+  ),
+}
 
 REQ_TYPES = ['prereq', 'coreq', 'pre_or_coreq', 'anti_req', 'advisory_prereq', 'advisory_coreq', 'advisory_pre_or_coreq']
 
@@ -29,6 +61,7 @@ def create_course_namedtuple(raw_course_dict : dict) -> Course:
 
   return Course(
     id=raw_course_dict.get('id'),
+    title=raw_course_dict.get('title'),
     desc=raw_course_dict.get('desc'),
     prereq=get_parsed_req(['Prerequisite', 'Prerequisites']),
     coreq=get_parsed_req(['Corequisite', 'Corequisites']),
@@ -53,12 +86,15 @@ def build_course_kb_from_html(html_input: str) -> list[Course]:
   for div in course_divs:
     clean_div = course_div_cleanup(div)                 ## div clean up
     raw_dict = parse_course_div(clean_div)              ## parse the cleaned div into a dictionary of course fields
-    course_obj = create_course_namedtuple(raw_dict)     ## convert dict to namedtuple
-    kb.append(course_obj)
+    course = create_course_namedtuple(raw_dict)     ## convert dict to namedtuple
+    if course.id in OVERRIDES:                      ## apply overrides if exists
+      print(f"Applying override for course {course.id}")
+      course = OVERRIDES[course.id]
+    kb.append(course)
 
   return kb
 
-def generate_kb_from_program(prog: str):
+def get_kb_from_program(prog: str):
   base_url = 'https://www.stonybrook.edu/sb/bulletin/current-fall24/academicprograms/{prog}/courses.php'
   url = base_url.format(prog=prog)
   resp = requests.get(url)
@@ -69,6 +105,17 @@ def generate_kb_from_program(prog: str):
   else:
     print("Failed to retrieve course data. Status code:", resp.status_code)
     return []
+
+def serialize_kb_to_pickle(kb: list[Course], filename: "course_kb.pkl"):
+  with open(filename, 'wb') as f:
+    f.write(jsonpickle.encode(kb).encode('utf-8'))
+    # pickle.dump(kb, f)
+
+def deserialize_kb_from_pickle(filename: "course_kb.pkl") -> list[Course]:
+  with open(filename, 'rb') as f:
+    kb = jsonpickle.decode(f.read().decode('utf-8'))
+    # kb = pickle.load(f)
+  return kb
 
 class PrologGenerator:
   ## generates rules from the AST in prolog and clingo format.
@@ -159,4 +206,4 @@ class ClingoGenerator(PrologGenerator):
     
     ## fallback: not all same type, expand into separate rules
     print("clingo: mixed disjunction, cannot pool:", expr)
-    return '; '.join(self.generate_expr(op) for op in expr.subexprs)
+    return '; '.join(self.generate_expr(op, req_type) for op in expr.subexprs)

@@ -5,7 +5,6 @@ from course_kb import Permission, Requirement, Taken, Passed, Major, Standing, A
 PAT_COURSE_ID = r'[A-Z]{3}\s[0-9]{3}'  ## course id: 3 uppercase letters followed by 3 digits.
 PAT_MAJOR = r'\b[A-Z]{3}\b'            ## major code: 3 uppercase letters
 
-# --- dom parsing ---
 def course_div_cleanup(course_div: BeautifulSoup):  
   ## pre-processing. clean up the course div and return a new div.
   ## we remove redundant tags and attributes, which makes it easier to parse the course fields in the next step.
@@ -163,7 +162,7 @@ re_course_list_parsers = {
 
   ## grammar: DEP (NUM1 (or NUM2)*) (or DEP (NUM1 (or NUM2)*))* 
   ## e.g. "AMS 151 or MAT 125 or 131"
-  re.compile(r'''^[A-Z]{3}\s+\d{3}(?:\s+or\s+\d{3})*(?:\s+or\s+[A-Z]{3}\s+\d{3}(?:\s+or\s+\d{3})*)*$''', re.IGNORECASE | re.VERBOSE): parse_course_list_3
+  re.compile(r'''^[A-Z]{3}\s+\d{3}(?:\s+or\s+\d{3})*(?:\s+or\s+[A-Z]{3}\s+\d{3}(?:\s+or\s+\d{3})*)*$''', re.IGNORECASE | re.VERBOSE): parse_course_list_3,
 }
 
 re_any_course_list = re.compile(rf'{'|'.join(r.pattern for r in re_course_list_parsers)}', re.IGNORECASE | re.VERBOSE)
@@ -288,7 +287,7 @@ def parse_req_text(text: str) -> And | Or | Requirement:
   for part in parts:            ## match each part with supported formats. each case is a full match
     if m := re.fullmatch(re_grade_or_higher_prefix, part):    ## course list with c or higher prefix
       need_passed = True
-      grade_required = m.group("grade").lower()  ## c, b, b+, etc.
+      grade_required = m.group("grade").upper()  ## C, B, B+, etc.
       rest = m.group("rest")            ## rest should be a course list
       course_list_ast = parse_course_list_text(rest)
       if course_list_ast is not None:
