@@ -1,9 +1,8 @@
 from pprint import pprint
 import requests
 import re
-import sys
+import argparse
 import pickle
-import jsonpickle
 from bs4 import BeautifulSoup, Tag
 from course_kb import Course, And, Expr, Major, Or, Passed, Permission, Requirement, Standing, Taken, UnsupportedRequirement
 from parse_course import course_div_cleanup, parse_course_div, parse_req_text
@@ -39,12 +38,6 @@ OVERRIDES = {
 }
 
 REQ_TYPES = ['prereq', 'coreq', 'pre_or_coreq', 'anti_req', 'advisory_prereq', 'advisory_coreq', 'advisory_pre_or_coreq']
-
-def get_courses_div_cleaned_from_html(html: str) -> list[Tag]:
-  soup = BeautifulSoup(html, "html.parser")
-  course_divs = soup.find_all("div", class_="course")   ## find all course divs in html
-  cleaned_divs = [course_div_cleanup(div) for div in course_divs]  ## clean up each course div
-  return cleaned_divs
 
 def create_course_namedtuple(raw_course_dict : dict) -> Course:
   ## from course dictionary (returned by parse_course_div) to course namedtuple
@@ -106,42 +99,52 @@ def get_kb_from_program(prog: str):
     print("Failed to retrieve course data. Status code:", resp.status_code)
     return []
 
-def serialize_kb_to_pickle(kb: list[Course], filename: "course_kb.pkl"):
-  with open(filename, 'wb') as f:
-    f.write(jsonpickle.encode(kb).encode('utf-8'))
-    # pickle.dump(kb, f)
+def serialize_kb_to_pickle(kb: list[Course], filepath):
+  with open(filepath, 'wb') as f:
+    pickle.dump(kb, f)
+    print(f'Pickled KB saved to {filepath}')
 
-def deserialize_kb_from_pickle(filename: "course_kb.pkl") -> list[Course]:
-  with open(filename, 'rb') as f:
-    kb = jsonpickle.decode(f.read().decode('utf-8'))
-    # kb = pickle.load(f)
+def deserialize_kb_from_pickle(filepath) -> list[Course]:
+  with open(filepath, 'rb') as f:
+    kb = pickle.load(f)
+    print(f'KB loaded from {filepath}')
   return kb
 
 class PrologGenerator:
   ## generates rules from the AST in prolog and clingo format.
-  def __init__(self, course: Course):
-                                  ## req_type is needed to handle passed and taken for coreq and prereq
-    self.course = course          ## for coreq, taken means in the same semester
-                                  ## for prereq, taken means in a previous semester
+  def __init__(self, kb: list[Course]):
+    self.kb = kb
 
-  def generate(self) -> list[str]:
+  def generate_kb(self) -> list[str]:
+    output_lines = []    ## l is a list of strings representing the kb
+    output_lines.extend([
+      r"%%%%% for unsupported requirements, we put 'unsupported' and assume they are satisfied.",
+      r"unsupported_prereq.     %%% assume unsupported prereqs are satisfied",
+      r"unsupported_coreq.      %%% assume unsupported coreqs are satisfied",
+    ])
+
+    for course in self.kb:
+      output_lines.extend(self.generate_course(course))
+    return output_lines
+
+  def generate_course(self, course) -> list[str]:
     l = []    ## l is a list of strings representing the kb
 
     ## generate course facts (course/2)
     pat_credits = r'(?P<min_credit>\d+)(?P<max_credit>-(\d+))?'
-    m = re.match(pat_credits, self.course.credits)
+    m = re.match(pat_credits, course.credits)
     if m:
       min_credit = int(m.group('min_credit'))
       max_credit = int(m.group('max_credit')) if m.group('max_credit') else min_credit
     
     for credit in range(min_credit, max_credit + 1):
-      l.append(f'course("{self.course.id}", {credit}).')
+      l.append(f'course("{course.id}", {credit}).')
 
     for req_type in REQ_TYPES:
-      req_value = getattr(self.course, req_type)
+      req_value = getattr(course, req_type)
       if req_value is not None:
-        l.append(f'has_{req_type}("{self.course.id}").')       ## add has_requisite fact for each course with that type of requisite
-        l.append(f'{req_type}("{self.course.id}", Sem) :- semester(Sem),{self.generate_expr(req_value, req_type)}.')    ## add Sem in the head
+        l.append(f'has_{req_type}("{course.id}").')       ## add has_requisite fact for each course with that type of requisite
+        l.append(f'{req_type}("{course.id}", Sem) :- semester(Sem),{self.generate_expr(req_value, req_type)}.')    ## add Sem in the head
     return l
 
   def generate_expr(self, expr: Expr, req_type: str) -> str:
@@ -188,7 +191,7 @@ class PrologGenerator:
     return ';'.join(parts)
 
 class ClingoGenerator(PrologGenerator):
-  ## same as prolog, only overridding disjunction
+  ## same as PrologGenerator, only overridding disjunction for pooling
   def generate_or(self, expr: Or, req_type) -> str:
     ## if all are with the same name -> pool arguments
     if all(isinstance(op, Requirement) for op in expr.subexprs):
@@ -204,6 +207,73 @@ class ClingoGenerator(PrologGenerator):
           return f'{name}_before(({pooled}), Sem)' if pooled.count(";") >= 1 else f'{name}_before({pooled}, Sem)'
         return f'{name}({pooled})'
     
-    ## fallback: not all same type, expand into separate rules
-    print("clingo: mixed disjunction, cannot pool:", expr)
-    return '; '.join(self.generate_expr(op, req_type) for op in expr.subexprs)
+    raise ValueError(f'clingo: mixed disjunction, cannot pool: {expr}')
+    ## TODO: fallback: not all same type, expand into separate rules
+    # print("clingo: mixed disjunction, cannot pool:", expr)
+    # return '; '.join(self.generate_expr(op, req_type) for op in expr.subexprs) ### not correct as is
+
+
+def main():
+  parser = argparse.ArgumentParser(description='Generate course KB for specified programs in Stony Brook.')
+
+  parser.add_argument('-d', '--dryrun', action='store_true', default= True, help="Test run: Fetches CSE and prints the first 10 courses.")
+
+  group_input = parser.add_mutually_exclusive_group()  ## input: generate KB or load from file
+  group_input.add_argument('-p', '--prog', nargs='+', help="Generate KB for one or more specific programs (e.g., -p cse phy).")
+  group_input.add_argument('-a', '--all', action='store_true', help="Generate KB for all programs relevant in evaluating CSE degree requirement.")
+  group_input.add_argument('-i', '--input', metavar='FILE', help="Load KB from a previously saved pickle file.")
+  
+  group_output = parser.add_mutually_exclusive_group()  ## output: either print or save to file
+  group_output.add_argument('-f', '--file', metavar='FILE', help="save KB to path. If language is specified then the KB will be export to the specific language. Otherwise, it will be saved to a pickle file.")
+  group_output.add_argument('-s', '--show', action='store_true', default=True, help="print the generated KB to console.")
+
+  parser.add_argument('-l', '--language', choices=['prolog', 'clingo'], help="export format: prolog or clingo (default: prolog)")
+
+  args = parser.parse_args()
+  programs_to_generate = []
+  
+  if args.input:
+    ## load KB from pickle
+    print(f"Loading KB from {args.input}...")
+    kb = deserialize_kb_from_pickle(args.input)
+  else:
+    if args.dryrun:
+      programs_to_generate = ['cse']
+    elif args.prog:
+      programs_to_generate = args.prog
+    else:
+      programs_to_generate = ['cse', 'ams', 'mat', 'bio', 'che', 'phy', 'geo', 'ast', 'wrt']
+
+    ## generate KB
+    kb = [course for prog in programs_to_generate for course in get_kb_from_program(prog)]
+  
+  if args.dryrun:
+    for course in kb[:10]:
+      pprint(course)
+    print(f'dryrun finished: printed first 10 courses for program {programs_to_generate[0]}')
+    return
+
+  if not args.language:
+    if args.show:
+      for course in kb:
+        pprint(course)
+    else:
+      filepath = args.file if args.file else './course_kb.pkl'
+      serialize_kb_to_pickle(kb, filepath)
+    return
+  
+  generator = PrologGenerator(kb) if args.language == 'prolog' else ClingoGenerator(kb)
+  output_text = "\n".join(generator.generate_kb())
+  
+  if args.show:
+    print(output_text)
+    return
+
+  filepath = args.file if args.file else f'./course_kb_{args.language}.{"pl" if args.language == "prolog" else "lp"}'
+
+  with open(filepath, 'w') as f:
+    f.write(output_text)
+    print(f'{args.language} KB saved to {filepath}.')
+
+if __name__ == "__main__":
+  main()
