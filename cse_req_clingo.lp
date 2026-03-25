@@ -6,7 +6,8 @@
 %% clingo version for checking and planning for BS degree requirements in CSE at Stony Brook University (Fall 2024).
 %% python version: https://github.com/unicomputing/cs_reqs/blob/main/cs_reqs_2024.da (checking only)
 
-c_or_higher("A";"A-";"B+";"B";"B-";"C+";"C").
+grade_higher_than(Grade, ExpectedGrade) :- grade_to_points(Grade, Points), grade_to_points(ExpectedGrade, ExpectedPoints), Points >= ExpectedPoints.
+c_or_higher(Grade) :- grade_higher_than(Grade, "C").
 
 %% mapping letter grade to points for GPA calculation
 %% scaled by 100 to make each integer
@@ -28,17 +29,18 @@ grade_to_points("Q", 0).
 
 %% gpa calculation, takes a subset (courses_taken, indicated by the subset name) and calculates the GPA = floor(weighted sum / sum of weights).
 %% only consider letter grades in grade_to_points
+%%% If the same course is taken multiple times, it will only be counted once here. Add 'When' to the Id to distinguish different attempts if we want to count them separately.
 gpa_mul_100(TakenSubset, Gpa) :-
-  courses_taken(Id, _, _, TakenSubset),
-  WeightedSum = #sum { Credit*Points : courses_taken(Id_, Credit, Grade, TakenSubset), grade_to_points(Grade, Points) },
-  SumOfWeights = #sum { Credit : courses_taken(Id_, Credit, Grade, TakenSubset), grade_to_points(Grade, _) },
+  courses_taken(_, _, _, TakenSubset),
+  WeightedSum = #sum { Credit*Points, Id : courses_taken(Id, Credit, Grade, TakenSubset), grade_to_points(Grade, Points) },
+  SumOfWeights = #sum { Credit, Id : courses_taken(Id, Credit, Grade, TakenSubset), grade_to_points(Grade, _) },
   SumOfWeights > 0,
   Gpa = WeightedSum / SumOfWeights. %%% integer floor division. 
 
 %% gpa is 0 when sum of weights is 0. same as in python
 gpa_mul_100(TakenSubset, 0) :-
-  courses_taken(Id, _, _, TakenSubset),
-  SumOfWeights = #sum { Credit : courses_taken(Id_, Credit, Grade, TakenSubset), grade_to_points(Grade, _) },
+  courses_taken(_, _, _, TakenSubset),
+  SumOfWeights = #sum { Credit, Id : courses_taken(Id, Credit, Grade, TakenSubset), grade_to_points(Grade, _) },
   SumOfWeights = 0.
 
 % taken(Id, Credits, Grade, When, Where): taken course Id with Credits, etc.
@@ -239,7 +241,7 @@ req_passed(credits_at_SB) :- credits_at_sb_req.
 
 deg_req :- req_passed(Item) : req_name(Item).   %% all requirements passed
 
-#maximize { 1, Item : req_passed(Item) }.
+#maximize { 1@3, Item : req_passed(Item) }.     %% prioritize satisfying more requirements
 
 #program plan.
 
@@ -258,7 +260,7 @@ semester(min_semester..max_semester).
 taken_before(Id, Sem) :- semester(Sem), taken(Id, _, _, Sem1, _), Sem1 < Sem.
 
 %% course Id is passed before semester Sem. %% for prereq only
-passed_before(Id, Sem) :- semester(Sem), taken(Id, _, Grade, Sem1, _), Sem1 < Sem, c_or_higher(Grade).
+passed_before((Id, ExpectedGrade), Sem) :- semester(Sem), taken(Id, _, Grade, Sem1, _), Sem1 < Sem, grade_higher_than(Grade, ExpectedGrade).
 
 %% course Id is taken at semester Sem. %% for coreq only   %%% todo: rename to taken_at?
 taken_same(Id, Sem) :- semester(Sem), taken(Id, _, _, Sem, _).
@@ -285,26 +287,26 @@ taken(Id, Credit, "A", Sem, "SB") :- course(Id, Credit), planned(Id, Sem).
    not coreq(Id, Sem).
 
 % antireq
-:- plan_to_take(Id, Sem),  %% todo: need to work on the KB on each one (there is only 3 courses with anti-req)
+:- planned(Id, Sem),  %% todo: need to work on the KB on each one (there is only 3 courses with anti-req)
    has_anti_req(Id), 
    anti_req(Id, Sem).      %% anti-req can not be satisfied
 
 %% do not exceed max courses per semester
 :- semester(Sem), #count { Id : planned(Id, Sem) } > max_courses_per_semester.
 
-%%%% optimization
-%% minimize the number of courses to take to satisfy all requirements.
-% #minimize { 1, Id : taken(Id, _, _, _, _) }.
-
+%%%% optimization (in inverse order of significance)
 %% minimize the number of semesters
 max_sem(X) :- semester(X), X = #max { Sem : planned(_, Sem) }.
-#minimize { X: max_sem(X) }.
+#minimize { X@1: max_sem(X) }.
+
+%% minimize the number of courses to take to satisfy all requirements.
+#minimize { 1@2, Id : planned(Id, _) }.
 
 #program input.
 
 %% student facts
 standing("U1"). standing("U2"). standing("U3"). standing("U4").
-major("CSE").
+major("CSE"). permission.
 
 %%%%% test
 %% to play around:
@@ -326,7 +328,7 @@ major("CSE").
 % taken_id("PHY 131"). taken_id("PHY 133"). taken_id("AST 203").
 
 %% generate input, assume all courses are taken in semester 0 (before planning semesters)
-% taken(Id, Credit, "A", 0, "SB") :- course(Id, Credit), taken_id(Id).
+taken(Id, Credit, "A", 0, "SB") :- course(Id, Credit), taken_id(Id).
 
 %%% ISSUE: better ways to do the same?
 %%%   Clingo does not seem to have native support for string manipulation,
