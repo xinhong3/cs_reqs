@@ -4,7 +4,7 @@ import re
 import argparse
 import pickle
 from bs4 import BeautifulSoup, Tag
-from course_kb import Course, And, Expr, Major, Or, Passed, Permission, Requirement, Standing, Taken, UnsupportedRequirement
+from course_kb import Course, And, Expr, LogicalExpr, Major, Or, Passed, Permission, Requirement, Standing, Taken, UnsupportedRequirement
 from parse_course import course_div_cleanup, parse_course_div, parse_req_text
 
 ## all the courses in CSE that can't be handled by the current parsing logic.
@@ -115,6 +115,18 @@ class PrologGenerator:
   def __init__(self, kb: list[Course]):
     self.kb = kb
 
+  def semester_suffix(self, req_type: str) -> str:
+    return "same" if req_type == "coreq" else "before"
+
+  def join_args(self, args: list[str]) -> str:
+    return ",".join(f'"{a}"' for a in args)
+
+  def format_req_with_semester(self, name: str, args: list[str], req_type: str) -> str:
+    suffix = self.semester_suffix(req_type)
+    if len(args) == 1:
+      return f'{name}_{suffix}("{args[0]}", Sem)'
+    return f'{name}_{suffix}(({self.join_args(args)}), Sem)'
+
   def generate_kb(self) -> list[str]:
     output_lines = []    ## l is a list of strings representing the kb
     output_lines.extend([
@@ -159,14 +171,16 @@ class PrologGenerator:
   def generate_requirement(self, req: Requirement, req_type) -> str:
     ## for passed and taken, add semester
     if isinstance(req, (Passed, Taken)):
-      suffix = "same" if req_type == "coreq" else "before"
-      return f'{req.name}_{suffix}("{req.arguments[0]}", Sem)'
+      return self.format_req_with_semester(req.name, req.arguments, req_type)
+    elif isinstance(req, UnsupportedRequirement):
+      ## ignore unsupported. we assert unsupported as a fact in clingo.
+      ## for prereq and coreq, we assume unsupported requirements are satisfied. 
+      ## for anti-req, unsupported requirements are assumed to be not satisfied.
+      return f'unsupported_{req_type}'
+    elif isinstance(req, Permission):
+      return f'permission'
     
-    # if isinstance(req, UnsupportedRequirement):
-    #   ## ignore unsupported. we assert unsupported as a fact in clingo.
-    #   return f'unsupported_{req_type}'
-    
-    arg_str = ",".join(f'"{a}"' for a in req.arguments)
+    arg_str = self.join_args(req.arguments)
     return f'{req.name}({arg_str})'
 
   def generate_and(self, expr: And, req_type) -> str:
@@ -175,8 +189,7 @@ class PrologGenerator:
     parts = []
     for op in expr.subexprs:
       s = self.generate_expr(op, req_type)
-      # Must maintain precedence: wrap Or inside And
-      if isinstance(op, Or) and len(op.subexprs) > 1:
+      if isinstance(op, LogicalExpr) and len(op.subexprs) > 1: ## add parentheses around Or
         s = f'({s})'
       parts.append(s)
     return ','.join(parts)
@@ -191,21 +204,37 @@ class PrologGenerator:
     return ';'.join(parts)
 
 class ClingoGenerator(PrologGenerator):
-  ## same as PrologGenerator, only overridding disjunction for pooling
+  ## same as PrologGenerator, only overridding conjunction and disjunction for pooling
+  def generate_and(self, expr: And, req_type) -> str:
+    if len(expr.subexprs) == 1:
+      return self.generate_expr(expr.subexprs[0], req_type)
+    parts = []
+    for op in expr.subexprs:                ## don't add parentheses for subexprs in And
+      s = self.generate_expr(op, req_type)
+      parts.append(s)
+    return ','.join(parts)
+
+  def pool_requirement_arguments(self, reqs: list[Requirement]) -> str:
+    return "; ".join(self.join_args(op.arguments) for op in reqs if op)
+
+  def format_pooled_sem_requirement(self, name: str, pooled: str, req_type: str) -> str:
+    suffix = self.semester_suffix(req_type)
+    return f'{name}_{suffix}(({pooled}), Sem)' if pooled.count(";") >= 1 else f'{name}_{suffix}({pooled}, Sem)'
+
   def generate_or(self, expr: Or, req_type) -> str:
-    ## if all are with the same name -> pool arguments
-    if all(isinstance(op, Requirement) for op in expr.subexprs):
-      names = set(op.name for op in expr.subexprs)
-      if len(names) == 1:
-        name = names.pop()
-        pooled = "; ".join(",".join(f'"{a}"' for a in op.arguments) for op in expr.subexprs if op)
-        if name in ["passed", "taken"]:   ## passed and taken takes two arguments, so pooling needs a different syntax.
-          if req_type == "coreq":    ## for coreq, it need to be satisfied in the same semester
-            if name == "passed": print("coreq shouldn't have passed requirements, but found:", expr)
-            else:
-                return f'taken_same(({pooled}), Sem)' if pooled.count(";") >= 1 else f'taken_same({pooled}, Sem)'
-          return f'{name}_before(({pooled}), Sem)' if pooled.count(";") >= 1 else f'{name}_before({pooled}, Sem)'
-        return f'{name}({pooled})'
+    ## if all are with the same requirement type -> pool arguments
+    if all(isinstance(op, Requirement) for op in expr.subexprs) and len(set(type(op) for op in expr.subexprs)) == 1:
+      pooled = self.pool_requirement_arguments(expr.subexprs)
+      node_type, node_name = type(expr.subexprs[0]), expr.subexprs[0].name
+
+      if node_type is Taken:   ## taken takes semester argument
+        return self.format_pooled_sem_requirement(node_name, pooled, req_type)
+
+      if node_type is Passed:  ## passed takes semester argument
+        if req_type == "coreq": print("coreq shouldn't have passed requirements, but found:", expr)
+        return self.format_pooled_sem_requirement(node_name, pooled, req_type)
+
+      return f'{node_name}({pooled})'
     
     raise ValueError(f'clingo: mixed disjunction, cannot pool: {expr}')
     ## TODO: fallback: not all same type, expand into separate rules
@@ -214,66 +243,49 @@ class ClingoGenerator(PrologGenerator):
 
 
 def main():
-  parser = argparse.ArgumentParser(description='Generate course KB for specified programs in Stony Brook.')
+  parser = argparse.ArgumentParser(
+    description='Generate course KB for specified programs in Stony Brook. \n'
+                'The generated KB can be serialized into a pickle file or exported in prolog/clingo format.\n'
+                'To generate KB for specific programs, use -p or --prog followed by program codes (e.g., -p cse phy). To generate for all programs (relevant to the CSE degree program), use -a or --all.\n'
+                'For output, use either -s/--show to print the KB to console, or -f/--file to save it to a file. If language is specified with -l/--language, the KB will be exported in that format; otherwise, it will be saved as a pickle file.\n')
 
-  parser.add_argument('-d', '--dryrun', action='store_true', default= True, help="Test run: Fetches CSE and prints the first 10 courses.")
-
-  group_input = parser.add_mutually_exclusive_group()  ## input: generate KB or load from file
+  group_input = parser.add_mutually_exclusive_group(required=True)  ## input: generate KB or load from file
   group_input.add_argument('-p', '--prog', nargs='+', help="Generate KB for one or more specific programs (e.g., -p cse phy).")
   group_input.add_argument('-a', '--all', action='store_true', help="Generate KB for all programs relevant in evaluating CSE degree requirement.")
-  group_input.add_argument('-i', '--input', metavar='FILE', help="Load KB from a previously saved pickle file.")
+  group_input.add_argument('-i', '--input', metavar='FILEPATH', help="Load KB from a previously saved pickle file.")
   
   group_output = parser.add_mutually_exclusive_group()  ## output: either print or save to file
-  group_output.add_argument('-f', '--file', metavar='FILE', help="save KB to path. If language is specified then the KB will be export to the specific language. Otherwise, it will be saved to a pickle file.")
-  group_output.add_argument('-s', '--show', action='store_true', default=True, help="print the generated KB to console.")
+  group_output.add_argument('-f', '--file', metavar='FILEPATH', help="Save KB to path. If language is specified then the KB will be export to the specific language. Otherwise, it will be saved to a pickle file.")
+  group_output.add_argument('-s', '--show', action='store_true', help="Print the KB in the console.")
 
-  parser.add_argument('-l', '--language', choices=['prolog', 'clingo'], help="export format: prolog or clingo (default: prolog)")
+  parser.add_argument('-l', '--language', choices=['prolog', 'clingo'], help="Export format: prolog or clingo (default: prolog)")
 
   args = parser.parse_args()
-  programs_to_generate = []
   
-  if args.input:
-    ## load KB from pickle
+  ## generate KB
+  if args.input:    ## load KB from pickle
     print(f"Loading KB from {args.input}...")
     kb = deserialize_kb_from_pickle(args.input)
-  else:
-    if args.dryrun:
-      programs_to_generate = ['cse']
-    elif args.prog:
-      programs_to_generate = args.prog
-    else:
-      programs_to_generate = ['cse', 'ams', 'mat', 'bio', 'che', 'phy', 'geo', 'ast', 'wrt']
-
-    ## generate KB
+  else:             ## generate KB from programs
+    programs_to_generate = args.prog if args.prog else ['cse', 'ams', 'mat', 'bio', 'che', 'phy', 'geo', 'ast', 'wrt']
     kb = [course for prog in programs_to_generate for course in get_kb_from_program(prog)]
-  
-  if args.dryrun:
-    for course in kb[:10]:
-      pprint(course)
-    print(f'dryrun finished: printed first 10 courses for program {programs_to_generate[0]}')
-    return
 
-  if not args.language:
-    if args.show:
-      for course in kb:
-        pprint(course)
+  ## output KB
+  if args.language: ## to prolog or clingo
+    generator = PrologGenerator(kb) if args.language == 'prolog' else ClingoGenerator(kb)
+    output_text = "\n".join(generator.generate_kb())
+    if args.show: print(output_text)
+    else:
+      ext = "pl" if args.language == "prolog" else "lp"
+      filepath = args.file if args.file else f'./course_kb_{args.language}.{ext}'
+      with open(filepath, 'w') as f:
+        f.write(output_text)
+      print(f'{args.language} KB saved to {filepath}.')
+  else:             ## to pickle
+    if args.show: pprint(kb)
     else:
       filepath = args.file if args.file else './course_kb.pkl'
       serialize_kb_to_pickle(kb, filepath)
-    return
-  
-  generator = PrologGenerator(kb) if args.language == 'prolog' else ClingoGenerator(kb)
-  output_text = "\n".join(generator.generate_kb())
-  
-  if args.show:
-    print(output_text)
-    return
-
-  filepath = args.file if args.file else f'./course_kb_{args.language}.{"pl" if args.language == "prolog" else "lp"}'
-
-  with open(filepath, 'w') as f:
-    f.write(output_text)
-    print(f'{args.language} KB saved to {filepath}.')
 
 if __name__ == "__main__":
   main()

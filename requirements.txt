@@ -1,3 +1,13 @@
+beautifulsoup4==4.14.3
+bs4==0.0.2
+certifi==2026.2.25
 cffi==2.0.0
+charset-normalizer==3.4.6
 clingo==5.8.0
+idna==3.11
+jsonpickle==4.1.1
 pycparser==3.0
+requests==2.32.5
+soupsieve==2.8.3
+typing_extensions==4.15.0
+urllib3==2.6.3
