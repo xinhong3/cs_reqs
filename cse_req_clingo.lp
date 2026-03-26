@@ -75,13 +75,13 @@ intro_req :-
 % 2. Required Advanced Courses
 c("CSE 303", theory). c("CSE 350", theory2).
 c("CSE 373", algo). c("CSE 385", algo2).
-c("CSE 310", common). c("CSE 316", common). c("CSE 320", common). c("CSE 416", common).
-s(adv, (theory; theory2; algo; algo2; common)).
+c("CSE 310", other). c("CSE 316", other). c("CSE 320", other). c("CSE 416", other).
+s(adv, (theory; theory2; algo; algo2; other)).
 
 adv_req :- 
   passed_all(theory; theory2),
   passed_all(algo; algo2),
-  passed_all(common).
+  passed_all(other).
 
 % 3. Computer Science Electives  %% simpler than 2025
 c(("CSE 475"; "CSE 495"; "CSE 300"; "CSE 301"; "CSE 312"), elect_exclude).
@@ -217,6 +217,8 @@ wit(credits_at_SB, Id) :- items23_course(Id), taken(Id, _, _, _, "SB").
 % The grade point average for the courses in Requirements 7 and 8 must be
 % at least 2.00.  %%% assume to be: The courses *taken to satisfy* Req...
 %% merged with 7 and 8; otherwise, not correct if as assumed.
+
+#show c/1.
 
 #program check.
 
