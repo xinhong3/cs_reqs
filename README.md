@@ -36,13 +36,13 @@ Options:
   - input source (choose one):
     - `-p, --prog`: build KB for one or more programs (example: `-p cse ams`).
     - `-a, --all`: build KB for all configured programs.
-    - `-i, --input FILEPATH`: load KB from an existing pickle file.
+    - `-i, --input FILEPATH`: load KB from an existing JSON file.
   - output mode (choose one):
     - `-s, --show`: print output to console.
     - `-f, --file FILEPATH`: save output to a file.
   - export language:
     - `-l, --language {prolog,clingo}`: export as prolog/clingo rules.
-    - if `-l` is omitted, output is in pickle format.
+    - if `-l` is omitted, output is in JSON format.
 
 Examples:
 ```bash
@@ -50,16 +50,16 @@ Examples:
 python build_kb.py -p cse -s
 
 # Same as above but save to file
-python build_kb.py -p cse -f kb_cse.pkl
+python build_kb.py -p cse -f kb_cse.json
 
-# Generate pickle KB for all programs and save to file
-python build_kb.py -a -f kb_complete.pkl
+# Generate JSON KB for all programs and save to file
+python build_kb.py -a -f kb_complete.json
 
 # Generate clingo KB for all programs
 python build_kb.py -a -l clingo -f kb_all_clingo.lp
 
-# Load an existing pickle KB and print
-python build_kb.py -i kb_complete.pkl -s
+# Load an existing JSON KB and print
+python build_kb.py -i kb_complete.json -s
 ```
 
 

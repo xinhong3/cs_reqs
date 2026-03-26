@@ -3,8 +3,9 @@ import requests
 import re
 import argparse
 import pickle
+import json
 from bs4 import BeautifulSoup, Tag
-from course_kb import Course, And, Expr, LogicalExpr, Major, Or, Passed, Permission, Requirement, Standing, Taken, UnsupportedRequirement
+from course_kb import *
 from parse_course import course_div_cleanup, parse_course_div, parse_req_text
 
 ## all the courses in CSE that can't be handled by the current parsing logic.
@@ -108,6 +109,72 @@ def deserialize_kb_from_pickle(filepath) -> list[Course]:
   with open(filepath, 'rb') as f:
     kb = pickle.load(f)
     print(f'KB loaded from {filepath}')
+  return kb
+
+AST_NAME_KEY = "__type__"
+
+class ASTEncoder(json.JSONEncoder):
+  def default(self, obj):
+    if isinstance(obj, LogicalExpr):
+      return {type(obj).__name__: obj.subexprs}
+      
+    elif isinstance(obj, Requirement):
+      return {type(obj).__name__: obj.arguments}
+
+    return super().default(obj)
+
+class ASTDecoder(json.JSONDecoder):
+  CLASS_MAP = {
+    'Course': Course,
+    'And': And,
+    'Or': Or,
+    'Passed': Passed,
+    'Taken': Taken,
+    'Major': Major,
+    'Standing': Standing,
+    'Permission': Permission,
+    'UnsupportedRequirement': UnsupportedRequirement,
+    'Requirement': Requirement
+  }
+  
+  def __init__(self, *args, **kwargs):
+    kwargs['object_hook'] = self.object_hook
+    super().__init__(*args, **kwargs)
+  
+  def object_hook(self, d):
+    ## 1. Top-Level Course namedtuple (Has the "__type__" key)
+    if AST_NAME_KEY in d:
+      t = d.pop(AST_NAME_KEY)
+      if t in self.CLASS_MAP:
+        return self.CLASS_MAP[t](**d)
+        
+    ## 2. Compact AST Nodes (It's a dictionary with exactly ONE key)
+    elif len(d) == 1:
+      k, v = list(d.items())[0]  ## Get the single key and its list of values
+      if k in self.CLASS_MAP:
+        cls = self.CLASS_MAP[k]
+        if issubclass(cls, LogicalExpr):
+          return cls(v)
+        elif issubclass(cls, Requirement):
+          return cls(*v)
+          
+    return d
+
+def serialize_kb_to_json(kb: list[Course], filepath):
+  kb_ready_for_json = []
+  for course in kb:
+    d = course._asdict()
+    d[AST_NAME_KEY] = type(course).__name__
+    kb_ready_for_json.append(d)
+
+  with open(filepath, 'w') as f:
+    json.dump(kb_ready_for_json, f, cls=ASTEncoder, indent=2)
+    print(f'JSON KB saved to {filepath}')
+
+def deserialize_kb_from_json(filepath) -> list[Course]:
+  with open(filepath, 'r') as f:
+    kb = json.load(f, cls=ASTDecoder)
+    print(f'KB loaded from {filepath} in JSON format')
   return kb
 
 class PrologGenerator:
@@ -245,17 +312,17 @@ class ClingoGenerator(PrologGenerator):
 def main():
   parser = argparse.ArgumentParser(
     description='Generate course KB for specified programs in Stony Brook. \n'
-                'The generated KB can be serialized into a pickle file or exported in prolog/clingo format.\n'
+                'The generated KB can be serialized into a JSON file or exported in prolog/clingo format.\n'
                 'To generate KB for specific programs, use -p or --prog followed by program codes (e.g., -p cse phy). To generate for all programs (relevant to the CSE degree program), use -a or --all.\n'
-                'For output, use either -s/--show to print the KB to console, or -f/--file to save it to a file. If language is specified with -l/--language, the KB will be exported in that format; otherwise, it will be saved as a pickle file.\n')
+                'For output, use either -s/--show to print the KB to console, or -f/--file to save it to a file. If language is specified with -l/--language, the KB will be exported in that format; otherwise, it will be saved as a JSON file.\n')
 
   group_input = parser.add_mutually_exclusive_group(required=True)  ## input: generate KB or load from file
   group_input.add_argument('-p', '--prog', nargs='+', help="Generate KB for one or more specific programs (e.g., -p cse phy).")
   group_input.add_argument('-a', '--all', action='store_true', help="Generate KB for all programs relevant in evaluating CSE degree requirement.")
-  group_input.add_argument('-i', '--input', metavar='FILEPATH', help="Load KB from a previously saved pickle file.")
+  group_input.add_argument('-i', '--input', metavar='FILEPATH', help="Load KB from a previously saved JSON file.")
   
   group_output = parser.add_mutually_exclusive_group()  ## output: either print or save to file
-  group_output.add_argument('-f', '--file', metavar='FILEPATH', help="Save KB to path. If language is specified then the KB will be export to the specific language. Otherwise, it will be saved to a pickle file.")
+  group_output.add_argument('-f', '--file', metavar='FILEPATH', help="Save KB to path. If language is specified then the KB will be export to the specific language. Otherwise, it will be saved to a JSON file.")
   group_output.add_argument('-s', '--show', action='store_true', help="Print the KB in the console.")
 
   parser.add_argument('-l', '--language', choices=['prolog', 'clingo'], help="Export format: prolog or clingo (default: prolog)")
@@ -263,9 +330,9 @@ def main():
   args = parser.parse_args()
   
   ## generate KB
-  if args.input:    ## load KB from pickle
+  if args.input:    ## load KB from JSON
     print(f"Loading KB from {args.input}...")
-    kb = deserialize_kb_from_pickle(args.input)
+    kb = deserialize_kb_from_json(args.input)
   else:             ## generate KB from programs
     programs_to_generate = args.prog if args.prog else ['cse', 'ams', 'mat', 'bio', 'che', 'phy', 'geo', 'ast', 'wrt']
     kb = [course for prog in programs_to_generate for course in get_kb_from_program(prog)]
@@ -281,11 +348,11 @@ def main():
       with open(filepath, 'w') as f:
         f.write(output_text)
       print(f'{args.language} KB saved to {filepath}.')
-  else:             ## to pickle
+  else:             ## to JSON
     if args.show: pprint(kb)
     else:
-      filepath = args.file if args.file else './course_kb.pkl'
-      serialize_kb_to_pickle(kb, filepath)
+      filepath = args.file if args.file else './course_kb.json'
+      serialize_kb_to_json(kb, filepath)
 
 if __name__ == "__main__":
   main()
