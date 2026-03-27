@@ -1,0 +1,4329 @@
+[
+  {
+    "id": "CSE 101",
+    "title": "Computer Science Principles",
+    "desc": "Introduces central ideas of computing and computer science, instills practices of algorithmic and computational thinking, and engages students in the creative aspects of the field. Also introduces appropriate computing technology as a means for solving computational problems and exploring creative endeavors. Includes weekly computer programming assignments, but assumes no previous programming experience. May not be taken by students with credit for CSE 114 or CSE 160.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "Level 3 or higher on the mathematics placement examination"
+      ]
+    },
+    "coreq": null,
+    "anti_req": {
+      "Or": [
+        {
+          "Taken": [
+            "CSE 114"
+          ]
+        },
+        {
+          "Taken": [
+            "CSE 160"
+          ]
+        }
+      ]
+    },
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 102",
+    "title": "Introduction to Web Design and Programming",
+    "desc": "An introduction to the design of Web pages, specifically the development of browser and device independent HTML, with an emphasis on the XHTML standards. Includes the use of style sheets (CSS) and tools for page layout and verification.  HTML is presented as a mark-up language, exploring the rules of HTML elements and attributes. Students learn the separation of page viewing information from the HTML through CSS style sheets as well as the use of block layout without using HTML tables. Addresses HTML display properties including text, color, image, and graphic elements as well as approaches to HTML validation and techniques.",
+    "prereq": null,
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": {
+      "Or": [
+        {
+          "Taken": [
+            "CSE 101"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "basic computer skills"
+          ]
+        }
+      ]
+    },
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 110",
+    "title": "Introduction to Computer Science",
+    "desc": "An introduction to fundamentals of computer science. Topics covered include algorithmic design, problem-solving techniques for computer programming, fundamentals of digital logic and computer organization, the role of the operating system, introductory programming methodology including variables, assignment statements, control statements and subroutines (methods), programming paradigms, the compilation process, theoretical limits of computation, social and ethical issues.  Intended for students who have not taken any college-level computer science course containing programming assignments in a high-level programming language.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "Level 3 or higher on the mathematics placement examination"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 113",
+    "title": "Foundations of Computer Science I",
+    "desc": "Introduction to the mathematical foundations of computer science. Topics include logic (propositional and predicate); proof techniques (induction/recursion, contradiction, and others); and key concepts of mathematical structures (sequences, sets, functions, relations, and graphs). Not for credit in addition to CSE 215.",
+    "prereq": {
+      // "UnsupportedRequirement": [
+      //   "AMS 151 or MAT 125 or MAT 131 or level 6 on the mathematics placement examination"
+      // ]
+      "Or": [
+        {
+          "Taken": [
+            "AMS 151"
+          ]
+        },
+        {
+          "Taken": [
+            "MAT 125"
+          ]
+        },
+        {
+          "Taken": [
+            "MAT 131"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "level 6 on the mathematics placement examination"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 114",
+    "title": "Introduction to Object-Oriented Programming",
+    "desc": "An introduction to procedural and object-oriented  programming methodology. Topics include program structure, conditional and iterative programming, procedures, arrays and records, object classes, encapsulation, information hiding, inheritance, polymorphism, file I/O, and exceptions. Includes required laboratory. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "Level 5 or higher on the math placement exam"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": {
+      "Or": [
+        {
+          "Taken": [
+            "CSE 101"
+          ]
+        },
+        {
+          "Taken": [
+            "ISE 108"
+          ]
+        }
+      ]
+    },
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 130",
+    "title": "Introduction to Programming in C",
+    "desc": "Introduces programming concepts using the C language.  Variables, data types, and expressions.  Conditional and iterative statements, functions, and structures.  Pointers, arrays, and strings.  Scope of variables and program organization.  Includes programming projects of an interdisciplinary nature.  Suitable as an introductory programming course for non-CSE majors.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "Level 3 or higher on the mathematics placement examination"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 150",
+    "title": "Foundations of Computer Science: Honors",
+    "desc": "Introduction to the logical and mathematical foundations of computer science for computer science honors students. Topics include functions, relations, and sets; recursion and functional programming; basic logic; and mathematical induction and other proof techniques.",
+    "prereq": {
+      "And": [
+        {
+          "UnsupportedRequirement": [
+            "one MAT course that satisfies D.E.C. C or QPS or score of level 4 on the math placement exam"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "admission to Honors in Computer Science or the Honors College or the WISE Honors Program or University Scholars or Simons STEM Scholars Program."
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 160",
+    "title": "Computer Science A: Honors",
+    "desc": "First part of a two-semester sequence, CSE 160 and CSE 260.  An introduction to procedural and object-oriented programming methodology and basic data structures. Topics include program structure, conditional and iterative programming, procedures, arrays, object classes, encapsulation, information hiding, inheritance, polymorphism, file I/O, exceptions and simple data structures, such as lists, queues and stacks.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "Honors in Computer Science or the Honors College or the WISE Honors Program or University Scholars or the Simons STEM Scholars Program."
+      ]
+    },
+    "coreq": {
+      "Taken": [
+        "CSE 161"
+      ]
+    },
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": {
+      "Taken": [
+        "CSE 101"
+      ]
+    },
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 161",
+    "title": "Laboratory for Computer Science A: Honors",
+    "desc": "Must be taken concurrently with lecture component, CSE 160; a common grade for both courses will be assigned. Laboratory sessions will focus on development of pragmatic programming skills and use of programming environments and tools in a supervised setting.",
+    "prereq": null,
+    "coreq": {
+      "Taken": [
+        "CSE 160"
+      ]
+    },
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "1",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 190",
+    "title": "Special Topics in Practice and Applications of Computer Science",
+    "desc": "A lecture course on a current topic in the practice and application of computer science. May be repeated as the topic changes.",
+    "prereq": null,
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 191",
+    "title": "Special Topics in Practice and Applications for Computer Science",
+    "desc": "A lecture course on a current topic in the practice and application of computer science.  May be repeated as the topic changes.",
+    "prereq": null,
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 192",
+    "title": "Special Topics in Practice and Applications for Computer Science",
+    "desc": "A lecture course on a current topic in the practice and application of computer science. May be repeated as the topic changes.",
+    "prereq": null,
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 214",
+    "title": "Data Structures",
+    "desc": "An extension of programming methodology to data storage and manipulation on complex data sets. Topics include: programming and applications of data structures; stacks, queues, lists, binary trees, heaps, priority queues, balanced trees and graphs. Recursive programming is heavily utilized. Fundamental sorting and searching algorithms are examined along with informal efficiency comparisons.",
+    "prereq": {
+      "Passed": [
+        "CSE 114",
+        "C"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 215",
+    "title": "Foundations of Computer Science",
+    "desc": "Introduction to the logical and mathematical foundations of computer science. Topics include functions, relations, and sets; recursion; elementary logic; and mathematical induction and other proof techniques. Not for credit in addition to CSE 113.",
+    "prereq": {
+      "Or": [
+        {
+          "Taken": [
+            "AMS 151"
+          ]
+        },
+        {
+          "Taken": [
+            "MAT 125"
+          ]
+        },
+        {
+          "Taken": [
+            "MAT 131"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 216",
+    "title": "Programming Abstractions",
+    "desc": "Intermediate-level programming concepts and paradigms, including  functional programming, object-orientation, basics of type systems, memory management, program and data abstractions, parameter passing, modularity, and parallel programming. Includes weekly recitations, which provide students with experience in the practice of programming in a variety of high-level languages.",
+    "prereq": {
+      "And": [
+        {
+          "Passed": [
+            "CSE 214",
+            "C"
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 220",
+    "title": "Systems Fundamentals I",
+    "desc": "Introduces systems-level programming concepts using the C language and assembly language, and explores the correspondence of programming constructs in these languages. Topics include internal data representation, basic instructions and control structures, bitwise operations, arithmetic operations, memory management, pointers, function calls and parameter passing, linking and loading. Included is an overview of foundational topics in computer architecture, organization and networks.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "C or higher in CSE 214 or co-requisite CSE 260 and CSE major"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 230",
+    "title": "Intermediate Programming in C and C++",
+    "desc": "Intermediate programming concepts using the C language in a UNIX environment. Files, systems calls, stream I/O, the C preprocessor, bitwise operations, the use of makefiles, advanced formatting of input and output, conversions. Introduction to object-oriented programming using C++; classes, objects, inheritance, aggregation, and overloading. Suitable for all majors.",
+    "prereq": {
+      "Or": [
+        {
+          "Taken": [
+            "CSE 130"
+          ]
+        },
+        {
+          "Taken": [
+            "CSE 220"
+          ]
+        },
+        {
+          "Taken": [
+            "ESE 124"
+          ]
+        },
+        {
+          "Taken": [
+            "ESG 111"
+          ]
+        },
+        {
+          "Taken": [
+            "BME 120"
+          ]
+        },
+        {
+          "Taken": [
+            "MEC 102"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 260",
+    "title": "Computer Science B: Honors",
+    "desc": "Second part of a two-semester sequence, CSE 160 and CSE 260. Applies object-oriented programming methodology to data storage and manipulation on complex data sets, such as, binary trees, heaps, priority queues, balanced trees and graphs. Recursive programming is heavily utilized. Fundamental sorting and searching algorithms are examined along with informal efficiency comparisons. Intermediate-level programming language concepts and paradigms, including functional programming, basics of type systems, program and data abstractions, and modularity.",
+    "prereq": {
+      "Taken": [
+        "CSE 160"
+      ]
+    },
+    "coreq": {
+      "Taken": [
+        "CSE 261"
+      ]
+    },
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 261",
+    "title": "Laboratory for Computer Science B: Honors",
+    "desc": "Must be taken concurrently with lecture component, CSE 260; a common grade for both courses will be assigned. Weekly laboratories provide students with experience in the practice of programming in a variety of high-level languages such as Java, Scala, Haskell, Python or Javascript.",
+    "prereq": null,
+    "coreq": {
+      "Taken": [
+        "CSE 260"
+      ]
+    },
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "1",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 300",
+    "title": "Technical Communications",
+    "desc": "Principles of professional technical communications for Computer Science and Information Systems majors. Topics include writing business communications, user manuals, press releases, literature reviews, and research abstracts. Persuasive oral communications and effective presentation techniques, to address a range of audiences, will also be covered. This course satisfies the upper-division writing requirement for CSE and ISE majors.",
+    "prereq": {
+      "And": [
+        {
+          "Taken": [
+            "WRT 102"
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Standing": [
+                "U3"
+              ]
+            },
+            {
+              "Standing": [
+                "U4"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 301",
+    "title": "History of Computing",
+    "desc": "A study of the history of computational devices from the early ages through the end of the 20th century. Topics include needs for computation in ancient times, development of computational models and devices through the 1800's and early 1900's, World War II and the development of the first modern computer, and early uses in business. Creation of programming languages and the microchip. Societal changes in computer usage due to the microcomputer, emergence of the Internet, the World Wide Web, and mobile computing. Legal and social impacts of modern computing. Cannot be used as a technical elective for the CSE major or minor.  This course is offered as both CSE 301 and ISE 301.",
+    "prereq": {
+      "Or": [
+        {
+          "Standing": [
+            "U2"
+          ]
+        },
+        {
+          "Standing": [
+            "U3"
+          ]
+        },
+        {
+          "Standing": [
+            "U4"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": {
+      "UnsupportedRequirement": [
+        "one course in computing"
+      ]
+    },
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 303",
+    "title": "Introduction to the Theory of Computation",
+    "desc": "An introduction to the abstract notions encountered in machine computation. Topics include finite automata, regular expressions, and formal languages, with emphasis on regular and context-free grammars. Questions relating to what can and cannot be done by machines are covered by considering various models of computation, including Turing machines, recursive functions, and universal machines. Not for credit in addition to CSE 350.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Passed": [
+                "CSE 160",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "CSE 214",
+                "C"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Passed": [
+                "CSE 150",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "CSE 215",
+                "C"
+              ]
+            }
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 304",
+    "title": "Compiler Design",
+    "desc": "Topics studied include formal description of programming languages, lexical analysis, syntax analysis, symbol tables and memory allocation, code generation, and interpreters. Students undertake a semester project that includes the design and implementation of a compiler for a language chosen by the instructor.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Passed": [
+                "CSE 216",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "CSE 260",
+                "C"
+              ]
+            }
+          ]
+        },
+        {
+          "Passed": [
+            "CSE 220",
+            "C"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": {
+      "Or": [
+        {
+          "Taken": [
+            "CSE 303"
+          ]
+        },
+        {
+          "Taken": [
+            "CSE 350"
+          ]
+        }
+      ]
+    },
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 305",
+    "title": "Principles of Database Systems",
+    "desc": "The design of database management systems to obtain consistency, integrity, and availability of data. Conceptual models and schemas of data: relational, hierarchical, and network. Students undertake a semester project that includes the design and implementation of a database system.",
+    "prereq": {
+      "And": [
+        {
+          "And": [
+            {
+              "Passed": [
+                "CSE 214",
+                "C"
+              ]
+            },
+            {
+              "Or": [
+                {
+                  "Passed": [
+                    "CSE 216",
+                    "C"
+                  ]
+                },
+                {
+                  "Passed": [
+                    "CSE 260",
+                    "C"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 306",
+    "title": "Operating Systems",
+    "desc": "Students are introduced to the structure of modern operating systems. Topics include virtual memory, resource allocation strategies, concurrency, and protection. The design and implementation of a simple operating system are performed. This course focuses on teaching the skills required to design and build modules of an operating system kernel. It covers key algorithms and architectures. A companion course, CSE 320, teaches complementary skills from the application programmer's point of view.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Passed": [
+                "CSE 320",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "ESE 280",
+                "C"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ECE"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 307",
+    "title": "Principles of Programming Languages",
+    "desc": "An introduction to programming languages paradigms, including functional and logic programming, and the suitability of various languages for particular programming tasks. Students write sample programs in the studied languages. The languages are used to illustrate programming language constructs such as scoping and binding, type systems, storage management and operating environments. This illustration is accompanied by an introduction to the implementation of programming languages, such as parsing, semantic analysis, symbol tables, memory allocation and code generation. Students complete a series of assignments to implement a language chosen by the instructor.",
+    "prereq": {
+      "And": [
+        {
+          "And": [
+            {
+              "Passed": [
+                "CSE 214",
+                "C"
+              ]
+            },
+            {
+              "Or": [
+                {
+                  "Passed": [
+                    "CSE 216",
+                    "C"
+                  ]
+                },
+                {
+                  "Passed": [
+                    "CSE 260",
+                    "C"
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 310",
+    "title": "Computer Networks",
+    "desc": "Overview of computer networks and the Internet. Concept of end systems, access networks, clients and servers. Connection-oriented and connectionless services. Circuit switching and packet switching. Description of Internet protocol layers, including application layer, transport layer, network layer and link layer. Architecture of the current Internet and the World-Wide Web. TCP/IP protocol stack. Internet routing and addressing. Local area network protocols, Ethernet hubs and switches. Wireless LANs. Multimedia networking. May not be taken by students with credit for ESE 346.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Passed": [
+                "CSE 214",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "CSE 260",
+                "C"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Passed": [
+                "CSE 220",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "ISE 218",
+                "C"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 311",
+    "title": "Systems Administration",
+    "desc": "This course covers practical techniques to manage information systems, also known as IT Systems Administration.  Students will learn how to install computers for assorted hardware and software platforms (Windows, Unix/Linux, OS-X).  Install networking equipment and configure it.  Install server software on several systems (e.g. web, database, mail) and configure it.  Secure the network, hosts, and services, and apply system patches.  Set up redundant computing services, virtual machines/services, and hardware so that services can survive some hardware/software failures.  Evaluate the performance, reliability, and security of the overall system. This course is offered as both CSE 311 and ISE 311.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 214"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 230"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 260"
+              ]
+            },
+            {
+              "Taken": [
+                "ISE 208"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "ISE"
+              ]
+            },
+            {
+              "Major": [
+                "CSE"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 312",
+    "title": "Social, Legal, and Ethical Issues in Computing",
+    "desc": "This course deals with the impact of computers on us as individuals and on our society.  Rapid changes in computing technology and in our use of that technology have changed the ways we work, play, and interact with other people.  These changes have created a flood of new social, legal and ethical issues that demand critical examination. This course is offered as both CSE 312 and ISE 312.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Standing": [
+                "U3"
+              ]
+            },
+            {
+              "Standing": [
+                "U4"
+              ]
+            }
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "one D.E.C. E or SNW  course"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 316",
+    "title": "Fundamentals of Software Development",
+    "desc": "Introduction to systematic design, development and testing of software systems, including event-driven programming, information management, databases, principles and practices for secure computing, and version control. Students apply these skills in the construction of large, robust programs.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Passed": [
+                "CSE 214",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "CSE 260",
+                "C"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Passed": [
+                "CSE 216",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "CSE 307",
+                "C"
+              ]
+            }
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 320",
+    "title": "Systems Fundamentals II",
+    "desc": "This course introduces essential concepts of operating systems, compilers, concurrency, and performance analysis, focused around several cross-cutting examples, such as memory management, error handling, and threaded programming. In this course, operating systems concepts are considered from the point of view of the application programmer, and the focus is on APIs for interacting with an operating system. A companion course, CSE 306, considers operating systems from the point of view of the OS kernel implementer.",
+    "prereq": {
+      "And": [
+        {
+          "Passed": [
+            "CSE 220",
+            "C"
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 323",
+    "title": "Human-Computer Interaction",
+    "desc": "A survey course designed to introduce students to Human-Computer Interaction and prepare them for further study in the specialized topics of their choice.  Students will have the opportunity to delve deeper in the course through a course project, and through a two-three week special topic selected at the instructor's discretion. Course is cross-listed as CSE 323, EST 323 and ISE 323.",
+    "prereq": {
+      "Or": [
+        {
+          "Taken": [
+            "CSE 214"
+          ]
+        },
+        {
+          "Taken": [
+            "CSE 230"
+          ]
+        },
+        {
+          "Taken": [
+            "CSE 260"
+          ]
+        },
+        {
+          "Taken": [
+            "ISE 208"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 325",
+    "title": "Computers and Sculpture",
+    "desc": "This multidisciplinary class surveys how computer science and computer technology are used in sculpture. Case studies with slides, videos, and software demonstrations illustrate a range of approaches of sculptors incorporating computers in their creative process. Various state-of-the art fabrication technologies are studied (with site visits if available on campus). Mathematical foundations are emphasized so students can recognize them when analyzing sculpture and choose the right tool when designing. In the weekly laboratory, these ideas are reinforced with projects using a range of available software and inexpensive construction materials, e.g., paper, cardboard, and foamcore.",
+    "prereq": {
+      "Or": [
+        {
+          "Taken": [
+            "CSE 110"
+          ]
+        },
+        {
+          "Taken": [
+            "CSE 101"
+          ]
+        },
+        {
+          "Taken": [
+            "CSE 114"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 327",
+    "title": "Fundamentals of Computer Vision",
+    "desc": "Introduces fundamental concepts, algorithms, and techniques in visual information processing. Covers image formation, binary image processing, image features, model fitting, optics, illumination, texture, motion, segmentation, and object recognition.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 214"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 230"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 260"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Taken": [
+                "AMS 210"
+              ]
+            },
+            {
+              "Taken": [
+                "MAT 211"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 328",
+    "title": "Fundamentals of Computer Graphics",
+    "desc": "An introduction to computer graphics including graphics application programming; data structures for graphics; representing and specifying color; fundamental hardware and software concepts for calligraphic and raster displays; two-dimensional, geometric transformations; introduction to three-dimensional graphics; graphics standards; and input devices, interaction handling, and user-computer interface.",
+    "prereq": {
+      "And": [
+        {
+          "Passed": [
+            "CSE 220",
+            "C"
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 331",
+    "title": "Computer Security Fundamentals",
+    "desc": "Introduces the basic concepts and terminology of computer security. Covers basic security topics such as cryptography, operating systems security, network security, and language-based security.",
+    "prereq": {
+      "And": [
+        {
+          "Taken": [
+            "CSE 220"
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": {
+      "Taken": [
+        "CSE 320"
+      ]
+    },
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 332",
+    "title": "Introduction to Visualization",
+    "desc": "This course is an introduction to both the foundations and applications of visualization and visual analytics, for the purpose of understanding complex data in science, medicine, business, finance, and many others. It will begin with the basics - visual perception, cognition, human-computer interaction, the sense-making process, data mining, computer graphics, and information visualization. It will then move to discuss how these elementary techniques are coupled into an effective visual analytics pipeline that allows humans to interactively think with data and gain insight. Students will get hands-on experience via several programming projects, using popular public-domain statistics and visualization libraries and APIs. This course is offered as both CSE 332 and  ISE 332.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 214"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 260"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Taken": [
+                "MAT 211"
+              ]
+            },
+            {
+              "Taken": [
+                "AMS 210"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Taken": [
+                "AMS 110"
+              ]
+            },
+            {
+              "Taken": [
+                "AMS 310"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 333",
+    "title": "User Interface Development",
+    "desc": "Survey of user interface systems, with emphasis on responsive and adaptive strategies to accommodate cross-platform deployment across multiple devices such as desktops and mobile devices. Demonstration of the use of tool kits for designing user interfaces. Additional topics include human factors, design standards, and visual languages. Students participate in a project involving the design and implementation of  user interface systems. This course is offered as both CSE 333 and ISE 333.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 214"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 260"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 334",
+    "title": "Introduction to Multimedia Systems",
+    "desc": "Survey of technologies available for user interfaces. Discussion of hypertext; voice, music, and video together with tools and models for capturing, editing, presenting, and combining them. Capabilities and characteristics of a range of peripheral devices including devices based on posture, gesture, head movement, and touch. Case studies of academic and commercial multimedia systems including virtual reality systems. Students participate in laboratory exercises and build a multimedia project. This course is offered as both CSE 334 and  ISE 334.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Standing": [
+                "U2"
+              ]
+            },
+            {
+              "Standing": [
+                "U3"
+              ]
+            },
+            {
+              "Standing": [
+                "U4"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 336",
+    "title": "Internet Programming",
+    "desc": "Introduces the design and development of software for Internet commerce. Topics include extended markup language, servlets, cookies, sessions, Internet media types, Web protocols, digital signatures, certificates, encryption, and the wireless Internet.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Passed": [
+                "CSE 214",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "CSE 260",
+                "C"
+              ]
+            }
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 337",
+    "title": "Scripting Languages",
+    "desc": "Scripting languages are widely used in the IT industry. Programming with scripting languages, also known as scripting, has several advantages compared to programming with other types of languages in that scripts facilitate rapid program development; can automate high-level jobs or tasks very effectively; and can be used to compose various software components, even binaries, into more complex and powerful applications. This course introduces the principles of scripting, covers one or two selected scripting languages in depth, and illustrates the advanced use of scripting by extensive case studies in application areas such as system administration, web application development, graphical user interface development, and text processing.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 214"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 260"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Standing": [
+                "U3"
+              ]
+            },
+            {
+              "Standing": [
+                "U4"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 350",
+    "title": "Theory of Computation: Honors",
+    "desc": "Introduces the abstract notions of machine computation for honors students. Includes finite automata, regular expressions, and formal languages, with emphasis on regular and context-free grammars. Explores what can and cannot be computed by considering various models of computation including Turing machines, recursive functions, and universal machines. Not for credit in addition to CSE 303.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 113"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 150"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 215"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Taken": [
+                "AMS 210"
+              ]
+            },
+            {
+              "Taken": [
+                "MAT 211"
+              ]
+            }
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "Honors in Computer Science or the Honors College or the WISE Honors Program or University Scholars or the Simons STEM Scholars Program."
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 351",
+    "title": "Introduction to Data Science",
+    "desc": "This multidisciplinary course introduces both theoretical concepts and practical approaches to extract knowledge from data. Topics include linear algebra, probability, statistics, machine learning, and programming. Using large data sets collected from real-world problems in areas of science, technology, and medicine, we introduce how to preprocess data, identify the best model that describes the data, make predictions, evaluate the results, and finally report the results using proper visualization methods. This course also teaches state-of-the art tools for data analysis, such as Python and its scientific libraries.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 214"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 260"
+              ]
+            }
+          ]
+        },
+        {
+          "Taken": [
+            "AMS 310"
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 352",
+    "title": "Artificial Intelligence",
+    "desc": "Topics covered include critique of artificial intelligence research; state-space problem representations and search algorithms; game-playing programs; theorem-proving programs; programs for the study and simulation of cognitive processes and pattern recognition. Further topics in current research as time permits.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 316"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 351"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 353",
+    "title": "Machine Learning",
+    "desc": "Covers fundamental concepts for intelligent systems that autonomously learn to perform a task and improve with experience, including problem formulations (e.g., selecting input features and outputs) and learning frameworks (e.g., supervised vs. unsupervised), standard models, methods, computational tools, algorithms and modern techniques, as well as methodologies to evaluate learning ability and to automatically select optimal models. Applications to areas such as computer vision (e.g., character and digit recognition), natural-language processing (e.g., spam filtering) and robotics (e.g., navigating complex environments) will motivate the coursework and material.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 316"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 351"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": {
+      "Or": [
+        {
+          "Taken": [
+            "AMS 310"
+          ]
+        },
+        {
+          "Taken": [
+            "AMS 311"
+          ]
+        },
+        {
+          "Taken": [
+            "AMS 412"
+          ]
+        }
+      ]
+    },
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 354",
+    "title": "Natural Language Processing",
+    "desc": "Natural language processing techniques power many intelligent language based applications. This course will introduce basic language analysis tasks such as language modeling and syntactic analysis, as well as core applications such as text classification, information extraction, question answering, and machine translation. The course will cover relevant algorithms, machine learning solutions, and evaluation methodologies.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 316"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 351"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 355",
+    "title": "Computational Geometry",
+    "desc": "The design and analysis of efficient algorithms to solve geometric problems that arise in computer graphics, robotics, geographical information systems, manufacturing, and optimization. Topics include convex hulls, triangulation, Voronoi diagrams, visibility, intersection, robot motion planning, and arrangements. This course is offered as both  AMS 345 and CSE 355.",
+    "prereq": {
+      "And": [
+        {
+          "Taken": [
+            "AMS 301"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "programming knowledge of C or C++ or Java"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 356",
+    "title": "Cloud Computing",
+    "desc": "Creating online services capable of handling millions of users requires a different mindset compared to traditional software development and deployment. Rather than building monolithic software packages from the ground up, bringing up modern online services calls for architecting systems by gluing together mature existing technologies deployed across many unreliable servers, working in concert to provide high-availability robust services. In this course, students will be exposed to the concepts and technologies behind deploying and scaling online services on the computing resources available in modern datacenters.",
+    "prereq": {
+      "And": [
+        {
+          "Passed": [
+            "CSE 316",
+            "C"
+          ]
+        },
+        {
+          "Passed": [
+            "CSE 320",
+            "C"
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 357",
+    "title": "Statistical Methods for Data Science",
+    "desc": "This interdisciplinary course introduces the mathematical concepts required to interpret results and subsequently draw conclusions from data in an applied manner. The course presents different techniques for applied statistical inference and data analysis, including their implementation in Python, such as parameter and distribution estimators, hypothesis testing, Bayesian inference, and likelihood.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Passed": [
+                "CSE 316",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "CSE 351",
+                "C"
+              ]
+            }
+          ]
+        },
+        {
+          "Passed": [
+            "AMS 310",
+            "C"
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 360",
+    "title": "Software Security",
+    "desc": "This course will describe the principles and practice of securing software systems. Topics will include: software vulnerabilities; static and dynamic analysis techniques for vulnerability detection; exploit detection and prevention; secure software development techniques and defensive programming; malware detection and analysis; security policies and sandboxing; information flow.",
+    "prereq": {
+      "And": [
+        {
+          "Taken": [
+            "CSE 220"
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": {
+      "Taken": [
+        "CSE 320"
+      ]
+    },
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 361",
+    "title": "Web Security",
+    "desc": "This course will cover all aspects of web security, including browser security, web server security, and web application security. Topics include: SOP and JavaScript; application and protocol vulnerabilities; probing, surveillance, and tracking; penetration testing; modern social engineering techniques; monetary incentives and monetization.",
+    "prereq": {
+      "And": [
+        {
+          "Taken": [
+            "CSE 220"
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": {
+      "Taken": [
+        "CSE 320"
+      ]
+    },
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 362",
+    "title": "Mobile Security",
+    "desc": "The course covers the latest security technologies for mobile platforms (e.g., Android and iOS). It first introduces the security issues plaguing mobile apps and discusses defensive mechanisms, such as code signing, app permissions, and sandbox. It then peeks into mobile OS, explaining how jailbreaking/rooting works and the internals of iOS/Android security designs. Finally, it surveys modern hardware-level security features, such as secure booting, TrustZone, and biometrics.",
+    "prereq": {
+      "And": [
+        {
+          "Taken": [
+            "CSE 220"
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": {
+      "Taken": [
+        "CSE 320"
+      ]
+    },
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 363",
+    "title": "Offensive Security",
+    "desc": "Hands-on course with the goal of understanding various security problems in depth, through a more adversarial way of thinking. By focusing on finding and exploiting vulnerabilities, the course will cover a broad range of topics, including the ethics of offensive security, reverse engineering, software vulnerability discovery and exploitation, malicious code analysis, network traffic interception and manipulation, reconnaissance and information gathering, physical security, and social engineering. All topics will be covered from a highly practical perspective, following a hands-on approach and tutorial-like sessions, along with programming assignments.",
+    "prereq": {
+      "And": [
+        {
+          "Taken": [
+            "CSE 220"
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": {
+      "Taken": [
+        "CSE 320"
+      ]
+    },
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 364",
+    "title": "Advanced Multimedia Techniques",
+    "desc": "SKIPPED",
+    "prereq": {
+      "Or": [
+        {
+          "Taken": [
+            "CSE 334"
+          ]
+        },
+        {
+          "Taken": [
+            "ISE 334"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 366",
+    "title": "Introduction to Virtual Reality",
+    "desc": "An introduction to the practical issues in the design and implementation of virtual environments. Topics covered include the fundamentals of systems requirements, transformations, user-interaction models, human vision models, tracking systems, input/output devices and techniques, and augmented reality. The topics covered are explained through the use of real-life applications of virtual-reality systems in engineering, science, and medicine.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 214"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 260"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Taken": [
+                "MAT 211"
+              ]
+            },
+            {
+              "Taken": [
+                "AMS 210"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 370",
+    "title": "Wireless and Mobile Networking",
+    "desc": "The fundamentals of wireless communication. Link, network and transcript layer protocols for wireless and mobile networking. Cellular networks. Wireless LANs. Wireless multihop networks. Mobile applications.",
+    "prereq": {
+      "And": [
+        {
+          "Taken": [
+            "CSE 310"
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 371",
+    "title": "Logic",
+    "desc": "A survey of the logical foundations of mathematics: development of propositional calculus and quantification theory, the notions of a proof and of a model, the completeness theorem, Goedel's incompleteness theorem. This course is offered as both CSE 371 and MAT 371.",
+    "prereq": {
+      "Or": [
+        {
+          "Taken": [
+            "CSE 113"
+          ]
+        },
+        {
+          "Taken": [
+            "CSE 150"
+          ]
+        },
+        {
+          "Taken": [
+            "CSE 215"
+          ]
+        },
+        {
+          "Taken": [
+            "MAT 200"
+          ]
+        },
+        {
+          "Taken": [
+            "MAT 250"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 373",
+    "title": "Analysis of Algorithms",
+    "desc": "Mathematical analysis of a variety of computer algorithms including searching, sorting, matrix multiplication, fast Fourier transform, and graph algorithms. Time and space complexity. Upper-bound, lower- bound, and average-case analysis. Introduction to NP completeness. Some machine computation is required for the implementation and comparison of algorithms. This course is offered as CSE 373 and MAT 373. Not for credit in addition to CSE 385.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Passed": [
+                "CSE 113",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "CSE 150",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "CSE 215",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "MAT 200",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "MAT 250",
+                "C"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Passed": [
+                "MAT 211",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "AMS 210",
+                "C"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Passed": [
+                "CSE 214",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "CSE 260",
+                "C"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "MAT"
+              ]
+            },
+            {
+              "Major": [
+                "DAS"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 376",
+    "title": "Advanced Systems Programming in UNIX/C",
+    "desc": "Focuses on several aspects of producing commercial-grade system software: reliability, portability, security, and survivability.   Uses Unix and C, heavily used in industry when developing systems and embedded systems code. Emphasizes techniques and tools to produce reliable, secure, and highly portable code.  Requires substantial programming as well as a course project.",
+    "prereq": {
+      "And": [
+        {
+          "Passed": [
+            "CSE 320",
+            "C"
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 377",
+    "title": "Introduction to Medical Imaging",
+    "desc": "An introduction to the mathematical, physical, and computational principles underlying modern medical imaging systems. Covers fundamentals of X-ray computer tomography, ultrasonic imaging, nuclear imaging, and magnetic resonance imaging (MRI), as well as more general concepts required for these, such as linear systems theory and the Fourier transform. Popular techniques for the visualization, segmentation, and analysis of medical image data are discussed, as well as applications of medical imaging, such as image-guided intervention. The course is appropriate for computer science, biomedical engineering, and electrical engineering majors.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "AMS 161"
+              ]
+            },
+            {
+              "Taken": [
+                "MAT 127"
+              ]
+            },
+            {
+              "Taken": [
+                "MAT 132"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Taken": [
+                "AMS 210"
+              ]
+            },
+            {
+              "Taken": [
+                "MAT 211"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 378",
+    "title": "Introduction to Robotics",
+    "desc": "Introduces basic concepts in robotics including coordinate transformation, kinematics, dynamics, Laplace transforms, equations of motion, feedback and feedforward control, and trajectory planning. Covers simple and complex sensors (such as cameras), hybrid and behavior based control and path planning. Concepts are illustrated through laboratories using the LEGO Robot Kit.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "AMS 161"
+              ]
+            },
+            {
+              "Taken": [
+                "MAT 127"
+              ]
+            },
+            {
+              "Taken": [
+                "MAT 132"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Taken": [
+                "AMS 210"
+              ]
+            },
+            {
+              "Taken": [
+                "MAT 211"
+              ]
+            },
+            {
+              "Taken": [
+                "MEC 262"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 380",
+    "title": "2D Game Programming",
+    "desc": "An introduction to the fundamental concepts of computer game programming. Students design and develop original games for PCs applying proven game design and software engineering principles.",
+    "prereq": {
+      "And": [
+        {
+          "Taken": [
+            "CSE 220"
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 381",
+    "title": "3D Game Programming",
+    "desc": "This course explores the concepts and technologies behind making 3D, networked games. This will include the examination of game engine creation as well as the use of middleware to build graphically sophisticated game systems.",
+    "prereq": {
+      "And": [
+        {
+          "Taken": [
+            "CSE 220"
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 385",
+    "title": "Analysis of Algorithms: Honors",
+    "desc": "Algorithmic design and analysis for Computer Science Honors students. Mathematical analysis of a variety of computer algorithms including searching, sorting, matrix multiplication, fast Fourier transform, and graph algorithms. Time and space complexity. Upper-bound, lower-bound, and average-case analysis. Randomization. Introduction to NP completeness. Some machine computation is required for the implementation and comparison of algorithms. Not for credit in addition to CSE/MAT 373.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 113"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 150"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 215"
+              ]
+            },
+            {
+              "Taken": [
+                "MAT 200"
+              ]
+            },
+            {
+              "Taken": [
+                "MAT 250"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Taken": [
+                "AMS 210"
+              ]
+            },
+            {
+              "Taken": [
+                "MAT 211"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 214"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 260"
+              ]
+            }
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "Honors in Computer Science or the Honors College or the WISE Honors Program or University Scholars or Simons STEM Scholars."
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 390",
+    "title": "Special Topics in Computer Science",
+    "desc": "A lecture or seminar course on a current topic in computer science. May be repeated as the topic changes, but cannot be used more than twice to satisfy CSE major requirements.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 214"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 260"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 391",
+    "title": "Special Topics in Computer Science",
+    "desc": "A lecture or seminar course on a current topic in computer science. May be repeated as the topic changes, but cannot be used more than twice to satisfy CSE major requirements.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 214"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 260"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 392",
+    "title": "Special Topics in Computer Science",
+    "desc": "A lecture or seminar course on a current topic in computer science. May be repeated as the topic changes, but cannot be used more than twice to satisfy CSE major requirements.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 214"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 260"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 393",
+    "title": "Special Topics in Computer Science",
+    "desc": "A lecture or seminar course on a current topic in computer science. May be repeated as the topic changes, but cannot be used more than twice to satisfy CSE major requirements.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 214"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 260"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 394",
+    "title": "Special Topics in Computer Science",
+    "desc": "A lecture or seminar course on a current topic in computer science. May be repeated as the topic changes, but cannot be used more than twice to satisfy CSE major requirements.",
+    "prereq": {
+      "And": [
+        {
+          "Or": [
+            {
+              "Taken": [
+                "CSE 214"
+              ]
+            },
+            {
+              "Taken": [
+                "CSE 260"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Major": [
+                "CSE"
+              ]
+            },
+            {
+              "Major": [
+                "ISE"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 416",
+    "title": "Software Engineering",
+    "desc": "Introduces the basic concepts and modern tools and techniques of software engineering. Emphasizes the development of reliable and maintainable software via system requirements and specifications, software design methodologies including object-oriented design, implementation, integration, and testing; software project management; life-cycle documentation; software maintenance; and consideration of human factor issues.",
+    "prereq": {
+      "And": [
+        {
+          "Passed": [
+            "CSE 316",
+            "C"
+          ]
+        },
+        {
+          "Standing": [
+            "U4"
+          ]
+        },
+        {
+          "Major": [
+            "CSE"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 475",
+    "title": "Undergraduate Teaching Practicum",
+    "desc": "Students assist faculty in teaching by conducting a recitation or laboratory section that supplements a lecture course. The student receives regularly scheduled supervision from the faculty instructor. May be used as an open elective only and repeated once.",
+    "prereq": {
+      "And": [
+        {
+          "UnsupportedRequirement": [
+            "U3 or U4 standing as an undergraduate CEAS major"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "a minimum g.p.a. of 3.00 in all Stony Brook courses"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "grade of B or better in the course in which the student is to assist and permission of department."
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 487",
+    "title": "Research in Computer Science",
+    "desc": "An independent research project with faculty supervision. Only three credits of research electives (AMS 487, CSE 487, BME 499, ESE 499, ESM 499, ISE 487, and MEC 499) may be counted toward technical elective requirements. May not be taken for more than six credits.",
+    "prereq": {
+      "Permission": [
+        "Permission of instructor and department"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "0-3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 488",
+    "title": "Internship in Computer Science",
+    "desc": "SKIPPED",
+    "prereq": {
+      "And": [
+        {
+          "Major": [
+            "CSE"
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Standing": [
+                "U3"
+              ]
+            },
+            {
+              "Standing": [
+                "U4"
+              ]
+            }
+          ]
+        },
+        {
+          "Permission": [
+            "permission of department"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": "S/U",
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 495",
+    "title": "Senior Honors Research Project I",
+    "desc": "A two-semester research project carried out under the supervision of a computer science faculty member. Students who enroll in CSE 495 must complete CSE 496 in the subsequent semester and receive only one grade upon completion of the sequence.",
+    "prereq": {
+      "And": [
+        {
+          "UnsupportedRequirement": [
+            "Admission to Honors in Computer Science"
+          ]
+        },
+        {
+          "Permission": [
+            "permission of instructor and department."
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CSE 496",
+    "title": "Senior Honors Research Project II",
+    "desc": "A two-semester research project carried out under the supervision of a computer science faculty member. Students must submit a written project report and make a presentation to the department at the year-end Honors Project Colloquium.",
+    "prereq": {
+      "And": [
+        {
+          "Taken": [
+            "CSE 495"
+          ]
+        },
+        {
+          "Permission": [
+            "permission of instructor and department"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "AMS 151",
+    "title": "Applied Calculus I",
+    "desc": "A review of functions and their applications; analytic methods of differentiation; interpretations and applications of differentiation; introduction to integration. Intended for CEAS majors. Not for credit in addition to MAT 125 or 126 or 131 or 141 or 171. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "Or": [
+        {
+          "Passed": [
+            "MAT 123",
+            "B"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "level 5 on the mathematics placement examination"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "AMS 161",
+    "title": "Applied Calculus II",
+    "desc": "Analytic and numerical methods of integration; interpretations and applications of integration; differential equations models and elementary solution techniques; phase planes; Taylor series and Fourier series. Intended for CEAS majors. Not for credit in addition to MAT 127, MAT 132, MAT 142, or MAT 171. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "Or": [
+        {
+          "Passed": [
+            "AMS 151",
+            "C"
+          ]
+        },
+        {
+          "Passed": [
+            "MAT 131",
+            "C"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "level 7 on the mathematics placement examination"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "AMS 210",
+    "title": "Applied Linear Algebra",
+    "desc": "An introduction to the theory and use of vectors and matrices. Matrix theory including systems of linear equations. Theory of Euclidean and abstract vector spaces. Eigenvectors and eigenvalues. Linear transformations. May not be taken for credit in addition to MAT 211.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "AMS 151 or MAT 131 or corequisite MAT 126 or level 7 or higher on the mathematics placement exam"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "AMS 301",
+    "title": "Finite Mathematical Structures",
+    "desc": "An introduction to graph theory and combinatorial analysis. The emphasis is on solving applied problems rather than on theorems and proofs. Techniques used in problem solving include generating functions, recurrence relations, and network flows. This course develops the type of mathematical thinking that is fundamental to computer science and operations research.",
+    "prereq": {
+      "Or": [
+        {
+          "Taken": [
+            "AMS 210"
+          ]
+        },
+        {
+          "Taken": [
+            "MAT 211"
+          ]
+        },
+        {
+          "Taken": [
+            "AMS 361"
+          ]
+        },
+        {
+          "Taken": [
+            "MAT 303"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "AMS 310",
+    "title": "Survey of Probability and Statistics",
+    "desc": "A survey of data analysis, probability theory, and statistics. Stem and leaf displays, box plots, schematic plots, fitting straight line relationships, discrete and continuous probability distributions, conditional distributions, binomial distribution, normal and t distributions, confidence intervals, and significance tests. May not be taken for credit in addition to ECO 320. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "Or": [
+        {
+          "Taken": [
+            "AMS 161"
+          ]
+        },
+        {
+          "Taken": [
+            "MAT 132"
+          ]
+        },
+        {
+          "Taken": [
+            "MAT 127"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "AMS 311",
+    "title": "Probability Theory",
+    "desc": "Probability spaces, random variables, moment generating functions, algebra of expectations, conditional and marginal distributions, multivariate distributions, order statistics, law of large numbers.",
+    "prereq": {
+      "Or": [
+        {
+          "And": [
+            {
+              "Taken": [
+                "AMS 301"
+              ]
+            },
+            {
+              "Taken": [
+                "AMS 310"
+              ]
+            }
+          ]
+        },
+        {
+          "Permission": [
+            "permission of instructor"
+          ]
+        }
+      ]
+    },
+    "coreq": {
+      "Or": [
+        {
+          "Taken": [
+            "MAT 203"
+          ]
+        },
+        {
+          "Taken": [
+            "AMS 261"
+          ]
+        }
+      ]
+    },
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "MAT 125",
+    "title": "Calculus A",
+    "desc": "Differential calculus, emphasizing conceptual understanding, computations and applications, for students who have the necessary background from 12th-year high school mathematics. Limits and continuous functions. Differentiation of elementary algebraic, trigonometric, exponential and logarithmic functions; graphing; modeling; and maximization. L'Hospital's rule.  May not be taken for credit in addition to MAT 131 or 141 or AMS 151. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "And": [
+        {
+          "Passed": [
+            "MAT 123",
+            "C"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "or level 4 on the mathematics placement examination"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "or corequisite MAT 130"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "MAT 126",
+    "title": "Calculus B",
+    "desc": "A continuation of MAT 125, covering integral calculus: Riemann sums, the fundamental theorem, symbolic and numeric methods of integration, area under a curve, volume, applications such as work and probability, improper integrals. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "Or": [
+        {
+          "Passed": [
+            "MAT 125",
+            "C"
+          ]
+        },
+        {
+          "Passed": [
+            "MAT 131",
+            "C"
+          ]
+        },
+        {
+          "Passed": [
+            "MAT 141",
+            "C"
+          ]
+        },
+        {
+          "Passed": [
+            "AMS 151",
+            "C"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "level 6 on the mathematics placement examination"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "MAT 127",
+    "title": "Calculus C",
+    "desc": "A continuation of MAT 126, covering: sequences, series, Taylor series, differential equations and modeling.  May not be taken for credit in addition to MAT 132, MAT 142, MAT 171, or AMS 161. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "Or": [
+        {
+          "Passed": [
+            "MAT 126",
+            "C"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "level 8 on the mathematics placement examination"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "MAT 131",
+    "title": "Calculus I",
+    "desc": "The differential calculus and integral calculus, emphasizing conceptual understanding, computations and applications, for students who have the necessary background from 12th-year high school mathematics.  Differentiation of elementary algebraic; trigonometric, exponential, and logarithmic functions; graphing; modelling and maximization; L'Hospital's rule; the Riemann integral; and the Fundamental Theorem of Calculus. May not be taken for credit in addition to MAT 125 or 141 or AMS 151. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "Or": [
+        {
+          "Passed": [
+            "MAT 123",
+            "B"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "level 5 on the mathematics placement examination"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "MAT 132",
+    "title": "Calculus II",
+    "desc": "A continuation of MAT 131, covering symbolic and numeric methods of integration; area under a curve; volume; applications such as work and probability; sequences; series; Taylor series; differential equations; and modelling. May not be taken for credit in addition to MAT 127, MAT 142, MAT 171, or AMS 161. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "Or": [
+        {
+          "Passed": [
+            "AMS 151",
+            "C"
+          ]
+        },
+        {
+          "Passed": [
+            "MAT 131",
+            "C"
+          ]
+        },
+        {
+          "Passed": [
+            "MAT 141",
+            "C"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "level 7 on the mathematics placement examination"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "MAT 211",
+    "title": "Introduction to Linear Algebra",
+    "desc": "Introduction to the theory of linear algebra with some applications; vectors, vector spaces, bases and dimension, applications to geometry, linear transformations and rank, eigenvalues and eigenvectors, determinants and inner products. May not be taken for credit in addition to AMS 210.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "C or higher in  AMS 151 or MAT 131 or 141 or coregistration in MAT 126 or level 7 on the mathematics placement examination"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "BIO 201",
+    "title": "Fundamentals of Biology: Organisms to Ecosystems",
+    "desc": "An introduction to the major concepts in evolution, ecology, and biodiversity at the genetic, organismal, community, and ecosystem levels. Topics are presented in relation to five overall themes: Nature and Process of Science, Evolution, Information Flow, Systems, and Structure-Function. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "Level 4 or higher on the mathematics placement examination or Corequisite MAT 123 or higher"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": {
+      "UnsupportedRequirement": [
+        "High School Biology"
+      ]
+    },
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "BIO 202",
+    "title": "Fundamentals of Biology: Molecular and Cellular Biology",
+    "desc": "The fundamentals of cell biology, biochemistry, and genetics. The biochemical and molecular bases of cell structure, energy metabolism, gene regulation, heredity, and development in living organisms from bacteria to man are discussed. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "C or higher in CHE 129 or CHE 131 or Corequisite CHE 152"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "BIO 203",
+    "title": "Fundamentals of Biology: Cellular and Organ Physiology",
+    "desc": "The fundamentals of cell and organ physiology in mammalian and non-mammalian organisms. The structure and function of cell membranes and the physiology of cell to cell signaling, cellular respiration, and homeostasis of organs and organisms are examined with an emphasis on the comparative physiology of vertebrates and invertebrates. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "C or higher in CHE 129 or CHE 131 or Corequisite CHE 152"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "BIO 204",
+    "title": "Fundamentals of Scientific Inquiry in the Biological Sciences I",
+    "desc": "First course in the foundational laboratory sequence for all biology students, and students in related fields.  Students will experience the laboratory process, research process, a wide range of laboratory tools, methods, skills, learn to read and write scientific presentations, and collaborate in formal inquiry. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so. This course has an associated fee. Please see www.stonybrook.edu/coursefees for more information. This course includes assignments that can be used to satisfy the SBC objective SPK if co-registered for BIO 458.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "C or higher in CHE 129, CHE 131, or Corequisite: CHE 152"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "2",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CHE 131",
+    "title": "General Chemistry IB",
+    "desc": "This is the initial course in the four-semester General-Chemistry/Organic-Chemistry sequence CHE 131/132/321/322. This sequence provides the necessary foundation for students who wish to pursue further coursework in Chemistry. The General Chemistry courses provide a broad introduction to the fundamental principles of chemistry, including substantial illustrative material drawn from the chemistry of inorganic, organic, and biochemical systems. The emphasis is on basic concepts, problem-solving, and factual material. The principal topics covered are stoichiometry, the states of matter, chemical equilibrium and introductory thermodynamics, electrochemistry, chemical kinetics, electron structure and chemical bonding, and chemical periodicity. Students will be placed into CHE 131 based on their performance in an Online Chemistry Placement and Preparation (OCPP) process. The four-semester sequence is inappropriate for students who have completed an AP course in chemistry and received a score of 4 or 5; these students are placed into CHE 152. Three lecture hours and one 80-minute workshop per week. May not be taken for credit in addition to CHE 129 or CHE 152. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "Online Chemistry Placement and Preparation (OCPP) Process. For information on the OCPP, copy and paste the following link into your browser. go.stonybrook.edu/ocpp Corequisite: MAT 125 or higher"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CHE 132",
+    "title": "General Chemistry II",
+    "desc": "A continuation of either CHE 129 or 131, introducing the fundamental principles of chemistry, including substantial illustrative material drawn from the chemistry of inorganic, organic, and biochemical systems. The principal topics covered are stoichiometry, the states of matter, chemical equilibrium and introductory thermodynamics, electrochemistry, chemical kinetics, electron structure and chemical bonding, and chemical periodicity. The sequence emphasizes basic concepts, problem solving, and factual material. It provides the necessary foundation for students who wish to pursue further coursework in chemistry.  Three lecture hours and one 80-minute workshop per week. May not be taken for credit in addition to CHE 152. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "And": [
+        {
+          "UnsupportedRequirement": [
+            "C or higher in CHE 129 or CHE 131.  Pre/Corequisite: MAT 125 for those who took CHE 129 or 130 or BA BIO majors"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "all others MAT 126 or higher"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CHE 133",
+    "title": "General Chemistry Laboratory I",
+    "desc": "Designed to familiarize students with (1) some chemical and physical properties of substances, (2) techniques of quantitative chemistry, and (3) scientific methodology. Three hours of laboratory or related activity per week. CHE 133 and CHE 134 may not be taken for credit in addition to CHE 154. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so. This course has an associated fee. Please see www.stonybrook.edu/coursefees for more information.",
+    "prereq": null,
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "1",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CHE 152",
+    "title": "Molecular Science I",
+    "desc": "This is the initial course of the three-semester Molecular Science sequence CHE 152/331/332. The topics covered in CHE 152 include atomic and molecular structure, chemical bonding, thermodynamics, equilibrium and aqueous chemistry, electrochemistry, kinetics and basics of organic chemistry. Students will be placed into CHE 152 based on their performance in the Online Chemistry Placement and Preparation (OCPP) process or upon receipt of a score of 4 or 5 in AP chemistry. (Such students cannot enroll in any of the courses CHE 129/130, 131, or 132). May not be taken for credit in addition to CHE 129, 131, or 132. Three lecture hours and one 80-minute workshop per week.",
+    "prereq": {
+      "And": [
+        {
+          "UnsupportedRequirement": [
+            "AP Chem score of 4-5 & satisfactory score on the Online Chemistry Placement & Prep Process (OCPP) or satisfactory score on the OCPP (http://go.stonybrook.edu/ocpp)"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "co-registration in MAT 131 (preferred), MAT 125, AMS 151 or higher calculus"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CHE 154",
+    "title": "Molecular Science Laboratory I",
+    "desc": "Designed to familiarize students with chemical and physical properties of substances, techniques of quantitative chemistry, and aspects of scientific methodology. Four hours of lab per week. CHE 154 may not be taken for credit in addition to CHE 134. This course has an associated fee. Please see www.stonybrook.edu/coursefees for more information.",
+    "prereq": null,
+    "coreq": {
+      "Taken": [
+        "CHE 152"
+      ]
+    },
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "2",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CHE 321",
+    "title": "Organic Chemistry I",
+    "desc": "An introduction to the structure, reactivity, and properties of organic compounds is presented using modern views of chemical bonding. These fundamental ideas are applied to topics ranging from synthetic chemistry to complex functional structures such as lipid bilayers. CHE 321 may not be taken for credit in addition to",
+    "prereq": {
+      "Passed": [
+        "CHE 132",
+        "C"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CHE 322",
+    "title": "Organic Chemistry IIA",
+    "desc": "Discussion of the structure, reactivity, and properties of organic compounds introduced in CHE 321 is continued. The chemistry of substances important in biology, medicine, and technology is emphasized. CHE 322 may not be taken for credit in addition to CHE 332. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "Passed": [
+        "CHE 321",
+        "C"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CHE 331",
+    "title": "Molecular Science II",
+    "desc": "Topics include the structural, mechanistic and synthetic aspects of organic chemistry, transition metal chemistry, catalysis, supramolecular chemistry, and polymer chemistry. This is the second course in a three semester sequence.  Students with a strong background prior to entering the University can take the 152-331-332 sequence, which covers the same material as 131-132-321-322. Three lecture hours and one 80-minute workshop per week. The laboratory component, CHE 383, must be taken the same semester as the CHE 331 lecture. May not be taken for credit in addition to CHE 321.",
+    "prereq": {
+      "Passed": [
+        "CHE 152",
+        "C"
+      ]
+    },
+    "coreq": {
+      "Taken": [
+        "CHE 383"
+      ]
+    },
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "CHE 332",
+    "title": "Molecular Science III",
+    "desc": "Topics include advanced structural, mechanistic and synthetic aspects of organic chemistry, the organic chemistry of biological pathways and biosynthesis. This is the final course in a three semester sequence.  Students with a strong background prior to entering the University can take the 152-331-332 sequence, which covers the same material as 131-132-321-322. Three lecture hours and one 80-minute workshop per week. May not be taken for credit in addition to CHE 322.",
+    "prereq": {
+      "Passed": [
+        "CHE 331",
+        "C"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "PHY 125",
+    "title": "Classical Physics A",
+    "desc": "First of a three-part sequence intended for physical-sciences or engineering majors. It focuses on the mechanics of point particles and simple oscillators, and emphasizes motion in one and two dimensions and the concepts",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "MAT 123 or Level 4 on the mathematics placement examination"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "PHY 126",
+    "title": "Classical Physics B",
+    "desc": "Second or third of a three-part sequence for physical-sciences or engineering majors. It focuses on the mechanics of rigid bodies, on fluids, waves, thermodynamics, and optics. Three lecture hours and one recitation hour per week.  Associated Labs (PHY 133 or PHY 134) are offered separately. Not for credit in addition to PHY 132, or PHY 142. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "Or": [
+        {
+          "Passed": [
+            "PHY 125",
+            "C"
+          ]
+        },
+        {
+          "Passed": [
+            "PHY 131",
+            "C"
+          ]
+        },
+        {
+          "Passed": [
+            "PHY 141",
+            "C"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "PHY 127",
+    "title": "Classical Physics C",
+    "desc": "Second or third of a three-part sequence for physical-sciences or engineering majors. It focuses on electromagnetism using the concepts of vector fields and scalar potentials, and on DC and AC electric circuits. Calculus is used concurrently with its development in MAT 126. Three lecture hours and one recitation hour per week. Associated Labs (PHY 133 or PHY 134) are offered separately. Not for credit in addition to PHY 122, PHY 132, or PHY 142. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "Or": [
+        {
+          "Passed": [
+            "PHY 125",
+            "C"
+          ]
+        },
+        {
+          "Passed": [
+            "PHY 131",
+            "C"
+          ]
+        },
+        {
+          "Passed": [
+            "PHY 141",
+            "C"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "PHY 131",
+    "title": "Classical Physics I",
+    "desc": "First part of a two-semester physics sequence for physical-sciences or engineering majors who have a strong mathematics background and are ready for a fast learning pace. It covers mechanics, wave motion, kinetic theory, and thermodynamics. Calculus is used concurrently with its development in MAT 131. Three lecture hours and one recitation hour per week. The Laboratory component, PHY 133 (Lab 1), could be taken concurrently. Not for credit in addition to PHY 121, PHY 125, or PHY 141. Advanced Placement Physics or a very strong course in high school Physics is recommended. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "MAT 123 or level 5 on the mathematics placement examination"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "PHY 132",
+    "title": "Classical Physics II",
+    "desc": "Second part of a two-semester physics sequence for physical-sciences or engineering majors who have a strong mathematics background and are ready for a fast learning pace. It covers electromagnetism, electric circuit theory, and optics. Calculus is used concurrently with its development in MAT 132. Three lecture hours and one recitation hour per week. The Laboratory component, PHY 134, may be taken concurrently. Not for credit in addition to PHY 122, PHY 127, or PHY 142. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "Or": [
+        {
+          "Passed": [
+            "PHY 131",
+            "C"
+          ]
+        },
+        {
+          "Passed": [
+            "PHY 141",
+            "C"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "PHY 133",
+    "title": "Classical Physics Laboratory I",
+    "desc": "Two and one half hours of laboratory per week that corresponds to the content of PHY 131 or PHY 125+PHY 126. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so. This course has an associated fee. Please see www.stonybrook.edu/coursefees for more information.",
+    "prereq": null,
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": {
+      "And": [
+        {
+          "And": [
+            {
+              "Taken": [
+                "PHY 125"
+              ]
+            },
+            {
+              "Taken": [
+                "PHY 126"
+              ]
+            }
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Taken": [
+                "PHY 131"
+              ]
+            },
+            {
+              "Taken": [
+                "PHY 141"
+              ]
+            }
+           ]
+        }
+      ]
+    },
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "1",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "PHY 134",
+    "title": "Classical Physics Laboratory II",
+    "desc": "Two and one half hours of laboratory per week that corresponds to the content of PHY 132 or PHY 126+127. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so. This course has an associated fee. Please see www.stonybrook.edu/coursefees for more information.",
+    "prereq": {
+      "Passed": [
+        "PHY 133",
+        "C"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "1",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "PHY 141",
+    "title": "Classical Physics I: Honors",
+    "desc": "First part of a demanding two-semester sequence for students with the strongest background, interests, and abilities in science and mathematics. The topics covered in PHY 141 are similar to those in PHY 131 but are treated in more depth in a small-class setting. Students may transfer to PHY 131 at any time during the first half of each semester without penalty. Three lecture hours and  one recitation hour per week. PHY 141 may not be taken for credit in addition to PHY 121, PHY 125, or PHY 131. Advanced Placement Physics or a very strong course in high school Physics is recommended. This course has an associated fee.  Please see www.stonybrook.edu/coursefees for more information.",
+    "prereq": null,
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "PHY 142",
+    "title": "Classical Physics II: Honors",
+    "desc": "Second part of a demanding two-semester sequence for students with the strongest background, interests and abilities in science and mathematics. The topics covered in PHY 142 are similar to those in PHY 132, but are treated in more depth in a small-class setting. Students may transfer to PHY 132 at any time during the first half of each semester without penalty. Three lecture hours and one recitation hour per week. PHY 142 may not be taken for credit in addition to PHY 122, PHY 127, or PHY 132. This course has an associated fee.  Please see www.stonybrook.edu/coursefees for more information.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "C or higher in PHY 141 or permission of department"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "PHY 251",
+    "title": "Modern Physics",
+    "desc": "A survey of the major physics theories of the 20th century (relativity and quantum mechanics) and their impact on most areas of physics. It introduces the special theory of relativity, the concepts of quantum and wave-particle duality, Schroedinger's wave equation, and other fundamentals of quantum theory as they apply to nuclei, atoms, molecules, and solids. It is recommended that students take the laboratory component, PHY 252, concurrently. Three hours lecture and one hour recitation per week.",
+    "prereq": {
+      "And": [
+        {
+          "UnsupportedRequirement": [
+            "PHY 122/124, or PHY 126 and 127, or PHY 132 or PHY 142"
+          ]
+        },
+        {
+          "UnsupportedRequirement": [
+            "and PHY 134"
+          ]
+        },
+        {
+          "Or": [
+            {
+              "Passed": [
+                "MAT 126",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "MAT 132",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "MAT 142",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "MAT 171",
+                "C"
+              ]
+            },
+            {
+              "Passed": [
+                "AMS 161",
+                "C"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "PHY 252",
+    "title": "Modern Physics Laboratory",
+    "desc": "Students perform some of the pivotal experiments of the 20th century. It is recommended that students take the lecture component, PHY 251, concurrently. Two hours of laboratory per week. This course has an associated fee. Please see www.stonybrook.edu/coursefees for more information.",
+    "prereq": null,
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": {
+      "Taken": [
+        "PHY 251"
+      ]
+    },
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "1",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "GEO 102",
+    "title": "The Earth",
+    "desc": "A summary of the processes that have shaped the earth and the other terrestrial planets as inferred from study of their surface materials, structural features, and interiors. Topics include the earth in the solar system; earth materials and rock-forming processes; surface processes and their bearing on human activities; crustal deformation and global tectonics; the earth's interior; and the geological features, compositions, and evolution of the terrestrial planets. Not for credit in addition to GEO 122.",
+    "prereq": null,
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "GEO 103",
+    "title": "The Earth Through Time",
+    "desc": "The history of the earth from its formation 4.5 billion years ago to the present. Major issues to be addressed include formation and early history of the earth and moon; evolution of continents, oceans, and atmosphere within the framework of plate tectonics; origin of life; and evidence of past climates.",
+    "prereq": null,
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "GEO 112",
+    "title": "Physical Geology Laboratory",
+    "desc": "Rock and mineral identification, introduction to topographic and geologic maps. Not for credit in addition to GEO 122.",
+    "prereq": null,
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "1",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "GEO 122",
+    "title": "Physical Geology",
+    "desc": "The nature of the earth and of the processes that shape it: the earth's external and internal energy; minerals and rocks; external processes and the evolution of the landscape; internal processes and the structure of the earth; the earth compared with other planets; sources of materials and energy. Laboratory includes study of minerals and rocks; landforms as shown on topographical maps and aerial photographs; geologic structures inferred from maps and block diagrams; problem sets. Two lectures and one three-hour laboratory and recitation per week. Not for credit in addition to GEO 102.",
+    "prereq": null,
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": {
+      "UnsupportedRequirement": [
+        "high school chemistry and high school physics"
+      ]
+    },
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "AST 203",
+    "title": "Astronomy",
+    "desc": "A survey of the physical nature of the universe for the student with some background in physics and mathematics. May not be taken for credit in addition to AST 101. Optional evening observing sessions with be held during the semester.",
+    "prereq": {
+      "Or": [
+        {
+          "Taken": [
+            "PHY 125"
+          ]
+        },
+        {
+          "Taken": [
+            "PHY 133"
+          ]
+        },
+        {
+          "Taken": [
+            "PHY 131"
+          ]
+        },
+        {
+          "Taken": [
+            "PHY 133"
+          ]
+        },
+        {
+          "Taken": [
+            "PHY 141"
+          ]
+        },
+        {
+          "Taken": [
+            "PHY 133"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "4",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
+    "id": "AST 205",
+    "title": "Introduction to Planetary Sciences",
+    "desc": "An introduction to the solar system for the student with a background in mathematics or physical sciences. A survey of the planets, comets, asteroids, and interplanetary medium, based upon the latest scientific discoveries. Not for credit in addition to AST 105 or GEO 106.",
+    "prereq": {
+      "Or": [
+        {
+          "Taken": [
+            "PHY 125"
+          ]
+        },
+        {
+          "Taken": [
+            "PHY 133"
+          ]
+        },
+        {
+          "Taken": [
+            "PHY 131"
+          ]
+        },
+        {
+          "Taken": [
+            "PHY 133"
+          ]
+        },
+        {
+          "Taken": [
+            "PHY 141"
+          ]
+        },
+        {
+          "Taken": [
+            "PHY 133"
+          ]
+        }
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  }
+]
