@@ -2,7 +2,6 @@ from pprint import pprint
 import requests
 import re
 import argparse
-import pickle
 import json
 from bs4 import BeautifulSoup, Tag
 from course_kb import *
@@ -38,7 +37,8 @@ OVERRIDES = {
   ),
 }
 
-REQ_TYPES = ['prereq', 'coreq', 'pre_or_coreq', 'anti_req', 'advisory_prereq', 'advisory_coreq', 'advisory_pre_or_coreq']
+REQ_TYPES = {'prereq', 'coreq', 'pre_or_coreq', 'anti_req', 'advisory_prereq', 'advisory_coreq', 'advisory_pre_or_coreq'}
+REQ_TYPES_IGNORE = {'advisory_prereq', 'advisory_coreq', 'advisory_pre_or_coreq'}
 
 def create_course_namedtuple(raw_course_dict : dict) -> Course:
   ## from course dictionary (returned by parse_course_div) to course namedtuple
@@ -48,9 +48,10 @@ def create_course_namedtuple(raw_course_dict : dict) -> Course:
   ## e.g., "Prerequisite" vs "Prerequisites"
   print("parsing course:", raw_course_dict.get('id'))
   def get_parsed_req(possible_keys):
+    lower_dict = {k.lower(): v for k, v in raw_course_dict.items()}
     for key in possible_keys:
-      if key in raw_course_dict:
-        return parse_req_text(raw_course_dict[key])
+      if key.lower() in lower_dict:
+        return parse_req_text(lower_dict[key.lower()])
     return None
 
   return Course(
@@ -59,7 +60,7 @@ def create_course_namedtuple(raw_course_dict : dict) -> Course:
     desc=raw_course_dict.get('desc'),
     prereq=get_parsed_req(['Prerequisite', 'Prerequisites']),
     coreq=get_parsed_req(['Corequisite', 'Corequisites']),
-    pre_or_coreq=get_parsed_req(['Pre- or Co-requisite', 'Pre- or Co-requisites']),
+    pre_or_coreq=get_parsed_req(['Pre- or Co-requisite', 'Pre- or Co-requisites', 'Pre- or corequisite', 'Pre- or corequisites']),
     anti_req=get_parsed_req(['Anti-requisite', 'Anti-requisites']),
     advisory_prereq=get_parsed_req(['Advisory Prerequisite', 'Advisory Prerequisites']),
     advisory_coreq=get_parsed_req(['Advisory Corequisite', 'Advisory Corequisites']),
@@ -100,18 +101,7 @@ def get_kb_from_program(prog: str):
     print("Failed to retrieve course data. Status code:", resp.status_code)
     return []
 
-def serialize_kb_to_pickle(kb: list[Course], filepath):
-  with open(filepath, 'wb') as f:
-    pickle.dump(kb, f)
-    print(f'Pickled KB saved to {filepath}')
-
-def deserialize_kb_from_pickle(filepath) -> list[Course]:
-  with open(filepath, 'rb') as f:
-    kb = pickle.load(f)
-    print(f'KB loaded from {filepath}')
-  return kb
-
-AST_NAME_KEY = "__type__"
+TYPE_KEY = "__type__"
 
 class ASTEncoder(json.JSONEncoder):
   def default(self, obj):
@@ -143,8 +133,8 @@ class ASTDecoder(json.JSONDecoder):
   
   def object_hook(self, d):
     ## 1. Top-Level Course namedtuple (Has the "__type__" key)
-    if AST_NAME_KEY in d:
-      t = d.pop(AST_NAME_KEY)
+    if TYPE_KEY in d:
+      t = d.pop(TYPE_KEY)
       if t in self.CLASS_MAP:
         return self.CLASS_MAP[t](**d)
         
@@ -164,7 +154,7 @@ def serialize_kb_to_json(kb: list[Course], filepath):
   kb_ready_for_json = []
   for course in kb:
     d = course._asdict()
-    d[AST_NAME_KEY] = type(course).__name__
+    d[TYPE_KEY] = type(course).__name__
     kb_ready_for_json.append(d)
 
   with open(filepath, 'w') as f:
@@ -178,12 +168,20 @@ def deserialize_kb_from_json(filepath) -> list[Course]:
   return kb
 
 class PrologGenerator:
+  suffix_mapping = {
+    "prereq": "before",
+    "coreq": "same",
+    "pre_or_coreq": "before_or_same",
+    "anti_req": "before",
+  }
   ## generates rules from the AST in prolog and clingo format.
   def __init__(self, kb: list[Course]):
     self.kb = kb
 
   def semester_suffix(self, req_type: str) -> str:
-    return "same" if req_type == "coreq" else "before"
+    if req_type in self.suffix_mapping:
+      return self.suffix_mapping[req_type]
+    else: raise ValueError(f"Unknown requirement type: {req_type}")
 
   def join_args(self, args: list[str]) -> str:
     return ",".join(f'"{a}"' for a in args)
@@ -219,7 +217,7 @@ class PrologGenerator:
     for credit in range(min_credit, max_credit + 1):
       l.append(f'course("{course.id}", {credit}).')
 
-    for req_type in REQ_TYPES:
+    for req_type in REQ_TYPES - REQ_TYPES_IGNORE:
       req_value = getattr(course, req_type)
       if req_value is not None:
         l.append(f'has_{req_type}("{course.id}").')       ## add has_requisite fact for each course with that type of requisite
@@ -272,6 +270,17 @@ class PrologGenerator:
 
 class ClingoGenerator(PrologGenerator):
   ## same as PrologGenerator, only overridding conjunction and disjunction for pooling
+  def __init__(self, kb: list[Course]):
+    super().__init__(kb)
+    self.aux_id = 0       ## auxiliary rules for Or: when pooling is not possible, we need to generate extra rules.
+    self.aux_rules = []
+  
+  def generate_kb(self) -> list[str]:
+    output_lines = super().generate_kb()
+    if self.aux_rules:
+      output_lines.extend(self.aux_rules)
+    return output_lines
+
   def generate_and(self, expr: And, req_type) -> str:
     if len(expr.subexprs) == 1:
       return self.generate_expr(expr.subexprs[0], req_type)
@@ -289,25 +298,63 @@ class ClingoGenerator(PrologGenerator):
     return f'{name}_{suffix}(({pooled}), Sem)' if pooled.count(";") >= 1 else f'{name}_{suffix}({pooled}, Sem)'
 
   def generate_or(self, expr: Or, req_type) -> str:
+    ## exclude unsupported
+    subexprs = [subexpr for subexpr in expr.subexprs if not isinstance(subexpr, UnsupportedRequirement)]
     ## if all are with the same requirement type -> pool arguments
-    if all(isinstance(op, Requirement) for op in expr.subexprs) and len(set(type(op) for op in expr.subexprs)) == 1:
-      pooled = self.pool_requirement_arguments(expr.subexprs)
-      node_type, node_name = type(expr.subexprs[0]), expr.subexprs[0].name
+    if all(isinstance(op, Requirement) for op in subexprs) and len(set(type(op) for op in subexprs)) == 1:
+      pooled = self.pool_requirement_arguments(subexprs)
+      node_type, node_name = type(subexprs[0]), subexprs[0].name
 
       if node_type is Taken:   ## taken takes semester argument
         return self.format_pooled_sem_requirement(node_name, pooled, req_type)
 
       if node_type is Passed:  ## passed takes semester argument
-        if req_type == "coreq": print("coreq shouldn't have passed requirements, but found:", expr)
+        if req_type == "coreq": print("coreq shouldn't have passed requirements, but found:", subexprs)
         return self.format_pooled_sem_requirement(node_name, pooled, req_type)
 
       return f'{node_name}({pooled})'
     
-    raise ValueError(f'clingo: mixed disjunction, cannot pool: {expr}')
-    ## TODO: fallback: not all same type, expand into separate rules
-    # print("clingo: mixed disjunction, cannot pool:", expr)
-    # return '; '.join(self.generate_expr(op, req_type) for op in expr.subexprs) ### not correct as is
+    # raise ValueError(f'clingo: mixed disjunction, cannot pool: {expr}')
+    self.aux_id += 1
+    aux_pred = f'aux_or_{self.aux_id}(Sem)'
+    for op in subexprs:
+      op_str = self.generate_expr(op, req_type)
+      self.aux_rules.append(f'{aux_pred} :- semester(Sem), {op_str}.')
+    return aux_pred
 
+COURSES_CSE_DEGREE = {    ## courses listed in the degree requirements.
+  'CSE 114', 'CSE 214', 'CSE 216',  ## prog
+  'CSE 160', 'CSE 161', 'CSE 260', 'CSE 261',  ## prog2
+  'CSE 215',  ## dmath
+  'CSE 150',  ## dmath2
+  'CSE 220',  ## sys
+  'CSE 303',  ## theory
+  'CSE 350',  ## theory2
+  'CSE 373',  ## algo
+  'CSE 385',  ## algo2
+  'CSE 310', 'CSE 316', 'CSE 320', 'CSE 416',  ## common
+  'AMS 151', 'AMS 161',  ## calc
+  'MAT 125', 'MAT 126', 'MAT 127',  ## calc2
+  'MAT 131', 'MAT 132',  ## calc3
+  'MAT 211',  ## alg
+  'AMS 210',  ## alg2
+  'AMS 301',  ## fmath
+  'AMS 310',  ## sta
+  'AMS 311',  ## sta2
+  'BIO 201', 'BIO 204',  ## bio
+  'BIO 202', 'BIO 204',  ## bio2
+  'BIO 203', 'BIO 204',  ## bio3
+  'CHE 131', 'CHE 133',  ## che
+  'CHE 152', 'CHE 154',  ## che2
+  'PHY 126', 'PHY 133',  ## phy
+  'PHY 131', 'PHY 133',  ## phy2
+  'PHY 141', 'PHY 133',  ## phy3
+  'CSE 312',  ## ethics
+  'CSE 300',  ## writing
+  'WRT 101', 'WRT 102', ## needed for writing
+  'CSE 475', 'CSE 495', 'CSE 300', 'CSE 301', 'CSE 312',  ## elect_exclude
+  'AST 203', 'AST 205', 'CHE 132', 'CHE 321', 'CHE 322', 'CHE 331', 'CHE 332', 'GEO 102', 'GEO 103', 'GEO 112', 'GEO 123', 'GEO 122', 'PHY 125', 'PHY 127', 'PHY 132', 'PHY 134', 'PHY 142', 'PHY 251', 'PHY 252'  ## sci_more
+}
 
 def main():
   parser = argparse.ArgumentParser(
@@ -330,12 +377,18 @@ def main():
   args = parser.parse_args()
   
   ## generate KB
+  kb = []
   if args.input:    ## load KB from JSON
     print(f"Loading KB from {args.input}...")
     kb = deserialize_kb_from_json(args.input)
   else:             ## generate KB from programs
-    programs_to_generate = args.prog if args.prog else ['cse', 'ams', 'mat', 'bio', 'che', 'phy', 'geo', 'ast', 'wrt']
-    kb = [course for prog in programs_to_generate for course in get_kb_from_program(prog)]
+    if args.all:
+      kb = get_kb_from_program('cse')  ## always include CSE courses in KB
+      other_programs = ['ams', 'mat', 'bio', 'che', 'phy', 'geo', 'ast', 'wrt']
+      kb.extend([course for prog in other_programs for course in get_kb_from_program(prog) if course.id in COURSES_CSE_DEGREE])  ## filter courses relevant to CSE degree requirements
+    else:
+      for prog in args.prog:
+        kb.extend(get_kb_from_program(prog))
 
   ## output KB
   if args.language: ## to prolog or clingo
