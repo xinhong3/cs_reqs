@@ -1,7 +1,7 @@
-from planner import plan, catalog, sci_combs
-from course_catalog import Major, Standing
-import checker
-from checker import Taken as CTaken, degree_reqs
+from ortools_code.planner import plan, catalog, sci_combs
+from ortools_code.course_catalog import Major, Standing
+import python_code.cs_reqs_2024 as checker
+from python_code.cs_reqs_2024 import Taken as CTaken, degree_reqs
 
 # ── helpers ────────────────────────────────────────────────────
 

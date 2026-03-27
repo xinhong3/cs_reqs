@@ -1,8 +1,8 @@
 import inspect
 from pprint import pprint
-from tests import Taken
-from run_clingo import print_clingo_stats, run_clingo
-import tests                ## tests.py in cs_reqs
+from tests.test_data import Taken
+from clingo_code.run_clingo import print_clingo_stats, run_clingo
+import tests.test_data as tests
 
 def testing(test_func):
   taken, expected_checked = test_func()

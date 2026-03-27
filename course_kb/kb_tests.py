@@ -1,7 +1,7 @@
 import unittest
 
-from build_kb import get_kb_from_program
-from course_kb import Course, Major, And, Or, Passed, Permission, Standing, Taken
+from .build_kb import get_kb_from_program
+from .course_kb import Course, Major, And, Or, Passed, Permission, Standing, Taken
 
 class TestCSE(unittest.TestCase):
   def setUp(self):

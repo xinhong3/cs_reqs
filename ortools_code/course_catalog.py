@@ -1,7 +1,7 @@
 # need to load course kb from what Ethan created instead of hardcoding like this
 
 from collections import namedtuple
-from solver import Attr, Plannable, And, Or
+from .solver import Attr, Plannable, And, Or
 
 class Major(Attr): pass
 class Standing(Attr): pass

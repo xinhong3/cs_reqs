@@ -1,6 +1,6 @@
 from itertools import product
-from solver import Solver, And, Or, get_leaves
-from course_catalog import (
+from .solver import Solver, And, Or, get_leaves
+from .course_catalog import (
     catalog, upper_division,
     Passed, Taken, Major, Standing, Unsupported, Permission,
     CourseAttr,

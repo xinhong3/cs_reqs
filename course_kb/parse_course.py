@@ -1,6 +1,6 @@
 import re
 from bs4 import BeautifulSoup, NavigableString, Tag
-from course_kb import Permission, Requirement, Taken, Passed, Major, Standing, And, Or, UnsupportedRequirement
+from .course_kb import Permission, Requirement, Taken, Passed, Major, Standing, And, Or, UnsupportedRequirement
 
 PAT_COURSE_ID = r'[A-Z]{3}\s[0-9]{3}'  ## course id: 3 uppercase letters followed by 3 digits.
 PAT_MAJOR = r'\b[A-Z]{3}\b'            ## major code: 3 uppercase letters

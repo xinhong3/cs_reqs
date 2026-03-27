@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-import clingo
+import clingo_code
 import argparse
 from pprint import pprint
 
@@ -8,12 +8,12 @@ class ClingoContext:
   ## can't have python code in the clingo file if using python api.
   ## the #script (python) in the clingo file is commented out, and we move the functions here.
   def upper_division(self, course_id):
-    return clingo.Number(int(course_id.string[4:]) >= 300)
+    return clingo_code.Number(int(course_id.string[4:]) >= 300)
 
   def course_prog(self, course_id):
-    return clingo.String(course_id.string[:3])
+    return clingo_code.String(course_id.string[:3])
 
-def print_clingo_stats(stats: clingo.Control.statistics):
+def print_clingo_stats(stats: clingo_code.Control.statistics):
   total_time = stats['summary']['times']['total']
   solve_time = stats['summary']['times']['solve']
   ground_time = total_time - solve_time
@@ -26,7 +26,7 @@ def run_clingo(mode, main_lp, kb_lp, taken_set = set()):
   ## runs Clingo, injects the taken courses, and returns the checked dict and schedule.
   
   ## find optimal solution and supress warnings about undefined atoms
-  ctrl = clingo.Control(["0", "-Wno-atom-undefined"])
+  ctrl = clingo_code.Control(["0", "-Wno-atom-undefined"])
   
   ctrl.load(main_lp)
   ctrl.load(kb_lp)

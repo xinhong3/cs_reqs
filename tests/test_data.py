@@ -6,7 +6,7 @@ Taken = namedtuple('Taken', ['id', 'credits', 'grade', 'when', 'where'])
 
 
 def test_0():  ## as test() in cs_reqs_2024.da
-  taken_ids = {'CSE 114', 'CSE 214', 'CSE 216', 'CSE 215', 'CSE 220', 
+  taken_ids = {'CSE 114', 'CSE 214', 'CSE 216', 'CSE 215', 'CSE 220',
                'CSE 303', 'CSE 310', 'CSE 316', 'CSE 320', 'CSE 373', 'CSE 416',
                'MAT 131', 'MAT 132', 'AMS 210', 'AMS 301', 'AMS 310',
                # electives
@@ -19,10 +19,10 @@ def test_0():  ## as test() in cs_reqs_2024.da
   checked = {
       'intro': (True, ['CSE 114', 'CSE 214', 'CSE 215', 'CSE 216', 'CSE 220']),
       'adv': (True,
-              ['CSE 303', 'CSE 310', 'CSE 316', 'CSE 320', 'CSE 373', 
+              ['CSE 303', 'CSE 310', 'CSE 316', 'CSE 320', 'CSE 373',
                'CSE 416']),
       'elect': (True,
-                ['CSE 351', 'CSE 352', 'CSE 353', 'CSE 355', 'CSE 360', 
+                ['CSE 351', 'CSE 352', 'CSE 353', 'CSE 355', 'CSE 360',
                  'CSE 361']),
       'calc': (True, ['MAT 131', 'MAT 132']),
       'alg': (True, ['AMS 210']),
@@ -47,7 +47,7 @@ def test_01():
   checked['degree'] = (False, [])
 
   return taken, checked
-  
+
 
 def test_02():
   taken, checked = test_01()
@@ -62,7 +62,7 @@ def test_02():
 
 def test_03():
   taken, checked = test_0()
-    
+
   taken -= {c for c in taken if c.id in {'CSE 352', 'CSE 353', 'CSE 355'}}
 
   checked['elect'] = (False, ['CSE 351', 'CSE 360', 'CSE 361', 'need 4 total'])
@@ -74,11 +74,11 @@ def test_03():
 
 def test_04():
   taken, checked = test_03()
-    
+
   taken |= {Taken(cid, 4, 'A', (2024,2), 'SB')
             for cid in {'CSE 352', 'CSE 353'}}
 
-  checked['elect'] = (True, ['CSE 351', 'CSE 352', 'CSE 353', 'CSE 360', 
+  checked['elect'] = (True, ['CSE 351', 'CSE 352', 'CSE 353', 'CSE 360',
                              'CSE 361'])
   checked['credits_at_SB'] = (True, ['items123 = 64', 'items23 = 44'])
   checked['degree'] = (True, [])
@@ -88,7 +88,7 @@ def test_04():
 
 def test_05():
   taken, checked = test_0()
-    
+
   taken -= {c for c in taken if c.id in {'AST 203'}}
   taken |= {Taken('BIO 201', 4, 'A', (2024,2), 'SB')}
 
@@ -99,7 +99,7 @@ def test_05():
 
 def test_06():
   taken, checked = test_0()
-    
+
   taken -= {c for c in taken if c.id in
             {'CSE 303', 'CSE 310', 'CSE 316', 'CSE 320', 'CSE 373', 'CSE 416',
              'CSE 360', 'CSE 361', 'CSE 351', 'CSE 352', 'CSE 353', 'CSE 355'}}
