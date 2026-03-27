@@ -291,3 +291,41 @@ def degree_reqs(taken):
                   for item, (check, wit) in checked.items()))
   return checked
 
+def test():
+  taken_ids = {'CSE 114', 'CSE 214', 'CSE 216', 'CSE 215', 'CSE 220', 
+               'CSE 303', 'CSE 310', 'CSE 316', 'CSE 320', 'CSE 373', 'CSE 416',
+               'MAT 131', 'MAT 132', 'AMS 210', 'AMS 301', 'AMS 310',
+               # electives
+               'CSE 360', 'CSE 361', 'CSE 351', 'CSE 352', 'CSE 353', 'CSE 355',
+               # science
+               'PHY 131', 'PHY 133', 'AST 203',
+               'CSE 300', 'CSE 312'
+  }
+  taken = {Taken(cid, 4, 'A', (2024,2), 'SB') for cid in taken_ids}
+  degree_reqs(taken)
+  print('---- witness:', w)
+
+test()
+
+
+import tests, inspect
+
+def testing(test):
+  taken, checked = test()
+  print('---- taken_ids: ', sorted({c.id for c in taken}))
+  # print('---- taken: ')
+  # pprint(sorted(taken))
+  print('---- checked: ')
+  pprint(checked)
+  assert(degree_reqs(taken)==checked)
+
+def run_tests():
+  global w
+  for (name, func) in inspect.getmembers(tests, inspect.isfunction):
+    if name.startswith('test_'):
+      w = dict()
+      print('--------', name, 'started:')
+      testing(func)
+    print('--------', name, 'passed !!!')
+
+run_tests()
