@@ -187,7 +187,7 @@ che = {'CHE 131', 'CHE 133'}; che2 ={'CHE 152', 'CHE 154'}
 phy = {'PHY 126', 'PHY 133'}
 phy2 = {'PHY 131', 'PHY 133'};
 phy3 = {'PHY 141', 'PHY 133'}
-sci_combs = [bio, bio2, bio2, che, che2, phy, phy2, phy3]  ## list/tuple/...
+sci_combs = [bio, bio2, bio3, che, che2, phy, phy2, phy3]  ## list/tuple/...
 
 ## subsumed by sci_req(taken) below
 ## def sci_comb_req(taken_ids):
