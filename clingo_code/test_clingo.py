@@ -11,7 +11,7 @@ def testing(test_func):
     taken_set=taken,
     mode='check', 
     main_lp='cse_req_clingo.lp', 
-    kb_lp='kb_complete.lp'
+    kb_lp='../course_kb/kb_complete.lp'
   )
   
   for req, (expected_check, expected_wits_) in expected_checked.items():
@@ -30,7 +30,7 @@ def test_clingo_planning(test_func):
     taken_set=taken,
     mode='plan',
     main_lp='cse_req_clingo.lp',
-    kb_lp='kb_complete.lp'
+    kb_lp='../course_kb/kb_complete.lp'
   )
 
   pprint(clingo_checked)

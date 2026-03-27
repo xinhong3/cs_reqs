@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-import clingo_code
+import clingo
 import argparse
 from pprint import pprint
 
@@ -8,12 +8,12 @@ class ClingoContext:
   ## can't have python code in the clingo file if using python api.
   ## the #script (python) in the clingo file is commented out, and we move the functions here.
   def upper_division(self, course_id):
-    return clingo_code.Number(int(course_id.string[4:]) >= 300)
+    return clingo.Number(int(course_id.string[4:]) >= 300)
 
   def course_prog(self, course_id):
-    return clingo_code.String(course_id.string[:3])
+    return clingo.String(course_id.string[:3])
 
-def print_clingo_stats(stats: clingo_code.Control.statistics):
+def print_clingo_stats(stats: clingo.Control.statistics):
   total_time = stats['summary']['times']['total']
   solve_time = stats['summary']['times']['solve']
   ground_time = total_time - solve_time
@@ -26,7 +26,7 @@ def run_clingo(mode, main_lp, kb_lp, taken_set = set()):
   ## runs Clingo, injects the taken courses, and returns the checked dict and schedule.
   
   ## find optimal solution and supress warnings about undefined atoms
-  ctrl = clingo_code.Control(["0", "-Wno-atom-undefined"])
+  ctrl = clingo.Control(["0", "-Wno-atom-undefined"])
   
   ctrl.load(main_lp)
   ctrl.load(kb_lp)
@@ -98,7 +98,7 @@ if __name__ == "__main__":
   parser.add_argument('-m', '--mode', choices=['check', 'plan'], default='check', help="Run mode.")
   # parser.add_argument('-t', '--taken', nargs='+', default=[], help="List of taken courses (e.g. 'CSE 114' 'CSE 214').")
   parser.add_argument('-f', '--file', default='cse_req_clingo.lp', help="Path to the main .lp file that encodes the logic.")
-  parser.add_argument('-k', '--kb', default='./kb/kb_complete.lp', help="Path to the KB .lp file.")
+  parser.add_argument('-k', '--kb', default='../course_kb/kb_complete.lp', help="Path to the KB .lp file.")
   
   args = parser.parse_args()
   
