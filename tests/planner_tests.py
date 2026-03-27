@@ -15,9 +15,8 @@ def to_checker_taken(hist, schedule, grades):
     taken = set()
     for cid, cr, grade, loc in hist:
         taken.add(CTaken(cid, cr, grade, (2024, 2), loc))
-    for cid in schedule:
-        taken.add(CTaken(cid, catalog[cid].credits, grades.get(cid, 'C'),
-                         (2025, 1), 'SB'))
+    for cid, sem in schedule.items():
+        taken.add(CTaken(cid, catalog[cid].credits, grades.get(cid, 'C'), sem, 'SB'))
     return taken
 
 def sci_credits(courses):

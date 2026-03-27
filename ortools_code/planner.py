@@ -25,6 +25,13 @@ GRADES = grade_to_points.keys()
 MAX_SEM = 10       # upper bound on future semesters
 CREDIT_LIMIT = 15  # max credits per semester
 
+SEM_NAMES = {1: 'Fall', 2: 'Winter', 3: 'Spring', 4: 'Summer'}
+
+def abs_sem(n, start):
+    sy, ss = start
+    offset = ss - 1 + n - 1
+    return sy + offset // 4, offset % 4 + 1
+
 class UsedInSci(CourseReq): pass
 
 bio  = {'BIO 201', 'BIO 204'}; bio2 = {'BIO 202', 'BIO 204'}; bio3 = {'BIO 203', 'BIO 204'}
@@ -50,7 +57,7 @@ def pred_for(cid):
 # ALDA
 # have_to take course
 # pass in course_kb from main by using course_catalog
-def plan(history, *student_reqs, exclude=set(), check=False):
+def plan(history, *student_reqs, exclude=set(), check=False, starting_semester=(1, 1)):
     # non-sci courses passed with C or higher at SB
     solver = Solver(ignore=(UnsupportedRequirement, Permission))
     for req in student_reqs:
@@ -291,7 +298,7 @@ def plan(history, *student_reqs, exclude=set(), check=False):
 
     schedule = {}
     if not check:
-        schedule = {cid: solver.value(sem[cid])
+        schedule = {cid: abs_sem(solver.value(sem[cid]), starting_semester)
                     for cid in catalog if solver.value(sem[cid]) > 0}
 
         # retreive grades chosen by the planner for courses
@@ -330,8 +337,9 @@ def plan(history, *student_reqs, exclude=set(), check=False):
             by_sem.setdefault(s, []).append(cid)
         print(f"New courses to take ({len(schedule)}):")
         for s in sorted(by_sem):
+            yr, sn = s
             total = sum(credits(c) for c in by_sem[s])
-            print(f"  Semester +{s} ({total} cr): {', '.join(fmt(c, grades) for c in sorted(by_sem[s]))}")
+            print(f"  year:{yr} semester:{SEM_NAMES[sn]} ({total} cr): {', '.join(fmt(c, grades) for c in sorted(by_sem[s]))}")
 
     return checked, schedule, grades
 
