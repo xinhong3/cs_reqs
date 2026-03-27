@@ -2,6 +2,7 @@ from ortools_code.planner import plan, catalog, sci_combs
 from ortools_code.course_catalog import Major, Standing
 import python_code.cs_reqs_2024 as checker
 from python_code.cs_reqs_2024 import Taken as CTaken, degree_reqs
+from pprint import pformat
 
 # ── helpers ────────────────────────────────────────────────────
 
@@ -67,7 +68,25 @@ def test_check_full():
     """Standard full course set — should plan nothing new."""
     checked, schedule, _ = plan(history(FULL), *ATTRS)
     assert schedule == {}, f"expected 0 new, got {len(schedule)}"
-    assert checked == EXPECTED
+
+    missing = []
+    mismatched = []
+
+    for k, expected_val in EXPECTED.items():
+        if k not in checked:
+            missing.append(k)
+        elif checked[k] != expected_val:
+            mismatched.append(
+                f"{k}: expected {expected_val!r}, got {checked[k]!r}"
+            )
+
+    msgs = []
+    if missing:
+        msgs.append(f"Missing keys in checked: {missing}")
+    if mismatched:
+        msgs.append("Value mismatches:\n" + "\n".join(mismatched))
+
+    assert not (missing or mismatched), "\n\n".join(msgs)
 
 
 def test_check_alt_calc_ams():

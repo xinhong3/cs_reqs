@@ -86,9 +86,6 @@
     "title": "Foundations of Computer Science I",
     "desc": "Introduction to the mathematical foundations of computer science. Topics include logic (propositional and predicate); proof techniques (induction/recursion, contradiction, and others); and key concepts of mathematical structures (sequences, sets, functions, relations, and graphs). Not for credit in addition to CSE 215.",
     "prereq": {
-      // "UnsupportedRequirement": [
-      //   "AMS 151 or MAT 125 or MAT 131 or level 6 on the mathematics placement examination"
-      // ]
       "Or": [
         {
           "Taken": [

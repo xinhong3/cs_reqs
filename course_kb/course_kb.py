@@ -85,9 +85,13 @@ class And(LogicalExpr): pass
 ## Represent a list of disjuncts.
 class Or(LogicalExpr):  pass
 
+## retrieve all leaf CourseReq predicates from an And-Or expression
+def get_reqs(expr):
+    if isinstance(expr, CourseReq):   return {expr}
+    if isinstance(expr, Requirement): return set()
+    if isinstance(expr, LogicalExpr): return set().union(*(get_reqs(op) for op in expr.operands))
+    return set()
+
 ## retrieve all CourseReq argument values (course IDs) from an And-Or expression
 def get_courses(expr):
-    if isinstance(expr, CourseReq):   return set(expr.arguments)
-    if isinstance(expr, Requirement): return set()
-    if isinstance(expr, LogicalExpr): return set().union(*(get_courses(op) for op in expr.operands))
-    return set()
+    return {arg for req in get_reqs(expr) for arg in req.arguments}

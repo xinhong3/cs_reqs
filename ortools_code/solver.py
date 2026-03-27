@@ -31,6 +31,18 @@ class Solver:
     def define(self, pred, expr):
         self._vars[pred] = self.constraint(expr)
 
+    def at_least(self, expr, n):
+        v = self.model.new_bool_var(f"geq_{n}_{id(expr)}")
+        self.model.add(expr >= n).only_enforce_if(v)
+        self.model.add(expr <  n).only_enforce_if(v.negated())
+        return v
+
+    def at_most(self, expr, n):
+        v = self.model.new_bool_var(f"leq_{n}_{id(expr)}")
+        self.model.add(expr <= n).only_enforce_if(v)
+        self.model.add(expr >  n).only_enforce_if(v.negated())
+        return v
+
     # make a constraint mandatory
     def require(self, expr):
         c = self.constraint(expr)
@@ -41,8 +53,10 @@ class Solver:
         if isinstance(expr, self.ignore):
             return None
 
-        if not isinstance(expr, LogicalExpr):
+        if isinstance(expr, Requirement):
             return self.val(expr)
+        if not isinstance(expr, LogicalExpr):
+            return expr  # raw BoolVar
 
         # recursively add constraints for operands
         ops = [self.constraint(op) for op in expr.operands]
