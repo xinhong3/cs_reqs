@@ -1,8 +1,9 @@
 import json, re
 from collections import namedtuple
 from course_kb.course_kb import (
-    Taken, Passed, Major, Standing, Permission, UnsupportedRequirement,
-    StudentReq, CourseReq, And, Or, get_courses, get_reqs, Requirement
+    Taken, Passed, Semester, Major, Standing, Permission, UnsupportedRequirement,
+    StudentReq, CourseReq, And, Or, get_courses, get_reqs, Requirement,
+    History
 )
 from course_kb.build_kb import ASTDecoder
 
@@ -104,3 +105,7 @@ _stub('MEC 262', 3)
 _stub('AMS 110', 3)
 _stub('MAT 200', 3)
 _stub('MAT 250', 3)
+
+# hardcoded term offerings by course id; missing courses are treated as unrestricted
+COURSE_ALLOWED_TERMS = {
+}

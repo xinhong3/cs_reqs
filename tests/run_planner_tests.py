@@ -9,6 +9,7 @@ from clingo_code.run_clingo import run_clingo
 from ortools_code.course_catalog import Major, Standing
 from ortools_code.planner import catalog, plan
 from python_code.cs_reqs_2024 import Taken, degree_reqs
+from course_kb.course_kb import History
 
 import tests.planner_test_cases as test_cases
 
@@ -28,8 +29,8 @@ def normalize_checked(checked):
 
 def to_checker_taken(history, planned_courses):
     taken = set()
-    for cid, cr, grade, where in history:
-        taken.add(Taken(cid, cr, grade, (2024, 2), where))
+    for h in history:
+        taken.add(Taken(h.id, h.credits, h.grade, h.when, h.where))
     for cid, when in planned_courses.items():
         taken.add(Taken(cid, catalog[cid].credits, 'C', when, 'SB'))
     return taken
@@ -58,8 +59,8 @@ def run_ortools(case):
 def run_clingo_backend(case):
     history, _ = case
     taken = {
-        Taken(cid, cr, grade, (2024, 2), where)
-        for cid, cr, grade, where in history
+        Taken(h.id, h.credits, h.grade, h.when, h.where)
+        for h in history
     }
     with redirect_stdout(io.StringIO()):
         checked, schedule, _ = run_clingo(

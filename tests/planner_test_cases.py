@@ -1,4 +1,6 @@
-from ortools_code.planner import catalog
+from ortools_code.planner import catalog, plan
+from ortools_code.course_catalog import Major, Standing
+from course_kb.course_kb import History
 
 
 FULL = {
@@ -11,8 +13,8 @@ FULL = {
 }
 
 
-def history(ids, grade='A', loc='SB'):
-    return [(cid, catalog[cid].credits, grade, loc) for cid in sorted(ids)]
+def history(ids, grade='A', loc='SB', when=(1, 1)):
+    return [History(cid, catalog[cid].credits, grade, when, loc) for cid in sorted(ids)]
 
 
 def test_plan_no_electives():
@@ -87,6 +89,26 @@ def test_plan_prereq_order_for_calc_sequence():
         assert planned_pairs, 'no planned prereq/course pair found to validate ordering'
         for pre, req in planned_pairs:
             assert schedule_by_course[pre] < schedule_by_course[req], f'{pre} should be before {req} in planned schedule'
+
+    return taken, validate
+
+
+def test_plan_respects_course_allowed_terms():
+    """OR-Tools planner should honor per-course allowed semester names."""
+    ids = FULL - {'CSE 220'}
+    taken = history(ids)
+
+    def validate(checked, schedule_courses, schedule_by_course):
+        expected_sem = {'Fall': 1, 'Spring': 3}
+        for sem_name, sem_num in expected_sem.items():
+            _, direct_schedule, _ = plan(
+                taken,
+                Major('CSE'),
+                Standing('U4'),
+                course_allowed_terms={'CSE 220': {sem_name}},
+            )
+            assert 'CSE 220' in direct_schedule
+            assert direct_schedule['CSE 220'][1] == sem_num, f'CSE 220 should be planned in {sem_name}'
 
     return taken, validate
 

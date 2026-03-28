@@ -1,5 +1,8 @@
 from collections import namedtuple
 
+## a course taken, e.g., History('CSE 114', 4, 'A', (2024, 2), 'SB')
+History = namedtuple('History', ['id', 'credits', 'grade', 'when', 'where'])
+
 ## Representation for course
 ## Each course: id, desc, prereqs, antireqs, coreqs, SBC, credits, ...
 ##   Fields are written in the order they appear in the input. Optional fields are None by default.
@@ -28,6 +31,7 @@ class Expr:
 ## Represent each requirement in requisites.
 class Requirement(Expr):
     name: str = ""     ## "taken", "passed", ...
+    domain = None      ## None → BoolVar; list → categorical IntVar (0 = unassigned, 1..N = values)
 
     def __init_subclass__(cls, **kwargs):
         super().__init_subclass__(**kwargs)
@@ -42,6 +46,8 @@ class Requirement(Expr):
 
 class StudentReq(Requirement): pass   ## Major, Standing — not decided by solver; pinned by planner
 class CourseReq(Requirement):  pass   ## Taken, Passed — free BoolVars decided by solver
+
+class Semester(CourseReq): pass   ## domain controlled by solver via set_domain
 
 class Taken(CourseReq):     ## e.g. taken_id("CSE 303"), taken_id("CSE 350")
                                ###    named taken_id to avoid clash with taken/5 in prolog and clingo.

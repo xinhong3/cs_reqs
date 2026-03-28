@@ -278,8 +278,8 @@ def test_1_four_sp25():
          CHE132(4,D=1.0), PHY131(3,A=4.0) -> (4*4+0*4+4*1+3*4)/(4+0+4+3) = 32/11 >= 2.0.
          sci passes; witness = ['CHE 131', 'CHE 132', 'CHE 133', 'PHY 131'].
     adv: still missing CSE 310 and CSE 416 (other incomplete).
-    credits_at_SB: intro(17) + adv_SB(CSE303+316+320+373=12) + elect_SB(CSE360+CSE361=6)
-                 = 35 >= 24; items23 = 12+6 = 18 >= 18.  credits_at_SB passes!
+    credits_at_SB: intro(14) + adv_SB(CSE303+316+320+373=12) + elect_SB(CSE360+CSE361=6)
+                 = 32 >= 24; items23 = 12+6 = 18 >= 18.  credits_at_SB passes!
     """
     taken = _snap(_transfer, _f22, _sp23, _f23, _sp24, _f24, _sp25_four)
     checked = {
@@ -292,7 +292,7 @@ def test_1_four_sp25():
         'sci':     (True,  ['CHE 131', 'CHE 132', 'CHE 133', 'PHY 131']),
         'ethics':  (True,  ['CSE 312']),
         'writing': (True,  ['CSE 300']),
-        'credits_at_SB': (True, ['items123 = 35', 'items23 = 18']),
+        'credits_at_SB': (True, ['items123 = 32', 'items23 = 18']),
         'degree':  (False, []),
     }
     return taken, checked
@@ -329,7 +329,7 @@ def test_1_three_sp25():
         'sci':     (True,  ['CHE 131', 'CHE 132', 'CHE 133', 'PHY 131']),
         'ethics':  (True,  ['CSE 312']),
         'writing': (True,  ['CSE 300']),
-        'credits_at_SB': (True, ['items123 = 35', 'items23 = 18']),
+        'credits_at_SB': (True, ['items123 = 32', 'items23 = 18']),
         'degree':  (False, []),
     }
     return taken, checked

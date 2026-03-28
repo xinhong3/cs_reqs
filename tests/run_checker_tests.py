@@ -4,6 +4,7 @@ import python_code.cs_reqs_2024 as checker
 from python_code.cs_reqs_2024 import degree_reqs
 from ortools_code.planner import plan
 from ortools_code.course_catalog import Major, Standing
+from course_kb.course_kb import History
 from clingo_code.run_clingo import run_clingo
 import tests.checker_test_cases as test_cases
 
@@ -14,7 +15,7 @@ def check_python(taken):
     return degree_reqs(taken)
 
 def check_ortools(taken):
-    history = [(t.id, t.credits, t.grade, t.where) for t in taken]
+    history = [History(t.id, t.credits, t.grade, t.when, t.where) for t in taken]
     checked, _, _ = plan(history, Major("CSE"), Standing("U4"), check=True)
     return checked
 
