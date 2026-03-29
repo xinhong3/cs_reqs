@@ -150,12 +150,12 @@ course("CSE 352", 3).
 has_prereq("CSE 352").
 prereq("CSE 352", Sem) :- semester(Sem),taken_before(("CSE 316"; "CSE 351"), Sem),major("CSE"; "DAS").
 course("CSE 353", 3).
-has_prereq("CSE 353").
-prereq("CSE 353", Sem) :- semester(Sem),taken_before(("CSE 316"; "CSE 351"), Sem),major("CSE"; "DAS").
 has_pre_or_coreq("CSE 353").
 pre_or_coreq("CSE 353", Sem) :- semester(Sem), taken_before_or_same("AMS 310", Sem).
 pre_or_coreq("CSE 353", Sem) :- semester(Sem), taken_before_or_same("AMS 311", Sem).
 pre_or_coreq("CSE 353", Sem) :- semester(Sem), taken_before_or_same("AMS 412", Sem).
+has_prereq("CSE 353").
+prereq("CSE 353", Sem) :- semester(Sem),taken_before(("CSE 316"; "CSE 351"), Sem),major("CSE"; "DAS").
 course("CSE 354", 3).
 has_prereq("CSE 354").
 prereq("CSE 354", Sem) :- semester(Sem),taken_before(("CSE 316"; "CSE 351"), Sem),major("CSE"; "DAS").
@@ -239,6 +239,10 @@ prereq("CSE 416", Sem) :- semester(Sem),passed_before(("CSE 316","C"), Sem),stan
 course("CSE 475", 3).
 has_prereq("CSE 475").
 prereq("CSE 475", Sem) :- semester(Sem),unsupported_prereq,unsupported_prereq,unsupported_prereq.
+course("CSE 487", 0).
+course("CSE 487", 1).
+course("CSE 487", 2).
+course("CSE 487", 3).
 has_prereq("CSE 487").
 prereq("CSE 487", Sem) :- semester(Sem),permission.
 course("CSE 488", 3).

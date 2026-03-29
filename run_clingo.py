@@ -70,8 +70,8 @@ def run_clingo(mode, main_lp, kb_lp, taken_set = set()):
         item = str(sym.arguments[0])
         checked[item][0] = True
       elif sym.name == "planned":             ## planning mode
-        cid = str(sym.arguments[0]).strip('"')
-        semester_sym = sym.arguments[1]
+        cid_sym, credit_sym_, semester_sym = sym.arguments
+        cid = str(cid_sym).strip('"')
         ## convert semester symbol from clingo to python
         if semester_sym.type == clingo.SymbolType.Number:    ## previous: just number for semester
           sem = semester_sym.number

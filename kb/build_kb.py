@@ -208,7 +208,7 @@ class PrologGenerator:
     l = []    ## l is a list of strings representing the kb
 
     ## generate course facts (course/2)
-    pat_credits = r'(?P<min_credit>\d+)(?P<max_credit>-(\d+))?'
+    pat_credits = r'^(?P<min_credit>\d+)(?:-(?P<max_credit>\d+))?$'
     m = re.match(pat_credits, course.credits)
     if m:
       min_credit = int(m.group('min_credit'))

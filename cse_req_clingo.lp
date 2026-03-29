@@ -268,50 +268,50 @@ offered(Id, Sem) :- course(Id, _), semester(Sem).
 
 %%%% generate
 %% any untaken course can be planned for at most one semester.
-{ planned(Id, Sem) : semester(Sem), offered(Id, Sem) } 1 :- course(Id, _), not taken_id(Id). %% #const can't be used in the head
+%%   plan with only one of the credit options if there are many
+{ planned(Id, Credit, Sem) : course(Id, Credit), semester(Sem), offered(Id, Sem) } 1 :- course(Id, _), not taken_id(Id). %% #const can't be used in the head
 
 %% assume course planned has grade A and taken in SB
-%%  plan with only one of the credit options if there are many
-1 { taken(Id, Credit, "A", Sem, "SB") : course(Id, Credit) } 1 :- planned(Id, Sem).
+taken(Id, Credit, "A", Sem, "SB") :- planned(Id, Credit, Sem).
 
 %%%% constraints
 %% all requirements must be satisfied.
 :- item(X), not sat(X).
 
 %% prereq: if a course is planned, then the prereq must be satisfied at the same semester.
-:- planned(Id, Sem),
+:- planned(Id, _, Sem),
    has_prereq(Id),
    not prereq(Id, Sem).
 
 % coreq: if a course is planned, then the coreq must be satisfied at the same semester.
-:- planned(Id, Sem),
+:- planned(Id, _, Sem),
    has_coreq(Id),
    not coreq(Id, Sem).
 
 % antireq: can not be satisfied at the same semester.
-:- planned(Id, Sem),
+:- planned(Id, _, Sem),
    has_anti_req(Id), 
    anti_req(Id, Sem).      %% anti-req can not be satisfied
 
 % must avoid: must-avoid can not be planned for (ignore history).
-:- planned(Id, _),
+:- planned(Id, _, _),
    must_avoid(Id).
 
 % must take: for must-take, either in history or in the plan.
 :- must_take(Id),
    not taken_id(Id),
-   not planned(Id, _).
+   not planned(Id, _, _).
 
-%% do not exceed max credits per semester %%% todo: need to consider different credit options for the same course, currently only works for courses with one credit option.
-:- semester(Sem), #sum { Credit, Id : planned(Id, Sem), course(Id, Credit) } > max_credits_per_semester.
+%% do not exceed max credits per semester
+:- semester(Sem), #sum { Credit, Id : planned(Id, Credit, Sem) } > max_credits_per_semester.
 
 %%%% optimization
 
 %% first, minimize the number of courses to take to satisfy all requirements.
-#minimize { 1@2, Id : planned(Id, _) }.
+#minimize { 1@2, Id : planned(Id, _, _) }.
 
 %% next, minimize the number of semesters
-max_sem(Sem) :- Sem = #max { (Y, T) : planned(_, (Y, T)) }. %% get the max semester in the plan
+max_sem(Sem) :- Sem = #max { (Y, T) : planned(_, _, (Y, T)) }. %% get the max semester in the plan
 #minimize { (Y*4+T)@1 : max_sem((Y, T)) }.
 
 #program input.
