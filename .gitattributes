@@ -1,2 +1,3 @@
 *.da linguist-language=python
 *.py diff=python
+*.lp linguist-language=prolog
