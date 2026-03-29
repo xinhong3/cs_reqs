@@ -3335,6 +3335,26 @@
     "__type__": "Course"
   },
   {
+    "id": "MAT 123",
+    "title": "Precalculus",
+    "desc": "Comprehensive preparation for the regular calculus sequences. Careful development of rational, exponential, logarithmic, and trigonometric functions, and their applications. Asymptotics and curve sketching. General modeling examples. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
+    "prereq": {
+      "UnsupportedRequirement": [
+        "C or better in MAP 103 or level 3 on the mathematics placement exam or corequisite MAT 119 (Prerequisite must be met within one year prior to beginning the course.)"
+      ]
+    },
+    "coreq": null,
+    "anti_req": null,
+    "pre_or_coreq": null,
+    "advisory_prereq": null,
+    "advisory_coreq": null,
+    "advisory_pre_or_coreq": null,
+    "category": null,
+    "credits": "3",
+    "grading": null,
+    "__type__": "Course"
+  },
+  {
     "id": "MAT 125",
     "title": "Calculus A",
     "desc": "Differential calculus, emphasizing conceptual understanding, computations and applications, for students who have the necessary background from 12th-year high school mathematics. Limits and continuous functions. Differentiation of elementary algebraic, trigonometric, exponential and logarithmic functions; graphing; modeling; and maximization. L'Hospital's rule.  May not be taken for credit in addition to MAT 131 or 141 or AMS 151. This course has been designated as a High Demand/Controlled Access (HD/CA) course. Students registering for HD/CA courses for the first time will have priority to do so.",
@@ -4322,7 +4342,7 @@
     "credits": "3",
     "grading": null,
     "__type__": "Course"
-  }
+  },
   {
     "id": "WRT 101",
     "title": "Introductory Writing Workshop",

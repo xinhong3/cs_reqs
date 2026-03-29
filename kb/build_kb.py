@@ -221,7 +221,11 @@ class PrologGenerator:
       req_value = getattr(course, req_type)
       if req_value is not None:
         l.append(f'has_{req_type}("{course.id}").')       ## add has_requisite fact for each course with that type of requisite
-        l.append(f'{req_type}("{course.id}", Sem) :- semester(Sem),{self.generate_expr(req_value, req_type)}.')    ## add Sem in the head
+        if isinstance(req_value, Or):
+          for subexpr in req_value.subexprs:
+            l.append(f'{req_type}("{course.id}", Sem) :- semester(Sem), {self.generate_expr(subexpr, req_type)}.')
+        else:
+          l.append(f'{req_type}("{course.id}", Sem) :- semester(Sem),{self.generate_expr(req_value, req_type)}.')    ## add Sem in the head
     return l
 
   def generate_expr(self, expr: Expr, req_type: str) -> str:
@@ -299,7 +303,8 @@ class ClingoGenerator(PrologGenerator):
 
   def generate_or(self, expr: Or, req_type) -> str:
     ## exclude unsupported
-    subexprs = [subexpr for subexpr in expr.subexprs if not isinstance(subexpr, UnsupportedRequirement)]
+    # subexprs = [subexpr for subexpr in expr.subexprs if not isinstance(subexpr, UnsupportedRequirement)]
+    subexprs = expr.subexprs
     ## if all are with the same requirement type -> pool arguments
     if all(isinstance(op, Requirement) for op in subexprs) and len(set(type(op) for op in subexprs)) == 1:
       pooled = self.pool_requirement_arguments(subexprs)
