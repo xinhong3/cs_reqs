@@ -242,17 +242,23 @@ req_passed(writing)       :- writing_req.
 req_passed(credits_at_SB) :- credits_at_sb_req.
 
 deg_req :- req_passed(Item) : req_name(Item).   %% all requirements passed
-
 #maximize { 1@3, Item : req_passed(Item) }.     %% prioritize satisfying more requirements
 
 #program plan.
 
-%% constants
-#const min_semester = 1.            %% min semester number
-#const max_semester = 8.            %% max number of semesters
-#const max_courses_per_semester = 4.%% max courses to take in one semester
+#const start_sem = (2024, 3).
+#const finish_sem = (2028, 4).
+#const num_sem_per_year = 4.
+#const max_credits_per_semester = 18. %% max courses to take in one semester
 
-semester(min_semester..max_semester).
+year(Y1..Y2) :- start_sem = (Y1, _), finish_sem = (Y2, _).
+term(1..num_sem_per_year).
+
+semester((Y, T)) :-     %% semesters between start_sem and finish_sem, inclusive
+  year(Y), 
+  term(T),
+  (Y, T) >= start_sem,
+  (Y, T) <= finish_sem.
 
 %% The KB uses temporal relations (*_before, *_same) to evaluate requisites.
 %% e.g. prereq("CSE 214", Sem) :- semester(Sem), passed_before("CSE 114", Sem).
@@ -267,12 +273,20 @@ passed_before((Id, ExpectedGrade), Sem) :- semester(Sem), taken(Id, _, Grade, Se
 %% course Id is taken at semester Sem. %% for coreq only   %%% todo: rename to taken_at?
 taken_same(Id, Sem) :- semester(Sem), taken(Id, _, _, Sem, _).
 
+%% for prereq_or_coreq: could be taken before or at the same semester.
+taken_before_or_same(Id, Sem) :- taken_before(Id, Sem).
+taken_before_or_same(Id, Sem) :- taken_same(Id, Sem).
+
+%%% TODO: assume courses are offered in all semesters, need to change it later.
+offered(Id, Sem) :- course(Id, _), semester(Sem).
+
 %%%% generate
 %% any untaken course can be planned for at most one semester.
-{ planned(Id, Sem) : Sem = min_semester..max_semester } 1 :- course(Id, _), not taken_id(Id). %% #const can't be used in the head
+{ planned(Id, Sem) : semester(Sem), offered(Id, Sem) } 1 :- course(Id, _), not taken_id(Id). %% #const can't be used in the head
 
 %% assume course planned has grade A and taken in SB
-taken(Id, Credit, "A", Sem, "SB") :- course(Id, Credit), planned(Id, Sem). 
+%%  plan with only one of the credit options if there are many
+1 { taken(Id, Credit, "A", Sem, "SB") : course(Id, Credit) } 1 :- planned(Id, Sem).
 
 %%%% constraints
 %% all requirements must be satisfied.
@@ -293,24 +307,35 @@ taken(Id, Credit, "A", Sem, "SB") :- course(Id, Credit), planned(Id, Sem).
    has_anti_req(Id), 
    anti_req(Id, Sem).      %% anti-req can not be satisfied
 
+% must avoid courses
+:- planned(Id, _),
+   must_avoid(Id).
+
+% must take courses
+:- must_take(Id),
+   not taken_id(Id),    %% not in history
+   not planned(Id, _).  %% not planned
+
 %% do not exceed max courses per semester
-:- semester(Sem), #count { Id : planned(Id, Sem) } > max_courses_per_semester.
+:- semester(Sem), #sum { Credit, Id : planned(Id, Sem), course(Id, Credit) } > max_credits_per_semester.
 
-%%%% optimization (in inverse order of significance)
-%% minimize the number of semesters
-max_sem(X) :- semester(X), X = #max { Sem : planned(_, Sem) }.
-#minimize { X@1: max_sem(X) }.
+%%%% optimization
 
-%% minimize the number of courses to take to satisfy all requirements.
+%% first, minimize the number of courses to take to satisfy all requirements.
 #minimize { 1@2, Id : planned(Id, _) }.
+
+%% next, minimize the number of semesters
+max_sem(Sem) :- Sem = #max { (Y, T) : planned(_, (Y, T)) }. %% get the max semester in the plan
+#minimize { (Y*4+T)@1 : max_sem((Y, T)) }.
 
 #program input.
 
 %% student facts
 standing("U1"). standing("U2"). standing("U3"). standing("U4").
 major("CSE"). permission.
-
-%%%%% test
+% must_avoid("CHE 322").
+% must_take("CHE 322").
+%%%%% test (commented out to get input from python)
 %% to play around:
 %%   you can comment out more of the taken_id facts.
 %%   change the generate rule (in the planning part below) to set upper_bound to max number of courses to plan for, e.g. 5.
@@ -329,83 +354,5 @@ major("CSE"). permission.
 % taken_id("CSE 352"). taken_id("CSE 353"). taken_id("CSE 355").
 % taken_id("PHY 131"). taken_id("PHY 133"). taken_id("AST 203").
 
-%% generate input, assume all courses are taken in semester 0 (before planning semesters)
-taken(Id, Credit, "A", 0, "SB") :- course(Id, Credit), taken_id(Id).
-
-%%% ISSUE: better ways to do the same?
-%%%   Clingo does not seem to have native support for string manipulation,
-%%%   therefore we use external python functions to extract course number and program from course Id.
-
-% #script (python)
-% import clingo
-
-% def upper_division(id):
-%   return clingo.Number(int(id.string[4:]) >= 300)
-
-% def course_prog(id):
-%   return clingo.String(id.string[:3])
-
-% def on_model(model, mode: str):     ## output
-%   checked = {}              ## key: requirement item, value: [status, witness list]
-%   planned_courses = {}      ## course Id to semester, key: course Id, value: semester
-%   schedule = {}             ## inverse of planned_courses, key: semester, value: list of course Ids
-  
-%   degree_passed = False
-
-%   for sym in model.symbols(atoms=True):       ## collect status and planned courses
-%     if sym.name == "deg_req":
-%       degree_passed = True
-%     elif sym.name == "req_passed":
-%       item = str(sym.arguments[0])
-%       checked[item] = [True, []]
-%     elif sym.name == "req_missing":
-%       item = str(sym.arguments[0])
-%       checked[item] = [False, []]
-%     elif sym.name == "planned":     ## planned courses, used to generate the schedule
-%       cid = str(sym.arguments[0]).strip('"')
-%       sem = sym.arguments[1].number
-%       planned_courses[cid] = sem
-%       schedule[sem] = schedule[sem] + [cid] if sem in schedule else [cid]
-
-%   for sym in model.symbols(atoms=True):       ## adding witness
-%     if sym.name == "wit":
-%       item = str(sym.arguments[0])
-%       cid = str(sym.arguments[1]).strip('"')
-      
-%       if cid in planned_courses:    ## different format for planned courses (so we know they are planned)
-%         sem = planned_courses[cid]
-%         course = f"{cid} (in Sem {sem})"
-%       else:
-%         course = cid
-
-%       if item in checked:
-%         checked[item][1].append(course)
-%       else:
-%         checked[item] = [True, [course]]
-
-%   for key in checked:
-%     status, wits = checked[key]
-%     checked[key] = (status, sorted(wits))   ## sort the witness list, as in python
-  
-%   checked['degree'] = (degree_passed, [])
-
-%   print('---- checked, from running degree_reqs:')      ## same output format as in python
-%   print(checked)
-%   print('----')
-  
-%   for item, (check, wits) in checked.items():
-%     print(item + '\t ' + str(check) + ' ' + str(wits))
-  
-%   if mode == 'plan': # print the schedule
-%     print('---- planned schedule:')
-%     for sem in sorted(schedule):
-%       print(f"Semester {sem}: {schedule[sem]}")
-
-% def main(prg):
-%   mode = 'check'
-%   if mode == 'check':   ## check only
-%     prg.ground([("base", []), ("check", [])])
-%   elif mode == 'plan':  ## check + plan
-%     prg.ground([("base", []), ("check", []), ("plan", [])])
-%   prg.solve(on_model=lambda m: on_model(m, mode))
-% #end.
+%% generate input, assume all courses are taken in semester 0
+% taken(Id, Credit, "A", (0, 0), "SB") :- course(Id, Credit), taken_id(Id).

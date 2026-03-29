@@ -1,7 +1,7 @@
 import inspect
 from pprint import pprint
 from tests import Taken
-from run_clingo import print_clingo_stats, run_clingo
+from run_clingo import DEFAULT_KB_LP, DEFAULT_MAIN_LP, print_clingo_stats, run_clingo
 import tests                ## tests.py in cs_reqs
 
 def testing(test_func):
@@ -10,15 +10,20 @@ def testing(test_func):
   clingo_checked, schedule_, stats = run_clingo(
     taken_set=taken,
     mode='check', 
-    main_lp='cse_req_clingo.lp', 
-    kb_lp='kb_complete.lp'
+    main_lp=DEFAULT_MAIN_LP, 
+    kb_lp=DEFAULT_KB_LP
   )
   
   for req, (expected_check, expected_wits_) in expected_checked.items():
     if req not in clingo_checked:
       assert False, f"Clingo is missing requirement: {req}"
     clingo_check = clingo_checked[req][0]
+    clingo_wits = clingo_checked[req][1]
     assert expected_check == clingo_check, f"Expected {expected_check} for {req}, but got {clingo_check}"
+    if req != 'credits_at_SB' and expected_check:
+      ## for credits req, python outputs total number of credits instead of list of courses
+      ## and for 
+      assert set(expected_wits_) <= set(clingo_wits), f"Expected witness {expected_wits_} for {req}, but got {clingo_wits}"
 
   pprint(clingo_checked)
   print_clingo_stats(stats)
@@ -29,8 +34,8 @@ def test_clingo_planning(test_func):
   clingo_checked, schedule, stats = run_clingo(
     taken_set=taken,
     mode='plan',
-    main_lp='cse_req_clingo.lp',
-    kb_lp='kb_complete.lp'
+    main_lp=DEFAULT_MAIN_LP,
+    kb_lp=DEFAULT_KB_LP
   )
 
   pprint(clingo_checked)
@@ -83,9 +88,9 @@ def test_plan_05():   ## remove science courses
   return taken, None
 
 if __name__ == "__main__":
-  # run_tests()
+  run_tests()
   
-  print("\n\n======== testing planning mode ========")
+  # print("\n\n======== testing planning mode ========")
   test_clingo_planning(test_plan_01)  ## expected: planned CSE 214 in semester 1
   test_clingo_planning(test_plan_03)
   test_clingo_planning(test_plan_02)

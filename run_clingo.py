@@ -4,6 +4,9 @@ import clingo
 import argparse
 from pprint import pprint
 
+DEFAULT_MAIN_LP = 'cse_req_clingo.lp'
+DEFAULT_KB_LP = 'kb_complete.lp'
+
 class ClingoContext:
   ## can't have python code in the clingo file if using python api.
   ## the #script (python) in the clingo file is commented out, and we move the functions here.
@@ -13,7 +16,7 @@ class ClingoContext:
   def course_prog(self, course_id):
     return clingo.String(course_id.string[:3])
 
-def print_clingo_stats(stats: clingo.Control.statistics):
+def print_clingo_stats(stats: clingo.control.Control.statistics):
   total_time = stats['summary']['times']['total']
   solve_time = stats['summary']['times']['solve']
   ground_time = total_time - solve_time
@@ -36,8 +39,8 @@ def run_clingo(mode, main_lp, kb_lp, taken_set = set()):
 
   test_facts = ""
   for c in taken_set:
-    ## get taken facts from test, except we change the when to semester (1).
-    test_facts += f'taken("{c.id}", {c.credits}, "{c.grade}", 1, "{c.where}").\n'
+    ## get taken facts from test.
+    test_facts += f'taken("{c.id}", {c.credits}, "{c.grade}", {str(c.when)}, "{c.where}").\n'
     if mode == 'plan':
       test_facts += f'taken_id("{c.id}").\n'  ## taken_id is only for planning, not needed in checking
 
@@ -69,7 +72,14 @@ def run_clingo(mode, main_lp, kb_lp, taken_set = set()):
         checked[item][0] = True
       elif sym.name == "planned":             ## planning mode
         cid = str(sym.arguments[0]).strip('"')
-        sem = sym.arguments[1].number
+        semester_sym = sym.arguments[1]
+        ## convert semester symbol from clingo to python
+        if semester_sym.type == clingo.SymbolType.Number:    ## previous: just number for semester
+          sem = semester_sym.number
+        elif semester_sym.type == clingo.SymbolType.Function and len(semester_sym.arguments) == 2: ## (year, term) tuple for semester
+          sem = (semester_sym.arguments[0].number, semester_sym.arguments[1].number)
+        else:
+          raise ValueError(f"Unexpected semester symbol: {semester_sym}")
         planned_courses[cid] = sem            ## record planned semester
         schedule[sem].append(cid)             ## add course to schedule
 
@@ -97,8 +107,8 @@ if __name__ == "__main__":
   parser = argparse.ArgumentParser(description="Run the Degree Checker and Planner.")
   parser.add_argument('-m', '--mode', choices=['check', 'plan'], default='check', help="Run mode.")
   # parser.add_argument('-t', '--taken', nargs='+', default=[], help="List of taken courses (e.g. 'CSE 114' 'CSE 214').")
-  parser.add_argument('-f', '--file', default='cse_req_clingo.lp', help="Path to the main .lp file that encodes the logic.")
-  parser.add_argument('-k', '--kb', default='./kb/kb_complete.lp', help="Path to the KB .lp file.")
+  parser.add_argument('-f', '--file', default=DEFAULT_MAIN_LP, help="Path to the main .lp file that encodes the logic.")
+  parser.add_argument('-k', '--kb', default=DEFAULT_KB_LP, help="Path to the KB .lp file.")
   
   args = parser.parse_args()
   
