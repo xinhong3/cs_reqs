@@ -67,7 +67,7 @@ c("CSE 150", dmath2).
 c("CSE 220", sys). 
 s(intro, (prog; prog2; dmath; dmath2; sys)).
 
-intro_req :-
+sat(intro) :-
   passed_all(prog; prog2),
   passed_all(dmath; dmath2),
   passed_all(sys).
@@ -78,7 +78,7 @@ c("CSE 373", algo). c("CSE 385", algo2).
 c("CSE 310", other). c("CSE 316", other). c("CSE 320", other). c("CSE 416", other).
 s(adv, (theory; theory2; algo; algo2; other)).
 
-adv_req :- 
+sat(adv) :- 
   passed_all(theory; theory2),
   passed_all(algo; algo2),
   passed_all(other).
@@ -93,10 +93,10 @@ courses_taken(Id, Credits, Grade, elect_passed) :-
   @upper_division(Id) = 1,    %% is upper division
   Credits >= 3, not courses(Id, adv), not c(Id, elect_exclude).
 
-elect_req :- 
+sat(elect) :- 
   #count { Id: courses_taken(Id, _, _, elect_passed) } >= 4.
 
-%% for elect, witness is the subset elect_passed used in elect_req.
+%% for elect, witness is the subset elect_passed used in elect.
 wit(elect, Id) :- courses_taken(Id, _, _, elect_passed).
 
 % 4. AMS 151, AMS 161 Applied Calculus I, II
@@ -108,7 +108,7 @@ c("MAT 125", calc2). c("MAT 126", calc2). c("MAT 127", calc2).
 c("MAT 131", calc3). c("MAT 132", calc3).
 s(calc, (calc; calc2; calc3)).
 
-calc_req :- 
+sat(calc) :- 
   passed_all(calc; calc2; calc3).
 
 % 5. One of the following:
@@ -116,7 +116,7 @@ c("MAT 211", alg).
 c("AMS 210", alg2).
 s(alg, (alg; alg2)).
 
-alg_req :- 
+sat(alg) :- 
   passed_all(alg; alg2).
 
 % 6. Both of the following:
@@ -125,7 +125,7 @@ c("AMS 310", sta).
 c("AMS 311", sta2).
 s(sta, (fmath; sta; sta2)).
 
-sta_req :-
+sat(sta) :-
   passed_all(fmath),
   passed_all(sta; sta2).
 
@@ -162,6 +162,8 @@ sci_cred_req :-  #sum { Credit, Id : courses_taken(Id, Credit, _, sci_subset) } 
 % The grade point average for the courses in Requirements 7 and 8 must be at least 2.00.
 sci_grade_req :- gpa_mul_100(sci_subset, Gpa), Gpa >= 200.
 
+sat(sci) :- sci_req, sci_cred_req, sci_grade_req.
+
 %% witness for sci is the subset used to satisfy all sci requirements, as in python.
 wit(sci, Id) :- courses_taken(Id, _, _, sci_subset).
 
@@ -169,13 +171,13 @@ wit(sci, Id) :- courses_taken(Id, _, _, sci_subset).
 c("CSE 312", ethics).
 s(ethics, ethics).
 
-ethics_req :- passed_all(ethics).
+sat(ethics) :- passed_all(ethics).
 
 % 10. Upper-Division Writing Requirement
 c("CSE 300", writing).
 s(writing, writing).
 
-writing_req :- passed_all(writing).
+sat(writing) :- passed_all(writing).
 
 %%% (copied from python) todo:
 % Note: All students are encouraged to discuss their program with an
@@ -201,7 +203,7 @@ items123_course(Id) :- courses_taken(Id, _, _, elect_passed).
 items23_course(Id) :- courses(Id, adv).
 items23_course(Id) :- courses_taken(Id, _, _, elect_passed).
 
-credits_at_sb_req :-
+sat(credits_at_SB) :-
   #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items123_course(Id) } >= 24,
   #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items23_course(Id) } >= 18.
 
@@ -218,31 +220,15 @@ wit(credits_at_SB, Id) :- items23_course(Id), taken(Id, _, _, _, "SB").
 % at least 2.00.  %%% assume to be: The courses *taken to satisfy* Req...
 %% merged with 7 and 8; otherwise, not correct if as assumed.
 
-#show c/1.
-
 #program check.
 
-%% whether the taken courses satisfy all requirements for BS major in CSE
+%% requirements items
+item(intro; adv; elect; calc; alg; sta; sci; ethics; writing; credits_at_SB).
 
-%%% there are no constraints used in checking, as when the degree requirements are not satisfied we want a model to show which reqs are (are not) satisfied and their witnesses.
+degree :- sat(Item) : item(Item).     %% degree requirement sat if all requirements are satisfied
 
-%% req_name: used in the constraint to check if all requirements are satisfied.
-req_name(intro; adv; elect; calc; alg; sta; sci; ethics; writing; credits_at_SB).
-
-%%% could've used req_passed directly in each requirement, but keep them same as in prolog.
-req_passed(intro)         :- intro_req.
-req_passed(adv)           :- adv_req.
-req_passed(elect)         :- elect_req.
-req_passed(calc)          :- calc_req.
-req_passed(alg)           :- alg_req.
-req_passed(sta)           :- sta_req.
-req_passed(sci)           :- sci_req, sci_cred_req, sci_grade_req.
-req_passed(ethics)        :- ethics_req.
-req_passed(writing)       :- writing_req.
-req_passed(credits_at_SB) :- credits_at_sb_req.
-
-deg_req :- req_passed(Item) : req_name(Item).   %% all requirements passed
-#maximize { 1@3, Item : req_passed(Item) }.     %% prioritize satisfying more requirements
+#maximize { 1@3, Item : sat(Item) }.  %% soft constraint: maximize the number of requirements satisfied. 
+                                      %%   so we have a model even when not all requirements are satisfied.
 
 #program plan.
 
@@ -255,7 +241,7 @@ year(Y1..Y2) :- start_sem = (Y1, _), finish_sem = (Y2, _).
 term(1..num_sem_per_year).
 
 semester((Y, T)) :-     %% semesters between start_sem and finish_sem, inclusive
-  year(Y), 
+  year(Y),
   term(T),
   (Y, T) >= start_sem,
   (Y, T) <= finish_sem.
@@ -290,7 +276,7 @@ offered(Id, Sem) :- course(Id, _), semester(Sem).
 
 %%%% constraints
 %% all requirements must be satisfied.
-:- req_name(X), not req_passed(X).
+:- item(X), not sat(X).
 
 %% prereq: if a course is planned, then the prereq must be satisfied at the same semester.
 :- planned(Id, Sem),
@@ -302,21 +288,21 @@ offered(Id, Sem) :- course(Id, _), semester(Sem).
    has_coreq(Id),
    not coreq(Id, Sem).
 
-% antireq
-:- planned(Id, Sem),  %% todo: need to work on the KB on each one (there is only 3 courses with anti-req)
+% antireq: can not be satisfied at the same semester.
+:- planned(Id, Sem),
    has_anti_req(Id), 
    anti_req(Id, Sem).      %% anti-req can not be satisfied
 
-% must avoid courses
+% must avoid: must-avoid can not be planned for (ignore history).
 :- planned(Id, _),
    must_avoid(Id).
 
-% must take courses
+% must take: for must-take, either in history or in the plan.
 :- must_take(Id),
-   not taken_id(Id),    %% not in history
-   not planned(Id, _).  %% not planned
+   not taken_id(Id),
+   not planned(Id, _).
 
-%% do not exceed max courses per semester
+%% do not exceed max credits per semester %%% todo: need to consider different credit options for the same course, currently only works for courses with one credit option.
 :- semester(Sem), #sum { Credit, Id : planned(Id, Sem), course(Id, Credit) } > max_credits_per_semester.
 
 %%%% optimization

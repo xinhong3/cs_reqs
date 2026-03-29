@@ -35,7 +35,8 @@ def run_clingo(mode, main_lp, kb_lp, taken_set = set()):
   ctrl.load(kb_lp)
   
   items = ('intro', 'adv', 'elect', 'calc', 'alg', 'sta', 
-          'sci', 'ethics', 'writing', 'credits_at_SB')
+          'sci', 'ethics', 'writing', 'credits_at_SB',
+          'degree')   ## include degree as an item
 
   test_facts = ""
   for c in taken_set:
@@ -52,22 +53,20 @@ def run_clingo(mode, main_lp, kb_lp, taken_set = set()):
   ctrl.ground(to_ground, context=ClingoContext())
   
   checked = {}  ## initialize all items to not passed
-  degree_passed = False
   schedule = {}
   
   def on_model(model):    ## invoked for every model found
-    nonlocal checked, schedule, degree_passed
+    nonlocal checked, schedule
 
     ## reset checked when there are multiple models (in planning mode)
     checked = {item: [False, []] for item in items}  ## initialize all items to not passed
     planned_courses = {}
     schedule = defaultdict(list)
-    degree_passed = False
     
     for sym in model.symbols(atoms=True):     ## collect check for each requirement
-      if sym.name == "deg_req":
-        degree_passed = True
-      elif sym.name == "req_passed":
+      if sym.name == "degree":
+        checked['degree'][0] = True
+      elif sym.name == "sat":
         item = str(sym.arguments[0])
         checked[item][0] = True
       elif sym.name == "planned":             ## planning mode
@@ -94,10 +93,8 @@ def run_clingo(mode, main_lp, kb_lp, taken_set = set()):
   ctrl.solve(on_model=on_model)
 
   ## sort witness, same as test in python
-  checked = {item: (check, sorted(wits)) for item, (check, wits) in checked.items()}          
+  checked = {item: (check, sorted(wits)) for item, (check, wits) in checked.items()}
 
-  checked['degree'] = (degree_passed, [])
-  
   for sem in schedule:
     schedule[sem].sort()
       
