@@ -20,8 +20,7 @@ def run_case(test_func, mode='check', checks_witness=False):
       clingo_check = clingo_checked[req][0]
       clingo_wits = clingo_checked[req][1]
       assert expected_check == clingo_check, f"Expected {expected_check} for {req}, but got {clingo_check}"
-      if expected_check: ## for checks that are False, python includes extra strings as witness.
-        assert set(expected_wits) <= set(clingo_wits), f"Expected witness {expected_wits} for {req}, but got {clingo_wits}"
+      assert set(expected_wits) <= set(clingo_wits), f"Expected witness {expected_wits} for {req}, but got {clingo_wits}"
 
   pprint(clingo_checked)
 

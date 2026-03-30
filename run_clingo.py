@@ -92,6 +92,12 @@ def run_clingo(mode, main_lp, kb_lp, taken_set = set()):
         if course in planned_courses:         ## for planned courses, indicate the semester
           course += f' (sem {planned_courses[course]})'
         checked[item][1].append(course)
+    
+    ## add extra strings if check for item is false
+    if not checked['elect'][0]:
+      checked['elect'][1].append('need 4 total')
+    if not checked['sci'][0]:
+      checked['sci'][1].append('need a lec/lab combo and more, with >=9 credits and >=2.0 GPA')
 
   ctrl.solve(on_model=on_model)
 
