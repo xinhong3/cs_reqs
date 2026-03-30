@@ -84,7 +84,10 @@ def run_clingo(mode, main_lp, kb_lp, taken_set = set()):
 
     for sym in model.symbols(atoms=True):     ## collect witness
       if sym.name == "wit":
-        item = str(sym.arguments[0])
+        item, val = str(sym.arguments[0]), sym.arguments[1]
+        if item == "credits_at_SB":  ## val.name is items123 or items23. matches python witness for credits_at_SB
+          checked[item][1].append(f"{val.name} = {val.arguments[0].number}")
+          continue
         course = str(sym.arguments[1]).strip('"')
         if course in planned_courses:         ## for planned courses, indicate the semester
           course += f' (sem {planned_courses[course]})'

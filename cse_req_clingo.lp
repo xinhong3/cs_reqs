@@ -203,12 +203,15 @@ items123_course(Id) :- courses_taken(Id, _, _, elect_passed).
 items23_course(Id) :- courses(Id, adv).
 items23_course(Id) :- courses_taken(Id, _, _, elect_passed).
 
-sat(credits_at_SB) :-
-  #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items123_course(Id) } >= 24,
-  #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items23_course(Id) } >= 18.
+items123_credits(Credits) :- Credits = #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items123_course(Id) }.
+items23_credits(Credits) :- Credits = #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items23_course(Id) }.
 
-wit(credits_at_SB, Id) :- items123_course(Id), taken(Id, _, _, _, "SB").
-wit(credits_at_SB, Id) :- items23_course(Id), taken(Id, _, _, _, "SB").
+sat(credits_at_SB) :-
+  items123_credits(Credits1), Credits1 >= 24,
+  items23_credits(Credits2), Credits2 >= 18.
+
+wit(credits_at_SB, items123(Total)) :- items123_credits(Total).
+wit(credits_at_SB, items23(Total)) :- items23_credits(Total).
 
 % Grading (%%% comments are copied from python)
 %

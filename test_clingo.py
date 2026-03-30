@@ -1,48 +1,44 @@
 import inspect
 from pprint import pprint
-from tests import Taken
 from run_clingo import DEFAULT_KB_LP, DEFAULT_MAIN_LP, print_clingo_stats, run_clingo
 import tests                ## tests.py in cs_reqs
 
-def testing(test_func):
-  taken, expected_checked = test_func()
-  print('---- taken_ids: ', sorted({c.id for c in taken}))
-  clingo_checked, schedule_, stats = run_clingo(
-    taken_set=taken,
-    mode='check', 
-    main_lp=DEFAULT_MAIN_LP, 
-    kb_lp=DEFAULT_KB_LP
-  )
-  
-  for req, (expected_check, expected_wits_) in expected_checked.items():
-    if req not in clingo_checked:
-      assert False, f"Clingo is missing requirement: {req}"
-    clingo_check = clingo_checked[req][0]
-    clingo_wits = clingo_checked[req][1]
-    assert expected_check == clingo_check, f"Expected {expected_check} for {req}, but got {clingo_check}"
-    if req != 'credits_at_SB' and expected_check:
-      ## for credits req, python outputs total number of credits instead of list of courses
-      ## and for 
-      assert set(expected_wits_) <= set(clingo_wits), f"Expected witness {expected_wits_} for {req}, but got {clingo_wits}"
-
-  pprint(clingo_checked)
-  print_clingo_stats(stats)
-
-def test_clingo_planning(test_func):
+def run_case(test_func, mode='check', checks_witness=False):
   taken, expected_checked = test_func()
   print('---- taken_ids: ', sorted({c.id for c in taken}))
   clingo_checked, schedule, stats = run_clingo(
     taken_set=taken,
-    mode='plan',
-    main_lp=DEFAULT_MAIN_LP,
+    mode=mode, 
+    main_lp=DEFAULT_MAIN_LP, 
     kb_lp=DEFAULT_KB_LP
   )
 
+  if checks_witness:
+    for req, (expected_check, expected_wits) in expected_checked.items():
+      if req not in clingo_checked:
+        assert False, f"Clingo is missing requirement: {req}"
+      clingo_check = clingo_checked[req][0]
+      clingo_wits = clingo_checked[req][1]
+      assert expected_check == clingo_check, f"Expected {expected_check} for {req}, but got {clingo_check}"
+      if expected_check: ## for checks that are False, python includes extra strings as witness.
+        assert set(expected_wits) <= set(clingo_wits), f"Expected witness {expected_wits} for {req}, but got {clingo_wits}"
+
   pprint(clingo_checked)
-  print('---- planned schedule:')
-  for sem in sorted(schedule):
-    print(f"Semester {sem}: {schedule[sem]}")
+
+  if mode == 'plan':
+    print('---- planned schedule:')
+    for sem in sorted(schedule):
+      print(f"Semester {sem}: {schedule[sem]}")
+
   print_clingo_stats(stats)
+
+  return clingo_checked, schedule, stats
+
+def testing(test_func):
+  return run_case(test_func, mode='check', checks_witness=True)
+
+def test_clingo_planning(test_func):
+  return run_case(test_func, mode='plan', checks_witness=False)
 
 def run_tests():
   for (name, func) in inspect.getmembers(tests, inspect.isfunction):
