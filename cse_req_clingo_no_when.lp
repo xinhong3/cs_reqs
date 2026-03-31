@@ -22,14 +22,14 @@ grade_points("I/F", 0). grade_points("Q", 0).
 %%   if a course is taken multiple times, all of them will be counted, as in python.
 gpa_x100(Tag, GPA) :-
   subset_taken(_, Tag),
-  WeightedSum = #sum { Credit*Points, Id, When : subset_taken(Id, Tag), taken(Id, Credit, Grade, When, _), grade_points(Grade, Points) },
-  SumOfWeights = #sum { Credit, Id, When : subset_taken(Id, Tag), taken(Id, Credit, Grade, When, _), grade_points(Grade, _) },
+  WeightedSum = #sum { Credit*Points, Id: subset_taken(Id, Tag), taken(Id, Credit, Grade, _, _), grade_points(Grade, Points) },
+  SumOfWeights = #sum { Credit, Id : subset_taken(Id, Tag), taken(Id, Credit, Grade, _, _), grade_points(Grade, _) },
   SumOfWeights > 0, GPA = WeightedSum / SumOfWeights. %%% integer floor division. 
 
 %% gpa is 0 when sum of weights is 0, as in python.
 gpa_x100(Tag, 0) :-
   subset_taken(_, Tag),
-  #sum { Credit, Id, When : subset_taken(Id, Tag), taken(Id, Credit, Grade, When, _), grade_points(Grade, _) } = 0.
+  #sum { Credit, Id : subset_taken(Id, Tag), taken(Id, Credit, Grade, _, _), grade_points(Grade, _) } = 0.
 
 % taken(Id, Credits, Grade, When, Where): taken course Id with Credits, etc.
 
@@ -146,7 +146,7 @@ sci_combs_req :- sci_combs(Subj), subset_taken(Id, sci) : c(Id, Subj).
 
 % The courses selected in 7 and 8 must carry at least 9 credits.
 %% Id is needed otherwise credit will only be counted once for courses that have the same credits.
-sci_cred_req :- #sum { Credit, Id, When : subset_taken(Id, sci), taken(Id, Credit, _, When, _) } >= 9.
+sci_cred_req :- #sum { Credit, Id : subset_taken(Id, sci), taken(Id, Credit, _, _, _) } >= 9.
 
 % The grade point average for the courses in Requirements 7 and 8 must be at least 2.00.
 sci_grade_req :- gpa_x100(sci, GPA), GPA >= 2*100.
@@ -192,15 +192,12 @@ items123_course(Id) :- subset_taken(Id, elect_passed).
 items23_course(Id) :- courses(Id, adv).
 items23_course(Id) :- subset_taken(Id, elect_passed).
 
-items123_credits(Credits) :- Credits = #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items123_course(Id) }.
-items23_credits(Credits) :- Credits = #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items23_course(Id) }.
-
 sat(credits_at_SB) :-
-  items123_credits(Credits1), Credits1 >= 24,
-  items23_credits(Credits2), Credits2 >= 18.
+  #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items123_course(Id) } >= 24,
+  #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items23_course(Id) } >= 18.
 
-wit(credits_at_SB, items123(Total)) :- items123_credits(Total).
-wit(credits_at_SB, items23(Total)) :- items23_credits(Total).
+wit(credits_at_SB, Id) :- items123_course(Id), taken(Id, _, _, _, "SB").
+wit(credits_at_SB, Id) :- items23_course(Id), taken(Id, _, _, _, "SB").
 
 % Grading (%%% comments are copied from python)
 %
