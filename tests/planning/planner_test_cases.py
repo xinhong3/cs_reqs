@@ -1,6 +1,5 @@
 from ortools_version.planner import catalog, plan_courses
-from ortools_version.course_catalog import Major, Standing
-from course_kb.course_kb import History
+from ortools_version.course_catalog import Major, Standing, History
 
 
 FULL = {

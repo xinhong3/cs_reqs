@@ -140,10 +140,12 @@ class Solver:
         return v
 
     # returns an IntVar equal to the max of the given vars
-    def max_of(self, vars):
+    # hi: explicit upper bound — required when vars are linear expressions (not registered IntVars)
+    def max_of(self, vars, hi=None):
         vars = list(vars)
         if not vars: return 0
-        hi = max(self._domains.get(id(v), 1) for v in vars)  # domain size = upper bound
+        if hi is None:
+            hi = max(self._domains.get(id(v), 1) for v in vars)
         result = self.model.new_int_var(0, hi, "max")
         self.model.add_max_equality(result, vars)
         return result
@@ -182,18 +184,18 @@ class Solver:
 
         metrics = []
         if hasattr(s, 'NumConflicts'):
-            metrics.append(f"conflicts={s.NumConflicts()} (search dead-ends found)")
+            metrics.append(f"conflicts={s.NumConflicts()}")
         if hasattr(s, 'NumBranches'):
             # branches are a practical proxy for search iterations in CP-SAT
-            metrics.append(f"branches={s.NumBranches()} (branching decisions made)")
+            metrics.append(f"branches={s.NumBranches()}")
         if hasattr(s, 'NumBooleans'):
-            metrics.append(f"booleans={s.NumBooleans()} (Boolean vars used after presolve)")
+            metrics.append(f"booleans={s.NumBooleans()}")
         if hasattr(s, 'WallTime'):
-            metrics.append(f"wall_time_s={s.WallTime():.3f} (real elapsed time)")
+            metrics.append(f"wall_time_s={s.WallTime():.3f}")
         if hasattr(s, 'UserTime'):
-            metrics.append(f"user_time_s={s.UserTime():.3f} (CPU time used)")
+            metrics.append(f"user_time_s={s.UserTime():.3f}")
         if hasattr(s, 'ResponseProto'):
-            metrics.append(f"det_time={s.ResponseProto().deterministic_time:.6f} (machine-independent effort)")
+            metrics.append(f"det_time={s.ResponseProto().deterministic_time:.6f}")
 
         print('Solver metrics: ' + (', '.join(metrics) if metrics else 'n/a'))
 
