@@ -8,9 +8,19 @@ from course_kb.build_kb import ASTDecoder
 
 # ── Course record & catalog ────────────────────────────────────
 
+# For the purpose of determining grade point average, grades are assigned
+# point values as follows:
+grade_to_points = {
+  'A': 4.00, 'A-': 3.67,
+  'B+': 3.33, 'B': 3.00, 'B-': 2.67,
+  'C+': 2.33, 'C': 2.00, 'C-': 1.67,
+  'D+': 1.33, 'D': 1.00,
+  'F': 0.00, 'I/F': 0.00, 'Q': 0.00
+}
+
 ## a course taken, e.g., History('CSE 114', 4, 'A', (2024, 2), 'SB')
 History = namedtuple('History', ['id', 'credits', 'grade', 'when', 'where'])
-Course = namedtuple('Course', ['id', 'credits', 'prereq'], defaults=[None])
+Course = namedtuple('Course', ['id', 'credits', 'prereq', 'coreq', 'anti_req'], defaults=[None, None, None])
 
 catalog = {}
 
@@ -29,7 +39,7 @@ def _load_kb(path):
 import os
 _kb_path = os.path.join(os.path.dirname(__file__), '..', 'course_kb', 'kb_cse_degree.json')
 for kc in _load_kb(_kb_path):
-    catalog[kc.id] = Course(kc.id, _parse_credits(kc.credits), kc.prereq)
+    catalog[kc.id] = Course(kc.id, _parse_credits(kc.credits), kc.prereq, kc.coreq, kc.anti_req)
 
 # ── Non-CSE courses used in degree requirements ────────────────
 
@@ -43,6 +53,7 @@ _stub('AMS 210', 3)
 _stub('AMS 301', 3)
 _stub('AMS 310', 3)
 _stub('AMS 311', 3)
+_stub('AMS 333', 3)
 
 _stub('MAT 125', 3)
 _stub('MAT 126', 3)

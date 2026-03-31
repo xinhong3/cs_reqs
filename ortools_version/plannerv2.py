@@ -250,7 +250,13 @@ def plan_courses(history, *student_reqs, must_exclude=set(), must_include=set(),
         # calculate total number of new courses taken
         for c in to_plan_from:
             solver[Taken(c)] = Or(*[Taken(c, g, s) for g in GRADES for s in all_sems])
-        
+
+        # set up 1-arg and 2-arg Taken for history courses so coreq/prereq exprs referencing them resolve correctly
+        for c in history_ids:
+            for s in all_sems:
+                solver[Taken(c, s)] = Or(*[Taken(c, g, s) for g in GRADES])
+            solver[Taken(c)] = Or(*[Taken(c, g, s) for g in GRADES for s in all_sems])
+
         new_courses = sum(solver[Taken(cid)] for cid in to_plan_from)
 
         prereqs = {cid: c.prereq for cid, c in catalog.items() if c.prereq}
@@ -259,10 +265,7 @@ def plan_courses(history, *student_reqs, must_exclude=set(), must_include=set(),
             # we're not checking pre-reqs in history
             if cid in history_ids.keys() | must_exclude: continue
 
-            # create constraint out of prereq expression
-            prereq_sat = solver.constraint(expr)
-            # if we take a course, we must satisfy its prereqs
-            if prereq_sat is not None: solver.implies(Taken(cid), prereq_sat)
+            solver.implies(Taken(cid), expr)
 
             for p in get_courses(expr):
                 for s in all_sems:
@@ -275,6 +278,22 @@ def plan_courses(history, *student_reqs, must_exclude=set(), must_include=set(),
                         # first possible semester and prereq not in history — can't take cid here
                         for g in GRADES:
                             solver.ensure(Taken(cid, g, s), 0)
+
+        # coreq: must be taken same semester or before (≤ rather than < for prereqs)
+        for cid, c in catalog.items():
+            if not c.coreq or cid in history_ids.keys() | must_exclude: continue
+            solver.implies(Taken(cid), c.coreq)
+            for p in get_courses(c.coreq):
+                for s in all_sems:
+                    if s < starting_semester: continue
+                    same_or_prior = [Taken(p, ps) for ps in all_sems if ps <= s]
+                    if same_or_prior:
+                        solver.implies(Taken(cid, s), Or(*same_or_prior))
+
+        # anti_req: cannot take this course if these courses are taken (before or with)
+        for cid, c in catalog.items():
+            if not c.anti_req or cid in history_ids.keys() | must_exclude: continue
+            solver.forbids(Taken(cid), c.anti_req)
 
         # credit limit per semester to spread courses out (only for new semesters)
         future_sems = list(semester_range(starting_semester, MAX_SEM))
@@ -334,6 +353,10 @@ def plan_courses(history, *student_reqs, must_exclude=set(), must_include=set(),
     checked['degree'] = (all(v for v, _ in checked.values()), [])
 
     if not check:
+        witnessed = {c for (_, wit) in checked.values() for c in wit if c in catalog}
+        additional = sorted(c for c in planned if c not in witnessed)
+        checked['additional'] = (True, additional)
+        print(f"additional : {', '.join(fmt(c, grades) for c in additional)}")
         # printing semester-wise schedule of courses
         by_s = {}
         for cid, s in planned.items():

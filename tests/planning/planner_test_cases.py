@@ -113,3 +113,17 @@ def test_plan_respects_course_allowed_terms():
     return taken, validate
 
 
+def test_plan_coreq_160_161_mutual():
+    """Mutual coreqs CSE 160 / CSE 161 should be scheduled together."""
+    ids = FULL - {'CSE 160', 'CSE 161'}
+    taken = history(ids)
+
+    def validate(checked, schedule_courses, schedule_by_course):
+        assert 'CSE 160' in schedule_courses
+        assert 'CSE 161' in schedule_courses
+        # mutual coreqs should end up in the same semester
+        assert schedule_by_course['CSE 160'] == schedule_by_course['CSE 161']
+
+    # require planner to include CSE 160 and validate its coreq is scheduled
+    return taken, validate, {'must_include': {'CSE 160'}, 'approaches': ['ortools_version']}
+

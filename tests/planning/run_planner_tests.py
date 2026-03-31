@@ -65,23 +65,41 @@ def validate_with_checker(history, planned_courses):
     return result, result['degree'][0]
 
 
-def run_ortools(case):
+def check_must_include(schedule_courses, must_include):
+    return sorted(set(must_include) - set(schedule_courses))
+
+
+def check_must_exclude(schedule_courses, must_exclude):
+    return sorted(set(must_exclude) & set(schedule_courses))
+
+
+def run_ortools(history, attrs=None):
     from ortools_version.course_catalog import Major, Standing
     from ortools_version.planner import plan_courses
 
-    history, _ = case
+    attrs = attrs or {}
+    must_include = set(attrs.get('must_include', set()))
+    must_exclude = set(attrs.get('must_exclude', set()))
+    start_sem = min((h.when for h in history), default=(1, 1))
     with redirect_stdout(io.StringIO()):
-        checked, schedule, _ = plan_courses(history, Major('CSE'), Standing('U4'), schedule=True)
+        checked, schedule, _ = plan_courses(
+            history,
+            Major('CSE'),
+            Standing('U4'),
+            schedule=True,
+            starting_semester=start_sem,
+            must_include=must_include,
+            must_exclude=must_exclude,
+        )
     checker_result, checker_ok = validate_with_checker(history, schedule)
     failed = [k for k, v in checker_result.items() if not v[0]]
     return normalize_checked(checked), set(schedule), schedule, checker_ok, failed
 
 
-def run_clingo_backend(case):
+def run_clingo_backend(history, attrs=None):
     from clingo_version.run_clingo import run_clingo
     from python_version.cs_reqs_2024 import Taken
 
-    history, _ = case
     taken = {
         Taken(h.id, h.credits, h.grade, h.when, h.where)
         for h in history
@@ -109,23 +127,49 @@ def run_clingo_backend(case):
 def run_one(label, backend):
     passed = []
     failed = []
+    skipped = []
 
     with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
         for name, func in ALL_TESTS:
             try:
                 case = func()
-                checked, schedule_courses, schedule_by_course, checker_ok, checker_failed = backend(case)
-                if not checker_ok:
+                if len(case) == 2:
+                    history, validate = case
+                    attrs = {}
+                elif len(case) == 3:
+                    history, validate, attrs = case
+                else:
+                    raise ValueError('test case must return (history, validate) or (history, validate, attrs)')
+
+                approaches = set(attrs.get('approaches', []))
+                if approaches and label not in approaches:
+                    skipped.append(name)
+                    continue
+
+                checked, schedule_courses, schedule_by_course, checker_ok, checker_failed = backend(history, attrs)
+                if not checker_ok and not attrs.get('skip_checker_validation', False):
                     failed.append((name, f"python checker rejected combined plan on: {checker_failed}"))
                     continue
 
-                _, validate = case
+                missing = check_must_include(schedule_courses, attrs.get('must_include', set()))
+                if missing:
+                    failed.append((name, f"missing must_include in planned schedule: {missing}"))
+                    continue
+
+                present = check_must_exclude(schedule_courses, attrs.get('must_exclude', set()))
+                if present:
+                    failed.append((name, f"found must_exclude in planned schedule: {present}"))
+                    continue
+
                 validate(checked, schedule_courses, schedule_by_course)
                 passed.append(name)
             except Exception as e:
                 failed.append((name, str(e)))
 
-    print(f"\n-> {label}: passed {len(passed)} test cases, failed {len(failed)} test cases")
+    print(
+        f"\n-> {label}: passed {len(passed)} test cases, "
+        f"failed {len(failed)} test cases, skipped {len(skipped)} test cases"
+    )
     for name, error in failed:
         print(f"   FAIL: {name}")
         print(f"      - {error}")

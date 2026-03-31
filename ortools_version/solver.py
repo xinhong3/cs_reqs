@@ -72,7 +72,18 @@ class Solver:
         return self[expr] if isinstance(expr, Requirement) else expr
 
     def implies(self, a, b):
-        self.model.add_implication(self._var(a), self.constraint(b))
+        c = self.constraint(b)
+        if c is not None:
+            self.model.add_implication(self._var(a), c)
+
+    # a → NOT b
+    def forbids(self, a, b):
+        c = self.constraint(b)
+        if c is None: return
+        if isinstance(c, int):
+            if c: self.model.add(self._var(a) == 0)  # b always true → a must be 0
+        else:
+            self.model.add_implication(self._var(a), c.negated())
 
     # bv is true ↔ iv > 0  (used to tie a bool predicate to a categorical one)
     def iff(self, bv, iv):
@@ -141,7 +152,7 @@ class Solver:
         return v
 
     # returns an IntVar equal to the max of the given vars
-    # hi: explicit upper bound — required when vars are linear expressions (not registered IntVars)
+    # hi: explicit upper bound — required when vars are linear expressions
     def max_of(self, vars, hi=None):
         vars = list(vars)
         if not vars: return 0
