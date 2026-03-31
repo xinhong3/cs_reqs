@@ -45,6 +45,12 @@ class Passed(Requirement):    ## e.g. passed("CSE 101"), passed("AMS 210", "B")
   ## other programs may have 'passed with B or higher'.
   name = "passed"
 
+class Coregister(Requirement):
+  ## a course needs to be taken together with another course. 
+  ### 'hack' to represent prereq OR coreq logic such as: "prereq: C1 or coreq C2"
+  ###    which is represented as prereq: Or([Taken("C1"), Coregister("C2")])
+  name = "coregister"
+
 class Major(Requirement):     ## e.g. cse_major
   name = "major"
 
@@ -84,6 +90,10 @@ class Or(LogicalExpr):
   def __init__(self, subexprs):
     super().__init__('Or', subexprs)
 
+class Not(LogicalExpr):
+  def __init__(self, subexpr):
+    super().__init__('Not', subexpr)
+
 if __name__ == "__main__":
   ## course with only prereq
   cse316 = Course(
@@ -113,35 +123,3 @@ if __name__ == "__main__":
     grading=None
   )
 
-COURSES_CSE_DEGREE = {    ## courses listed in the degree requirements.
-  'CSE 114', 'CSE 214', 'CSE 216',  ## prog
-  'CSE 160', 'CSE 161', 'CSE 260', 'CSE 261',  ## prog2
-  'CSE 215',  ## dmath
-  'CSE 150',  ## dmath2
-  'CSE 220',  ## sys
-  'CSE 303',  ## theory
-  'CSE 350',  ## theory2
-  'CSE 373',  ## algo
-  'CSE 385',  ## algo2
-  'CSE 310', 'CSE 316', 'CSE 320', 'CSE 416',  ## common
-  'AMS 151', 'AMS 161',  ## calc
-  'MAT 125', 'MAT 126', 'MAT 127',  ## calc2
-  'MAT 131', 'MAT 132',  ## calc3
-  'MAT 211',  ## alg
-  'AMS 210',  ## alg2
-  'AMS 301',  ## fmath
-  'AMS 310',  ## sta
-  'AMS 311',  ## sta2
-  'BIO 201', 'BIO 204',  ## bio
-  'BIO 202', 'BIO 204',  ## bio2
-  'BIO 203', 'BIO 204',  ## bio3
-  'CHE 131', 'CHE 133',  ## che
-  'CHE 152', 'CHE 154',  ## che2
-  'PHY 126', 'PHY 133',  ## phy
-  'PHY 131', 'PHY 133',  ## phy2
-  'PHY 141', 'PHY 133',  ## phy3
-  'CSE 312',  ## ethics
-  'CSE 300',  ## writing
-  'CSE 475', 'CSE 495', 'CSE 300', 'CSE 301', 'CSE 312',  ## elect_exclude
-  'AST 203', 'AST 205', 'CHE 132', 'CHE 321', 'CHE 322', 'CHE 331', 'CHE 332', 'GEO 102', 'GEO 103', 'GEO 112', 'GEO 123', 'GEO 122', 'PHY 125', 'PHY 127', 'PHY 132', 'PHY 134', 'PHY 142', 'PHY 251', 'PHY 252'  ## sci_more
-}

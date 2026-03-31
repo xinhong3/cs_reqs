@@ -3,6 +3,7 @@ import requests
 import re
 import argparse
 import json
+import os
 from bs4 import BeautifulSoup, Tag
 from course_kb import *
 from parse_course import course_div_cleanup, parse_course_div, parse_req_text
@@ -118,8 +119,10 @@ class ASTDecoder(json.JSONDecoder):
     'Course': Course,
     'And': And,
     'Or': Or,
+    'Not': Not,
     'Passed': Passed,
     'Taken': Taken,
+    'Coregister': Coregister,
     'Major': Major,
     'Standing': Standing,
     'Permission': Permission,
@@ -157,9 +160,22 @@ def serialize_kb_to_json(kb: list[Course], filepath):
     d[TYPE_KEY] = type(course).__name__
     kb_ready_for_json.append(d)
 
+  merged_kb = kb_ready_for_json
+  added_count = len(kb_ready_for_json)
+
+  if os.path.exists(filepath):
+    print(f"KB already exists at {filepath}, merging with new entries.")
+    with open(filepath, 'r') as f:
+      existing_kb = json.load(f)
+
+    existing_ids = {entry.get('id') for entry in existing_kb if isinstance(entry, dict) and entry.get('id')}
+    new_entries = [entry for entry in kb_ready_for_json if entry.get('id') not in existing_ids]
+    merged_kb = existing_kb + new_entries
+    added_count = len(new_entries)
+
   with open(filepath, 'w') as f:
-    json.dump(kb_ready_for_json, f, cls=ASTEncoder, indent=2)
-    print(f'JSON KB saved to {filepath}')
+    json.dump(merged_kb, f, cls=ASTEncoder, indent=2)
+    print(f'JSON KB saved to {filepath} (added {added_count} new entries)')
 
 def deserialize_kb_from_json(filepath) -> list[Course]:
   with open(filepath, 'r') as f:
@@ -222,16 +238,22 @@ class PrologGenerator:
       if req_value is not None:
         l.append(f'has_{req_type}("{course.id}").')       ## add has_requisite fact for each course with that type of requisite
         if isinstance(req_value, Or):
-          for subexpr in req_value.subexprs:
-            l.append(f'{req_type}("{course.id}", Sem) :- semester(Sem), {self.generate_expr(subexpr, req_type)}.')
+          subexprs = [op for op in req_value.subexprs if not isinstance(op, UnsupportedRequirement)]
+          
+          if not subexprs:
+            l.append(f'{req_type}("{course.id}", Sem) :- semester(Sem), unsupported_{req_type}.')
+          else:
+            for subexpr in subexprs:
+              l.append(f'{req_type}("{course.id}", Sem) :- semester(Sem), {self.generate_expr(subexpr, req_type)}.')
         else:
-          l.append(f'{req_type}("{course.id}", Sem) :- semester(Sem),{self.generate_expr(req_value, req_type)}.')    ## add Sem in the head
-    return l
+          l.append(f'{req_type}("{course.id}", Sem) :- semester(Sem),{self.generate_expr(req_value, req_type)}.')
+    return list(dict.fromkeys(l))   ## deduplicate with order preserved
 
   def generate_expr(self, expr: Expr, req_type: str) -> str:
     if isinstance(expr, Requirement): return self.generate_requirement(expr, req_type)
     elif isinstance(expr, And): return self.generate_and(expr, req_type)
     elif isinstance(expr, Or): return self.generate_or(expr, req_type)
+    elif isinstance(expr, Not): return self.generate_not(expr, req_type)
     else:
       print("unsupported expr type:", type(expr))
       return "unsupported: " + str(expr)
@@ -241,13 +263,15 @@ class PrologGenerator:
     ## for passed and taken, add semester
     if isinstance(req, (Passed, Taken)):
       return self.format_req_with_semester(req.name, req.arguments, req_type)
+    elif isinstance(req, Coregister):
+      return f'taken_same("{req.arguments[0]}")'
+    elif isinstance(req, Permission):
+      return f'permission'
     elif isinstance(req, UnsupportedRequirement):
       ## ignore unsupported. we assert unsupported as a fact in clingo.
       ## for prereq and coreq, we assume unsupported requirements are satisfied. 
       ## for anti-req, unsupported requirements are assumed to be not satisfied.
       return f'unsupported_{req_type}'
-    elif isinstance(req, Permission):
-      return f'permission'
     
     arg_str = self.join_args(req.arguments)
     return f'{req.name}({arg_str})'
@@ -271,6 +295,11 @@ class PrologGenerator:
         s = f'({s})'
       parts.append(s)
     return ';'.join(parts)
+  
+  def generate_not(self, expr: Not, req_type) -> str:
+    negated_expr = expr.subexpr
+    s = self.generate_expr(negated_expr, req_type)
+    return f'not ({s})'
 
 class ClingoGenerator(PrologGenerator):
   ## same as PrologGenerator, only overridding conjunction and disjunction for pooling
@@ -302,9 +331,13 @@ class ClingoGenerator(PrologGenerator):
     return f'{name}_{suffix}(({pooled}), Sem)' if pooled.count(";") >= 1 else f'{name}_{suffix}({pooled}, Sem)'
 
   def generate_or(self, expr: Or, req_type) -> str:
-    ## exclude unsupported
-    # subexprs = [subexpr for subexpr in expr.subexprs if not isinstance(subexpr, UnsupportedRequirement)]
-    subexprs = expr.subexprs
+    ## filter out unsupported requirements in Or
+    subexprs = [op for op in expr.subexprs if not isinstance(op, UnsupportedRequirement)]
+    
+    ## if all subexprs are unsupported, return unsupported
+    if not subexprs:
+      return f'unsupported_{req_type}'
+
     ## if all are with the same requirement type -> pool arguments
     if all(isinstance(op, Requirement) for op in subexprs) and len(set(type(op) for op in subexprs)) == 1:
       pooled = self.pool_requirement_arguments(subexprs)
@@ -316,6 +349,9 @@ class ClingoGenerator(PrologGenerator):
       if node_type is Passed:  ## passed takes semester argument
         if req_type == "coreq": print("coreq shouldn't have passed requirements, but found:", subexprs)
         return self.format_pooled_sem_requirement(node_name, pooled, req_type)
+      
+      if node_type is Coregister:  ## coregister is treated as taken_same
+        return self.format_pooled_sem_requirement('taken', pooled, 'coreq')
 
       return f'{node_name}({pooled})'
     
@@ -359,6 +395,20 @@ COURSES_CSE_DEGREE = {    ## courses listed in the degree requirements.
   'WRT 101', 'WRT 102', ## needed for writing
   'CSE 475', 'CSE 495', 'CSE 300', 'CSE 301', 'CSE 312',  ## elect_exclude
   'AST 203', 'AST 205', 'CHE 132', 'CHE 321', 'CHE 322', 'CHE 331', 'CHE 332', 'GEO 102', 'GEO 103', 'GEO 112', 'GEO 123', 'GEO 122', 'PHY 125', 'PHY 127', 'PHY 132', 'PHY 134', 'PHY 142', 'PHY 251', 'PHY 252'  ## sci_more
+}
+
+COURSES_CSE_DEGREE |= { ## missing prereq courses from the above courses
+  'AMS 110', 'AMS 261', 'AMS 361', 'AMS 412',  ## ams
+  'BME 120',  ## bme
+  'CHE 129', 'CHE 383',  ## che
+  'ESE 124', 'ESE 280',  ## ese
+  'ESG 111',  ## esg
+  'ISE 108', 'ISE 208', 'ISE 218', 'ISE 334',  ## ise
+  'MAT 130', 'MAT 141', 'MAT 142', 'MAT 171',  ## mat calc & prep
+  'MAT 200', 'MAT 203', 'MAT 205', 'MAT 250',  ## mat intermediate
+  'MAT 303', 'MAT 307',  ## mat advanced
+  'MEC 102', 'MEC 262',  ## mec
+  'PHY 122', 'PHY 124'   ## phy
 }
 
 def main():

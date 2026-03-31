@@ -185,6 +185,46 @@ def parse_course_list_text(text: str) -> And | Or | str:
   
   return None
 
+def parse_mixed_or_list(text: str) -> list[str | UnsupportedRequirement] | None:
+  """
+  Parse disjunctions that may mix course ids (including omitted department code)
+  with unsupported text, e.g.
+    - "AMS 161 or MAT 127 or 132 or MPE level 9"
+    - "MAT 127 or 132 or 142 or AMS 161 or level 9 on the mathematics placement examination"
+  Returns a list of either course-id strings or UnsupportedRequirement nodes.
+  Returns None if no course-like token is found.
+  """
+  if re.search(r'\bor\s+higher\b', text, re.IGNORECASE) or re.search(r'\bor\b[^;,.]*\bequivalent\b', text, re.IGNORECASE):
+    return [UnsupportedRequirement(text)]
+
+  parts = [p.strip(" ,.") for p in re.split(r'\s+or\s+', text, flags=re.IGNORECASE) if p.strip(" ,.")]
+  if not parts:
+    return None
+
+  items = []
+  current_dept = None
+  found_course = False
+
+  for part in parts:
+    m_full = re.fullmatch(r'([A-Z]{3})\s+(\d{3})', part, re.IGNORECASE)
+    if m_full:
+      dept = m_full.group(1).upper()
+      num = m_full.group(2)
+      current_dept = dept
+      items.append(f'{dept} {num}')
+      found_course = True
+      continue
+
+    m_num = re.fullmatch(r'(\d{3})', part)
+    if m_num and current_dept:
+      items.append(f'{current_dept} {m_num.group(1)}')
+      found_course = True
+      continue
+
+    items.append(UnsupportedRequirement(part))
+
+  return items if found_course else None
+
 def apply_requirement_recursive(node: And | Or, requirement: Requirement) -> And | Or:
   ## apply the requirement (e.g. Taken or Passed) to each course in the course list recursively.
   ## e.g. And([ "CSE 160", Or(["CSE 214", "CSE 260"]) ]) with requirement = Passed becomes
@@ -362,6 +402,8 @@ def parse_req_text(text: str) -> And | Or | Requirement:
   pass_with_grade = lambda cid: Passed(cid, grade_required)
 
   for part in parts:            ## match each part with supported formats. each case is a full match
+    part = part.strip()
+
     if m := re.fullmatch(re_grade_or_higher_prefix, part):    ## course list with c or higher prefix
       need_passed = True
       grade_required = m.group("grade").upper()  ## C, B, B+, etc.
@@ -370,8 +412,13 @@ def parse_req_text(text: str) -> And | Or | Requirement:
       if course_list_ast is not None:
         requirements.append(apply_requirement_recursive(course_list_ast, pass_with_grade))
       else:
-        print("unsupported course list format in parse_course_list_text:", text)
-        requirements.append(UnsupportedRequirement(part))
+        mixed_items = parse_mixed_or_list(rest)
+        if mixed_items is not None:
+          converted = [pass_with_grade(item) if isinstance(item, str) else item for item in mixed_items]
+          requirements.append(build_node(Or, converted))
+        else:
+          print("unsupported course list format in parse_course_list_text:", text)
+          requirements.append(UnsupportedRequirement(part))
     elif m := re.fullmatch(re_any_course_list, part): ## course list
       req = pass_with_grade if need_passed else Taken
       requirements.append(apply_requirement_recursive(parse_course_list_text(part), req))
@@ -396,6 +443,13 @@ def parse_req_text(text: str) -> And | Or | Requirement:
     elif m := re.fullmatch(re_permission, part):
       requirements.append(Permission(part))
     else:
+      mixed_items = parse_mixed_or_list(part)
+      if mixed_items is not None:
+        req = pass_with_grade if need_passed else Taken
+        converted = [req(item) if isinstance(item, str) else item for item in mixed_items]
+        requirements.append(build_node(Or, converted))
+        continue
+
       if USE_LLM_TO_PARSE:
         print(f"Regex failed, asking LLM to parse: '{part}'")
         try:
