@@ -6,42 +6,32 @@
 %% clingo version for checking and planning for BS degree requirements in CSE at Stony Brook University (Fall 2024).
 %% python version: https://github.com/unicomputing/cs_reqs/blob/main/cs_reqs_2024.da (checking only)
 
-grade_higher_than(Grade, ExpectedGrade) :- grade_to_points(Grade, Points), grade_to_points(ExpectedGrade, ExpectedPoints), Points >= ExpectedPoints.
-c_or_higher(Grade) :- grade_higher_than(Grade, "C").
+is_higher(Grade, Grade2) :- grade_points(Grade, Points), grade_points(Grade2, Points2), Points >= Points2.
+c_or_higher(Grade) :- is_higher(Grade, "C").
 
 %% mapping letter grade to points for GPA calculation
 %% scaled by 100 to make each integer
-grade_to_points("A", 400).
-grade_to_points("A-", 367).
-grade_to_points("B+", 333).
-grade_to_points("B", 300).
-grade_to_points("B-", 267).
-grade_to_points("C+", 233).
-grade_to_points("C", 200).
-grade_to_points("C-", 167).
-grade_to_points("D+", 133).
-grade_to_points("D", 100).
-grade_to_points("F", 0).
-grade_to_points("I/F", 0).
-grade_to_points("Q", 0).
+grade_points("A", 400). grade_points("A-", 367).
+grade_points("B+", 333). grade_points("B", 300). grade_points("B-", 267).
+grade_points("C+", 233). grade_points("C", 200). grade_points("C-", 167).
+grade_points("D+", 133). grade_points("D", 100). grade_points("F", 0).
+grade_points("I/F", 0). grade_points("Q", 0).
 
 %% courses_taken(Id, Credits, Grade, Subset): a subset of courses taken, identified by Subset.
 
 %% gpa calculation, takes a subset (courses_taken, indicated by the subset name) and calculates the GPA = floor(weighted sum / sum of weights).
-%% only consider letter grades in grade_to_points
-%%% If the same course is taken multiple times, it will only be counted once here. Add 'When' to the Id to distinguish different attempts if we want to count them separately.
-gpa_mul_100(TakenSubset, Gpa) :-
-  courses_taken(_, _, _, TakenSubset),
-  WeightedSum = #sum { Credit*Points, Id : courses_taken(Id, Credit, Grade, TakenSubset), grade_to_points(Grade, Points) },
-  SumOfWeights = #sum { Credit, Id : courses_taken(Id, Credit, Grade, TakenSubset), grade_to_points(Grade, _) },
-  SumOfWeights > 0,
-  Gpa = WeightedSum / SumOfWeights. %%% integer floor division. 
+%% only consider letter grades in grade_points
+%%% If the same course is taken multiple times, it will only be counted once here.
+gpa_x100(tag, GPA) :-
+  subset_taken(_, tag),
+  WeightedSum = #sum { Credit*Points, Id, When : subset_taken(Id, tag), taken(Id, Credit, Grade, When, _), grade_points(Grade, Points) },
+  SumOfWeights = #sum { Credit, Id, When : subset_taken(Id, tag), taken(Id, Credit, Grade, When, _), grade_points(Grade, _) },
+  SumOfWeights > 0, GPA = WeightedSum / SumOfWeights. %%% integer floor division. 
 
 %% gpa is 0 when sum of weights is 0. same as in python
-gpa_mul_100(TakenSubset, 0) :-
+gpa_x100(TakenSubset, 0) :-
   courses_taken(_, _, _, TakenSubset),
-  SumOfWeights = #sum { Credit, Id : courses_taken(Id, Credit, Grade, TakenSubset), grade_to_points(Grade, _) },
-  SumOfWeights = 0.
+  #sum { Credit, Id : courses_taken(Id, Credit, Grade, TakenSubset), grade_points(Grade, _) } = 0
 
 % taken(Id, Credits, Grade, When, Where): taken course Id with Credits, etc.
 
@@ -60,8 +50,7 @@ courses(Id, Item) :- s(Item, Subj), c(Id, Subj).
 
 % 1. Required Introductory Courses
 c("CSE 114", prog). c("CSE 214", prog). c("CSE 216", prog). 
-c("CSE 160", prog2). c("CSE 161", prog2). 
-c("CSE 260", prog2). c("CSE 261", prog2).
+c(("CSE 160"; "CSE 161"; "CSE 260"; "CSE 261"), prog2).
 c("CSE 215", dmath). 
 c("CSE 150", dmath2).
 c("CSE 220", sys). 
@@ -88,8 +77,7 @@ c(("CSE 475"; "CSE 495"; "CSE 300"; "CSE 301"; "CSE 312"), elect_exclude).
 
 courses_taken(Id, Credits, Grade, elect_passed) :- 
   taken(Id, Credits, Grade, _, _), c_or_higher(Grade),
-  Prog = @course_prog(Id), 
-  Prog = "CSE", 
+  @course_prog(Id) = "CSE", 
   @upper_division(Id) = 1,    %% is upper division
   Credits >= 3, not courses(Id, adv), not c(Id, elect_exclude).
 
@@ -143,26 +131,28 @@ sci_combs(bio; bio2; bio3; che; che2; phy; phy2; phy3).
 
 % 8. Additional natural science courses selected from above and following list:
 % Note: The courses selected in 7 and 8 must carry at least 9 credits.
-c(("AST 203"; "AST 205"; "CHE 132"; "CHE 321"; "CHE 322"; "CHE 331"; "CHE 332"; "GEO 102"; "GEO 103"; "GEO 112"; "GEO 123"; "GEO 122"; "PHY 125"; "PHY 127"; "PHY 132"; "PHY 134"; "PHY 142"; "PHY 251"; "PHY 252"), sci_more).
+c(("AST 203"; "AST 205"; "CHE 132"; "CHE 321"; "CHE 322"; "CHE 331"; "CHE 332";
+   "GEO 102"; "GEO 103"; "GEO 112"; "GEO 123"; "GEO 122";
+   "PHY 125"; "PHY 127"; "PHY 132"; "PHY 134"; "PHY 142"; "PHY 251"; "PHY 252"), sci_more).
 
 %% sci_courses(taken) in python: set of all sci courses taken
-courses_taken(Id, Credit, Grade, sci_courses) :- taken(Id, Credit, Grade, _, _), c(Id, sci_more).
-courses_taken(Id, Credit, Grade, sci_courses) :- taken(Id, Credit, Grade, _, _), c(Id, L), sci_combs(L).
+sci_taken(Id) :- sci_combs(Subj), c(Id, Subj), taken(Id, _, _, _, _).
+sci_taken(Id) :- c(Id, sci_more), taken(Id, _, _, _, _).
 
 %% generate a subset of sci_courses taken: use the same subset to satisfy sci_req, sci_cred_req and sci_grade_req.
-{ courses_taken(Id, Credit, Grade, sci_subset) : courses_taken(Id, Credit, Grade, sci_courses) }.
+{ subset_taken(Id, sci) } :- sci_taken(Id).
 
 %% the subset must contain one sci_combo, use in requirement 7.
-sci_req :- sci_combs(L), courses_taken(Id, _, _, sci_subset) : c(Id, L).
+sci_combs_req :- sci_combs(Subj), subset_taken(Id, sci) : c(Id, Subj).
 
 % The courses selected in 7 and 8 must carry at least 9 credits.
 %% Id is needed otherwise credit will only be counted once for courses that have the same credits.
-sci_cred_req :-  #sum { Credit, Id : courses_taken(Id, Credit, _, sci_subset) } >= 9.
+sci_cred_req :- #sum { Credit, Id, When : subset_taken(Id, sci), taken(Id, Credit, _, _, _) } >= 9.
 
 % The grade point average for the courses in Requirements 7 and 8 must be at least 2.00.
-sci_grade_req :- gpa_mul_100(sci_subset, Gpa), Gpa >= 200.
+sci_grade_req :- gpa_x100(sci, GPA), GPA >= 2x100.
 
-sat(sci) :- sci_req, sci_cred_req, sci_grade_req.
+sat(sci) :- sci_combs_req, sci_cred_req, sci_grade_req.
 
 %% witness for sci is the subset used to satisfy all sci requirements, as in python.
 wit(sci, Id) :- courses_taken(Id, _, _, sci_subset).
