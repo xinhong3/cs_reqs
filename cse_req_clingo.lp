@@ -17,21 +17,19 @@ grade_points("C+", 233). grade_points("C", 200). grade_points("C-", 167).
 grade_points("D+", 133). grade_points("D", 100). grade_points("F", 0).
 grade_points("I/F", 0). grade_points("Q", 0).
 
-%% courses_taken(Id, Credits, Grade, Subset): a subset of courses taken, identified by Subset.
-
-%% gpa calculation, takes a subset (courses_taken, indicated by the subset name) and calculates the GPA = floor(weighted sum / sum of weights).
-%% only consider letter grades in grade_points
-%%% If the same course is taken multiple times, it will only be counted once here.
-gpa_x100(tag, GPA) :-
-  subset_taken(_, tag),
-  WeightedSum = #sum { Credit*Points, Id, When : subset_taken(Id, tag), taken(Id, Credit, Grade, When, _), grade_points(Grade, Points) },
-  SumOfWeights = #sum { Credit, Id, When : subset_taken(Id, tag), taken(Id, Credit, Grade, When, _), grade_points(Grade, _) },
+%% gpa calculation, takes a subset (marked by the tag) and calculates the GPA = floor(weighted sum / sum of weights).
+%%   only consider letter grades in grade_points.
+%%   if a course is taken multiple times, all of them will be counted, as in python.
+gpa_x100(Tag, GPA) :-
+  subset_taken(_, Tag),
+  WeightedSum = #sum { Credit*Points, Id, When : subset_taken(Id, Tag), taken(Id, Credit, Grade, When, _), grade_points(Grade, Points) },
+  SumOfWeights = #sum { Credit, Id, When : subset_taken(Id, Tag), taken(Id, Credit, Grade, When, _), grade_points(Grade, _) },
   SumOfWeights > 0, GPA = WeightedSum / SumOfWeights. %%% integer floor division. 
 
-%% gpa is 0 when sum of weights is 0. same as in python
-gpa_x100(TakenSubset, 0) :-
-  courses_taken(_, _, _, TakenSubset),
-  #sum { Credit, Id : courses_taken(Id, Credit, Grade, TakenSubset), grade_points(Grade, _) } = 0
+%% gpa is 0 when sum of weights is 0, as in python.
+gpa_x100(Tag, 0) :-
+  subset_taken(_, Tag),
+  #sum { Credit, Id, When : subset_taken(Id, Tag), taken(Id, Credit, Grade, When, _), grade_points(Grade, _) } = 0.
 
 % taken(Id, Credits, Grade, When, Where): taken course Id with Credits, etc.
 
@@ -47,9 +45,10 @@ wit(Item, Id) :- s(Item, Subj), passed_all(Subj), c(Id, Subj).
 
 % return set of courses in subjects in requirement item.
 courses(Id, Item) :- s(Item, Subj), c(Id, Subj).
+subset_taken(Id, Item) :- s(Item, Subj), c(Id, Subj), taken(Id, _, _, _, _).
 
 % 1. Required Introductory Courses
-c("CSE 114", prog). c("CSE 214", prog). c("CSE 216", prog). 
+c(("CSE 114"; "CSE 214"; "CSE 216"), prog).
 c(("CSE 160"; "CSE 161"; "CSE 260"; "CSE 261"), prog2).
 c("CSE 215", dmath). 
 c("CSE 150", dmath2).
@@ -64,7 +63,7 @@ sat(intro) :-
 % 2. Required Advanced Courses
 c("CSE 303", theory). c("CSE 350", theory2).
 c("CSE 373", algo). c("CSE 385", algo2).
-c("CSE 310", other). c("CSE 316", other). c("CSE 320", other). c("CSE 416", other).
+c(("CSE 310"; "CSE 316"; "CSE 320"; "CSE 416"), other).
 s(adv, (theory; theory2; algo; algo2; other)).
 
 sat(adv) :- 
@@ -75,25 +74,25 @@ sat(adv) :-
 % 3. Computer Science Electives  %% simpler than 2025
 c(("CSE 475"; "CSE 495"; "CSE 300"; "CSE 301"; "CSE 312"), elect_exclude).
 
-courses_taken(Id, Credits, Grade, elect_passed) :- 
+subset_taken(Id, elect_passed) :-
   taken(Id, Credits, Grade, _, _), c_or_higher(Grade),
-  @course_prog(Id) = "CSE", 
+  @course_prog(Id) = "CSE",
   @upper_division(Id) = 1,    %% is upper division
   Credits >= 3, not courses(Id, adv), not c(Id, elect_exclude).
 
 sat(elect) :- 
-  #count { Id: courses_taken(Id, _, _, elect_passed) } >= 4.
+  #count { Id: subset_taken(Id, elect_passed) } >= 4.
 
 %% for elect, witness is the subset elect_passed used in elect.
-wit(elect, Id) :- courses_taken(Id, _, _, elect_passed).
+wit(elect, Id) :- subset_taken(Id, elect_passed).
 
 % 4. AMS 151, AMS 161 Applied Calculus I, II
 %%% (copied from python) todo:
 % Equivalency for MAT courses achieved through the Mathematics
 % Placement Examination is accepted to meet MAT course requirements.
-c("AMS 151", calc). c("AMS 161", calc).
-c("MAT 125", calc2). c("MAT 126", calc2). c("MAT 127", calc2).
-c("MAT 131", calc3). c("MAT 132", calc3).
+c(("AMS 151"; "AMS 161"), calc).
+c(("MAT 125"; "MAT 126"; "MAT 127"), calc2).
+c(("MAT 131"; "MAT 132"), calc3).
 s(calc, (calc; calc2; calc3)).
 
 sat(calc) :- 
@@ -119,14 +118,14 @@ sat(sta) :-
 
 % 7. At least one of the following natural science lecture/laboratory combinations...
 % combinations:
-c("BIO 201", bio). c("BIO 204", bio).
-c("BIO 202", bio2). c("BIO 204", bio2).
-c("BIO 203", bio3). c("BIO 204", bio3).
-c("CHE 131", che). c("CHE 133", che).
-c("CHE 152", che2). c("CHE 154", che2).
-c("PHY 126", phy). c("PHY 133", phy).
-c("PHY 131", phy2). c("PHY 133", phy2).
-c("PHY 141", phy3). c("PHY 133", phy3).
+c(("BIO 201"; "BIO 204"), bio).
+c(("BIO 202"; "BIO 204"), bio2).
+c(("BIO 203"; "BIO 204"), bio3).
+c(("CHE 131"; "CHE 133"), che).
+c(("CHE 152"; "CHE 154"), che2).
+c(("PHY 126"; "PHY 133"), phy).
+c(("PHY 131"; "PHY 133"), phy2).
+c(("PHY 141"; "PHY 133"), phy3).
 sci_combs(bio; bio2; bio3; che; che2; phy; phy2; phy3).
 
 % 8. Additional natural science courses selected from above and following list:
@@ -147,15 +146,15 @@ sci_combs_req :- sci_combs(Subj), subset_taken(Id, sci) : c(Id, Subj).
 
 % The courses selected in 7 and 8 must carry at least 9 credits.
 %% Id is needed otherwise credit will only be counted once for courses that have the same credits.
-sci_cred_req :- #sum { Credit, Id, When : subset_taken(Id, sci), taken(Id, Credit, _, _, _) } >= 9.
+sci_cred_req :- #sum { Credit, Id, When : subset_taken(Id, sci), taken(Id, Credit, _, When, _) } >= 9.
 
 % The grade point average for the courses in Requirements 7 and 8 must be at least 2.00.
-sci_grade_req :- gpa_x100(sci, GPA), GPA >= 2x100.
+sci_grade_req :- gpa_x100(sci, GPA), GPA >= 2*100.
 
 sat(sci) :- sci_combs_req, sci_cred_req, sci_grade_req.
 
 %% witness for sci is the subset used to satisfy all sci requirements, as in python.
-wit(sci, Id) :- courses_taken(Id, _, _, sci_subset).
+wit(sci, Id) :- subset_taken(Id, sci).
 
 % 9. Professional Ethics
 c("CSE 312", ethics).
@@ -187,11 +186,11 @@ sat(writing) :- passed_all(writing).
 %% courses in items 1,2,3
 items123_course(Id) :- courses(Id, intro).
 items123_course(Id) :- courses(Id, adv).
-items123_course(Id) :- courses_taken(Id, _, _, elect_passed).
+items123_course(Id) :- subset_taken(Id, elect_passed).
 
 %% courses in items 2,3
 items23_course(Id) :- courses(Id, adv).
-items23_course(Id) :- courses_taken(Id, _, _, elect_passed).
+items23_course(Id) :- subset_taken(Id, elect_passed).
 
 items123_credits(Credits) :- Credits = #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items123_course(Id) }.
 items23_credits(Credits) :- Credits = #sum { Credit, Id : taken(Id, Credit, _, _, "SB"), items23_course(Id) }.
@@ -246,10 +245,10 @@ semester((Y, T)) :-     %% semesters between start_sem and finish_sem, inclusive
 %% course Id is taken before semester Sem. %% for prereq and antireq
 taken_before(Id, Sem) :- semester(Sem), taken(Id, _, _, Sem1, _), Sem1 < Sem.
 
-%% course Id is passed before semester Sem. %% for prereq only
-passed_before((Id, ExpectedGrade), Sem) :- semester(Sem), taken(Id, _, Grade, Sem1, _), Sem1 < Sem, grade_higher_than(Grade, ExpectedGrade).
+%% passed course Id before Sem with grade higher than Grade %% prereq only
+passed_before((Id, Grade), Sem) :- semester(Sem), taken(Id, _, Grade1, Sem1, _), Sem1 < Sem, is_higher(Grade1, Grade).
 
-%% course Id is taken at semester Sem. %% for coreq only   %%% todo: rename to taken_at?
+%% course Id is taken at semester Sem. %% coreq only   %%% todo: rename to taken_at?
 taken_same(Id, Sem) :- semester(Sem), taken(Id, _, _, Sem, _).
 
 %% for prereq_or_coreq: could be taken before or at the same semester.
@@ -261,8 +260,7 @@ offered(Id, Sem) :- course(Id, _), semester(Sem).
 
 %%%% generate
 %% any untaken course can be planned for at most one semester.
-%%   plan with only one of the credit options if there are many
-{ planned(Id, Credit, Sem) : course(Id, Credit), semester(Sem), offered(Id, Sem) } 1 :- course(Id, _), not taken_id(Id). %% #const can't be used in the head
+{ planned(Id, Credit, Sem) : semester(Sem), offered(Id, Sem) } 1 :- course(Id, Credit), not taken_id(Id). %% #const can't be used in the head
 
 %% assume course planned has grade A and taken in SB
 taken(Id, Credit, "A", Sem, "SB") :- planned(Id, Credit, Sem).
