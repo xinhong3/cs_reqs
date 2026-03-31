@@ -196,6 +196,8 @@ def test_4():
   }
   taken |= fall25
 
+  # courses with grade as None will be ignored in the checker - which means the credits cournt won't reflect below values
+  # not including in-progress courses in checking
   checked['credits_at_SB'] = (True, ['items123 = 38', 'items23 = 24'])
 
   return taken, checked

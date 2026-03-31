@@ -1,14 +1,15 @@
 import json, re
 from collections import namedtuple
 from course_kb.course_kb import (
-    Taken, Passed, Semester, Major, Standing, Permission, UnsupportedRequirement,
+    Taken, Passed, Major, Standing, Permission, UnsupportedRequirement,
     StudentReq, CourseReq, And, Or, get_courses, get_reqs, Requirement,
-    History, Grade
 )
 from course_kb.build_kb import ASTDecoder
 
 # ── Course record & catalog ────────────────────────────────────
 
+## a course taken, e.g., History('CSE 114', 4, 'A', (2024, 2), 'SB')
+History = namedtuple('History', ['id', 'credits', 'grade', 'when', 'where'])
 Course = namedtuple('Course', ['id', 'credits', 'prereq'], defaults=[None])
 
 catalog = {}
